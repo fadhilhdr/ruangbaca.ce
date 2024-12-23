@@ -3,62 +3,72 @@
         <h2 class="text-lg font-medium text-gray-900">
             {{ __('Profile Information') }}
         </h2>
-
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __("Update your account's profile information and email address.") }}
-        </p>
     </header>
 
-    <form id="send-verification" method="post" action="{{ route('verification.send') }}">
-        @csrf
-    </form>
+    <!-- Profile Information (Read-Only) -->
+    <div class="mt-6 space-y-6 bg-white p-6 rounded-lg">
+        <!-- User ID -->
+        <div>
+            <x-input-label for="userid" :value="__('User ID')" />
+            <x-text-input id="userid" name="userid" type="text" class="mt-1 block w-full bg-gray-100" :value="$user->userid" disabled />
+        </div>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
-        @csrf
-        @method('patch')
-
+        <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full bg-gray-100" :value="$user->name" disabled />
         </div>
 
+        <!-- Additional Information (Read-Only Fields) -->
+        @if ($user->student)
+            <div>
+                <x-input-label for="angkatan" :value="__('Angkatan')" />
+                <x-text-input id="angkatan" name="angkatan" type="text" class="mt-1 block w-full bg-gray-100" :value="$user->student->angkatan" disabled />
+            </div>
+            <div>
+                <x-input-label for="gender" :value="__('Gender')" />
+                <x-text-input id="gender" name="gender" type="text" class="mt-1 block w-full bg-gray-100" :value="$user->student->gender" disabled />
+            </div>
+            <div>
+                <x-input-label for="status" :value="__('Status')" />
+                <x-text-input id="status" name="status" type="text" class="mt-1 block w-full bg-gray-100" :value="$user->student->status" disabled />
+            </div>
+        @elseif ($user->lecturer)
+            <div>
+                <x-input-label for="kode_dosen" :value="__('Kode Dosen')" />
+                <x-text-input id="kode_dosen" name="kode_dosen" type="text" class="mt-1 block w-full bg-gray-100" :value="$user->lecturer->kode_dosen" disabled />
+            </div>
+            <div>
+                <x-input-label for="riwayat_s1" :value="__('Riwayat S1')" />
+                <x-text-input id="riwayat_s1" name="riwayat_s1" type="text" class="mt-1 block w-full bg-gray-100" :value="$user->lecturer->riwayat_s1" disabled />
+            </div>
+            <div>
+                <x-input-label for="riwayat_s2" :value="__('Riwayat S2')" />
+                <x-text-input id="riwayat_s2" name="riwayat_s2" type="text" class="mt-1 block w-full bg-gray-100" :value="$user->lecturer->riwayat_s2" disabled />
+            </div>
+            <div>
+                <x-input-label for="riwayat_s3" :value="__('Riwayat S3')" />
+                <x-text-input id="riwayat_s3" name="riwayat_s3" type="text" class="mt-1 block w-full bg-gray-100" :value="$user->lecturer->riwayat_s3 ?? __('Not available')" disabled />
+            </div>
+            <div>
+                <x-input-label for="kepakaran1" :value="__('Kepakaran 1')" />
+                <x-text-input id="kepakaran1" name="kepakaran1" type="text" class="mt-1 block w-full bg-gray-100" :value="$user->lecturer->kepakaran1" disabled />
+            </div>
+            <div>
+                <x-input-label for="kepakaran2" :value="__('Kepakaran 2')" />
+                <x-text-input id="kepakaran2" name="kepakaran2" type="text" class="mt-1 block w-full bg-gray-100" :value="$user->lecturer->kepakaran2 ?? __('Not available')" disabled />
+            </div>
+        @elseif ($user->employee)
+            <div>
+                <x-input-label for="division" :value="__('Division')" />
+                <x-text-input id="division" name="division" type="text" class="mt-1 block w-full bg-gray-100" :value="$user->employee->division" disabled />
+            </div>
+        @endif
+
+        <!-- Role -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
-
-            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                <div>
-                    <p class="text-sm mt-2 text-gray-800">
-                        {{ __('Your email address is unverified.') }}
-
-                        <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            {{ __('Click here to re-send the verification email.') }}
-                        </button>
-                    </p>
-
-                    @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-600">
-                            {{ __('A new verification link has been sent to your email address.') }}
-                        </p>
-                    @endif
-                </div>
-            @endif
+            <x-input-label for="role" :value="__('Role')" />
+            <x-text-input id="role" name="role" type="text" class="mt-1 block w-full bg-gray-100" :value="$user->role->name ?? __('Not available')" disabled />
         </div>
-
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
-
-            @if (session('status') === 'profile-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
-                >{{ __('Saved.') }}</p>
-            @endif
-        </div>
-    </form>
+    </div>
 </section>

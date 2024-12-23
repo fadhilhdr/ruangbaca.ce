@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('visitors', function (Blueprint $table) {
             $table->id();
-            $table->string('nim');
+            // userid bisa nim, nip, atau kalau nim mahasiswa non tekkom (tidak terdaftar di db) bisa dikosongkan dan langsung mengisi nama saja
+            $table->string('userid'); 
             $table->string('name');
             $table->timestamp('check_in_at')->nullable();
             $table->timestamp('check_out_at')->nullable();
@@ -22,9 +23,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('visitors');

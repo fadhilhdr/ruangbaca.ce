@@ -27,7 +27,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'userid' => ['required', 'string'], // Gantilah validasi 'email' menjadi 'userid'
             'password' => ['required', 'string'],
         ];
     }
@@ -41,11 +41,12 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        // Ganti 'email' menjadi 'userid' di sini
+        if (! Auth::attempt($this->only('userid', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'userid' => trans('auth.failed'), // Ganti 'email' menjadi 'userid'
             ]);
         }
 
@@ -68,7 +69,7 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
+            'userid' => trans('auth.throttle', [ // Ganti 'email' menjadi 'userid'
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -80,6 +81,7 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        // Ganti 'email' menjadi 'userid' di sini
+        return Str::transliterate(Str::lower($this->string('userid')).'|'.$this->ip());
     }
 }

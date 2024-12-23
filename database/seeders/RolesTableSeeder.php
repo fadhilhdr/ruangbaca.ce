@@ -16,9 +16,9 @@ class RolesTableSeeder extends Seeder
     {
         // Menambahkan data default untuk roles
         DB::table('roles')->insert([
-            ['name' => 'member'],
-            ['name' => 'admin'],
-            ['name' => 'superadmin'],
+            ['name' => 'Member'],
+            ['name' => 'Admin'],
+            ['name' => 'Superadmin'],
         ]);
     }
 }

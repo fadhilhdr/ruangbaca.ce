@@ -9,5 +9,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RolesTableSeeder::class);
         $this->call(StudentSeeder::class);
+        $this->call(EmployeeSeeder::class);
+        $this->call(LecturerSeeder::class);
     }
 }

@@ -9,15 +9,20 @@ class Visitor extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nim', 'name', 'check_in_at', 'check_out_at'];
+    protected $fillable = ['userid', 'name', 'instansi', 'check_in_at', 'check_out_at'];
 
     public function student()
     {
-        return $this->belongsTo(Student::class, 'nim', 'nim');
+        return $this->belongsTo(Student::class, 'userid', 'nim');
     }
 
-    public function user()
+    public function lecturer()
     {
-        return $this->hasOne(User::class, 'userid', 'nim');
+        return $this->belongsTo(Lecturer::class, 'userid', 'nip');
+    }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'userid', 'nip');
     }
 }

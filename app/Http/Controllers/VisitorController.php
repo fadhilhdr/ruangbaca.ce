@@ -3,63 +3,77 @@
 namespace App\Http\Controllers;
 
 use App\Models\Visitor;
+use App\Models\Student;
+use App\Models\Lecturer;
+use App\Models\Employee;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class VisitorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        // Validasi input
+        $request->validate([
+            'userid' => 'nullable|string',
+            'name' => 'nullable|string',
+            'instansi' => 'nullable|string',
+        ]);
+    
+        $userid = $request->input('userid');
+        $name = $request->input('name');
+        $instansi = $request->input('instansi', 'Teknik Komputer'); // Default instansi dengan kapital yang benar
+    
+        // Jika ada userid (NIM/NIP), cari pengguna
+        $user = Student::where('nim', $userid)->first()
+            ?? Lecturer::where('nip', $userid)->first()
+            ?? Employee::where('nip', $userid)->first();
+    
+        if ($user) {
+            $name = $user->name;
+            $instansi = 'Teknik Komputer'; // Instansi otomatis jika terdaftar
+    
+            // Simpan data ke tabel visitor
+            Visitor::create([
+                'userid' => $userid,
+                'name' => $name,
+                'instansi' => $instansi,
+                'check_in_at' => now(),
+            ]);
+    
+            // Redirect dengan notifikasi sukses
+            return redirect()->route('visitor.index')->with('success', "Selamat datang, $name!");
+        }
+    
+        // Jika NIM/NIP tidak ditemukan dan nama tidak diisi
+        if (!$name) {
+            return redirect()->back()->with('error', 'NIM/NIP tidak terdaftar, mohon masukan nama dan instansi.');
+        }
+    
+        // Jika pengunjung tidak terdaftar, simpan data dengan nama dan instansi manual
+        if (!$instansi) {
+            return redirect()->back()->with('error', 'Mohon masukan instansi.');
+        }
+    
+        // Simpan data ke tabel visitor
+        Visitor::create([
+            'userid' => $userid,
+            'name' => $name,
+            'instansi' => $instansi,
+            'check_in_at' => now(),
+        ]);
+    
+        // Redirect dengan notifikasi sukses
+        return redirect()->route('visitor.index')->with('success', "Selamat datang, $name!");
     }
+    
+    
+    
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Visitor $visitor)
+    public function index()
     {
-        //
-    }
+        $todayVisitors = Visitor::whereDate('check_in_at', Carbon::today())->get();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Visitor $visitor)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Visitor $visitor)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Visitor $visitor)
-    {
-        //
+        return view('visitor.index', compact('todayVisitors'));
     }
 }

@@ -22,32 +22,23 @@
             position: relative;
             margin-bottom: 2rem;
         }
-
-
         .content-wrapper {
             padding-top: 4.5rem;
         }
-
         .visitor-section {
-            margin-top: -8rem;
+            margin-top: -30rem;
             position: relative;
             z-index: 20;
-            background-color: transparent;
             padding: 1.5rem;
             border-radius: 0.75rem;
+            background-color: #ffffff;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 2rem;
-            background-color: #ffffff; 
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
         }
-
-
-
         .stats-section {
-            margin-top:0;
+            margin-top: 0;
             position: relative;
             z-index: 20;
-            background-color: transparent;
         }
     </style>
 </head>
@@ -97,16 +88,40 @@
         <div class="container mx-auto px-4">
             <div class="visitor-section">
                 <h3 class="text-xl font-semibold mb-4">Check-in Visitor</h3>
-                <form method="POST" action="{{ route('visitor.checkin') }}">
+                <form method="POST" action="{{ route('visitor.store') }}">
                     @csrf
                     <div class="mb-4">
-                        <label for="userid" class="block text-sm font-medium text-gray-700">NIM/NIP atau Nama</label>
-                        <input type="text" name="userid" id="userid" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <label for="userid" class="block text-sm font-medium text-gray-700">NIM atau NIP</label>
+                        <input type="text" name="userid" id="userid" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
-                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Check-in</button>
-                </form>
-            </div>
             
+                    <div class="mb-4">
+                        <label for="name" class="block text-sm font-medium text-gray-700">Nama </label>
+                        <input type="text" name="name" id="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+            
+                    <div class="mb-4">
+                        <label for="instansi" class="block text-sm font-medium text-gray-700">Instansi</label>
+                        <input type="text" name="instansi" id="instansi" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Teknik Komputer">
+                    </div>
+            
+                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 w-full">Check-in</button>
+                </form>
+            
+                @if(session('error'))
+                    <div class="mt-4 text-red-500 text-sm">
+                        <p>{{ session('error') }}</p>
+                    </div>
+                @endif
+                
+                @if(session('success'))
+                    <div class="mt-4 text-green-500 text-sm">
+                        <p>{{ session('success') }}</p>
+                    </div>
+                @endif
+            </div>            
+            
+            </div>
         </div>
 
         <div class="container mx-auto px-4">
@@ -125,9 +140,9 @@
                         <p class="text-2xl font-bold">758,573</p>
                     </div>
                 </div>
-                
+
                 <h2 class="text-2xl font-bold mb-6">Our Collection</h2>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                     <div class="bg-white p-6 rounded-lg shadow">
                         <div class="flex justify-between items-start">
@@ -151,7 +166,7 @@
                             <div class="w-10 h-10 bg-blue-100 rounded-lg"></div>
                         </div>
                     </div>
-                    
+
                     <div class="bg-white p-6 rounded-lg shadow">
                         <div class="flex justify-between items-start">
                             <div>
@@ -215,5 +230,15 @@
             </div>
         </footer>
     </div>
+
+    <script>
+        // Menghapus notifikasi setelah beberapa detik
+        setTimeout(() => {
+            const notification = document.getElementById('notification');
+            if (notification) {
+                notification.style.display = 'none';
+            }
+        }, 5000);
+    </script>
 </body>
 </html>

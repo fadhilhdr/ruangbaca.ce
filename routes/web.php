@@ -46,7 +46,7 @@ Route::get('/dashboard', function () {
 // Rute dashboard berdasarkan role pengguna
 Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
-        return view('admin.dashboard'); // Pastikan file view `admin.dashboard` ada
+        return view('admin.layouts.base'); // Pastikan file view `admin.dashboard` ada
     })->name('dashboard');
 });
 

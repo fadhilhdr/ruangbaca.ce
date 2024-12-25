@@ -31,11 +31,11 @@
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
     <div class="app-wrapper"> <!--begin::Sidebar-->
-        @include('superadmin.layouts.navbar')
-        @include('superadmin.layouts.sidebar')
-        @include('superadmin.layouts.footer')
+        @include('admin.layouts.navbar')
+        @include('admin.layouts.sidebar')
+        @include('admin.layouts.footer')
     </div> <!--end::App Wrapper-->
-    @include('superadmin.layouts.scripts')
+    @include('admin.layouts.scripts')
 </body><!--end::Body-->
 
 </html>

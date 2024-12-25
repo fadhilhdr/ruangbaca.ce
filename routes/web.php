@@ -1,14 +1,10 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VisitorController;
-use App\Models\Employee;
-use App\Models\Lecturer;
-use App\Models\Student;
-use App\Models\Visitor;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 // Rute utama
 Route::get('/', function () {
@@ -32,7 +28,6 @@ Route::middleware('auth')->group(function () {
 // Rute pengalihan otomatis ke dashboard berdasarkan peran pengguna setelah login
 Route::get('/dashboard', function () {
     $user = Auth::user();
-
     // Cek role pengguna dan arahkan ke dashboard yang sesuai
     if ($user->role->name === 'Member') {
         return redirect()->route('member.dashboard');
@@ -49,4 +44,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/member/dashboard', 'member.dashboard')->name('member.dashboard');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

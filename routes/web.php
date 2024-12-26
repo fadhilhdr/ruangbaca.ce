@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\VisitorController;
@@ -66,6 +67,18 @@ Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->g
         return view('member.dashboard'); // Pastikan file view `member.dashboard` ada
     })->name('dashboard');
 });
+
+#PUBLIC ROUTES
+
+Route::prefix('public/books')->name('public.books.')->group(function () {
+    Route::get('/', [BookController::class, 'index'])->name('index');
+    Route::get('/{id}', [BookController::class, 'show'])->name('show');
+});
+
+
+
+
+
 
 // Include rute autentikasi default Laravel Breeze
 require __DIR__ . '/auth.php';

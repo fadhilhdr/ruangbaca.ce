@@ -15,6 +15,7 @@ Route::get('/', function () {
 // Rute pengelolaan visitor
 Route::post('/visitor', [VisitorController::class, 'store'])->name('visitor.store');
 Route::get('/visitor', [VisitorController::class, 'index'])->name('visitor.index');
+Route::post('/visitor/confirmCheckout', [VisitorController::class, 'confirmCheckout'])->name('visitor.confirmCheckout');
 
 // Rute registrasi pengguna
 Route::get('register', [RegisteredUserController::class, 'create'])->name('register');

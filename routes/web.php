@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\VisitorController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +49,9 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', function () {
         return view('admin.layouts.base'); // Pastikan file view `admin.dashboard` ada
     })->name('dashboard');
+    Route::resource('students', StudentController::class); // Manage students
+    Route::get('/upload-data', [StudentController::class, 'upload'])->name('students.upload');
+    Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
 });
 
 Route::middleware(['auth', 'role:Superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {

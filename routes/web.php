@@ -1,20 +1,18 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\VisitorController;
-use App\Models\Employee;
-use App\Models\Lecturer;
-use App\Models\Student;
-use App\Models\Visitor;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 // Rute utama
 Route::get('/', function () {
     return view('welcome');
 });
 
+// Rute pengelolaan visitor
 Route::post('/visitor', [VisitorController::class, 'store'])->name('visitor.store');
 Route::get('/visitor', [VisitorController::class, 'index'])->name('visitor.index');
 
@@ -22,7 +20,7 @@ Route::get('/visitor', [VisitorController::class, 'index'])->name('visitor.index
 Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
 Route::post('register', [RegisteredUserController::class, 'store']);
 
-// Rute profil pengguna yang hanya bisa diakses oleh pengguna yang sudah login
+// Rute profil pengguna (hanya untuk pengguna yang sudah login)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -34,19 +32,39 @@ Route::get('/dashboard', function () {
     $user = Auth::user();
 
     // Cek role pengguna dan arahkan ke dashboard yang sesuai
-    if ($user->role->name === 'Member') {
-        return redirect()->route('member.dashboard');
-    } elseif ($user->role->name === 'Admin') {
-        return redirect()->route('admin.dashboard');
-    } elseif ($user->role->name === 'Superadmin') {
-        return redirect()->route('superadmin.dashboard');
+    switch ($user->role->name) {
+        case 'Member':
+            return redirect()->route('member.dashboard');
+        case 'Admin':
+            return redirect()->route('admin.dashboard');
+        case 'Superadmin':
+            return redirect()->route('superadmin.dashboard');
+        default:
+            abort(403, 'Unauthorized action.');
     }
 })->middleware(['auth', 'verified'])->name('dashboard');
-// Rute untuk dashboard berdasarkan role pengguna (admin, member, superadmin)
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('/superadmin/dashboard', 'superadmin.dashboard')->name('superadmin.dashboard');
-    Route::view('/admin/dashboard', 'admin.dashboard')->name('admin.dashboard');
-    Route::view('/member/dashboard', 'member.dashboard')->name('member.dashboard');
+
+// Rute dashboard berdasarkan role pengguna
+Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('admin.layouts.base'); // Pastikan file view `admin.dashboard` ada
+    })->name('dashboard');
+    Route::resource('students', StudentController::class); // Manage students
+    Route::get('/upload-data', [StudentController::class, 'upload'])->name('students.upload');
+    Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
 });
 
-require __DIR__.'/auth.php';
+Route::middleware(['auth', 'role:Superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('superadmin.layouts.base'); // Pastikan file view `superadmin.layouts.base` ada
+    })->name('dashboard');
+});
+
+Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('member.dashboard'); // Pastikan file view `member.dashboard` ada
+    })->name('dashboard');
+});
+
+// Include rute autentikasi default Laravel Breeze
+require __DIR__ . '/auth.php';

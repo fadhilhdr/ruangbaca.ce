@@ -7,6 +7,7 @@
             <p class="text-gray-600">Nama: {{ $visitor->name }}</p>
             <p class="text-gray-600">NIM/NIP: {{ $visitor->userid ?? '-' }}</p>
             <p class="text-gray-600">Instansi: {{ $visitor->instansi }}</p>
+            <p class="text-gray-600">Check in: {{ $visitor->check_in_at }}</p>
 
             <form action="{{ route('visitor.confirmCheckout') }}" method="POST" class="mt-4">
                 @csrf

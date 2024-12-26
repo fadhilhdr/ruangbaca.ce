@@ -30,7 +30,8 @@ class VisitorController extends Controller
             ?? Employee::where('nip', $userid)->first();
     
         // Periksa apakah pengguna sudah check-in dan belum checkout
-        $existingVisitor = Visitor::where('userid', $userid)
+        $existingVisitor = Visitor::where('name', 'LIKE', "%$name%")
+            ->where('instansi', 'LIKE', "%$instansi%")
             ->whereNull('check_out_at')
             ->first();
     
@@ -77,17 +78,18 @@ class VisitorController extends Controller
     {
         // Validasi input
         $visitorId = $request->input('visitor_id');
-
+    
         // Temukan visitor berdasarkan ID
         $visitor = Visitor::findOrFail($visitorId);
-
+    
         // Update checkout jika konfirmasi
         $visitor->update([
             'check_out_at' => now(),
         ]);
-
+    
         return redirect()->route('visitor.index')->with('success', "Sampai jumpa, {$visitor->name}!");
     }
+    
 
 
     public function index()

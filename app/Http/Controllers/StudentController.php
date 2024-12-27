@@ -65,17 +65,29 @@ class StudentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Student $student)
+    public function edit($id)
     {
-        //
+        $student = Student::findOrFail($id);
+        return view('admin.studentData.edit', compact('student'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Student $student)
+/**
+ * Update the specified resource in storage.
+ */
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'nim' => 'required|numeric|unique:students,nim,' . $id,
+            'name' => 'required|string|max:255',
+            'angkatan' => 'required|numeric',
+            'gender' => 'required|in:Laki-laki,Perempuan',
+            'status' => 'required|in:Aktif,Tidak Aktif',
+        ]);
+
+        $student = Student::findOrFail($id);
+        $student->update($request->all());
+
+        return redirect()->route('admin.students.index')->with('success', 'Data student berhasil diperbarui.');
     }
 
     /**

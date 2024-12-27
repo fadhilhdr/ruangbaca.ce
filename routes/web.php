@@ -3,7 +3,9 @@
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VisitorController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +54,8 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
         return view('admin.layouts.base'); // Pastikan file view `admin.dashboard` ada
     })->name('dashboard');
     Route::resource('students', StudentController::class); // Manage students
+    Route::resource('lecturers', LecturerController::class); // Manage lecturers
+    Route::get('/upload-data', [LecturerController::class, 'upload'])->name('lecturers.upload');
     Route::get('/upload-data', [StudentController::class, 'upload'])->name('students.upload');
     Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
 });
@@ -60,6 +64,9 @@ Route::middleware(['auth', 'role:Superadmin'])->prefix('superadmin')->name('supe
     Route::get('/dashboard', function () {
         return view('superadmin.layouts.base'); // Pastikan file view `superadmin.layouts.base` ada
     })->name('dashboard');
+    Route::resource('users', UsersController::class);
+    Route::get('/users/{id}/edit', [UsersController::class, 'edit'])->name('users.edit');
+
 });
 
 Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->group(function () {

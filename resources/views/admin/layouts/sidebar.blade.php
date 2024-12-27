@@ -9,8 +9,7 @@
     <div class="sidebar-wrapper">
         <nav class="mt-2"> <!--begin::Sidebar Menu-->
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
-                <li class="nav-item menu-open"> <a href="#" class="nav-link active"> <i
-                            class="nav-icon bi bi-speedometer"></i>
+                <li class="nav-item"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-speedometer"></i>
                         <p>
                             Students Data
                             <i class="nav-arrow bi bi-chevron-right"></i>
@@ -22,6 +21,29 @@
                                 <p>Index</p>
                             </a> </li>
                         <li class="nav-item"> <a href="{{ route('admin.students.create') }}" class="nav-link"> <i
+                                    class="nav-icon bi bi-circle"></i>
+                                <p>Insert Data</p>
+                            </a> </li>
+                        <li class="nav-item"> <a href="{{ route('admin.students.upload') }}" class="nav-link"> <i
+                                    class="nav-icon bi bi-circle"></i>
+                                <p>Upload Data From Excel</p>
+                            </a> </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
+                <li class="nav-item"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-speedometer"></i>
+                        <p>
+                            Lecturers Data
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"> <a href="{{ route('admin.lecturers.index') }}" class="nav-link"> <i
+                                    class="nav-icon bi bi-circle"></i>
+                                <p>Index</p>
+                            </a> </li>
+                        <li class="nav-item"> <a href="{{ route('admin.lecturers.create') }}" class="nav-link"> <i
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Insert Data</p>
                             </a> </li>

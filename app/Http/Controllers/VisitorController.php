@@ -29,7 +29,21 @@ class VisitorController extends Controller
             ?? Lecturer::where('nip', $userid)->first()
             ?? Employee::where('nip', $userid)->first();
     
+        // Periksa apakah pengguna sudah check-in dan belum checkout
+        $existingVisitor = Visitor::where('name', 'LIKE', "%$name%")
+            ->where('instansi', 'LIKE', "%$instansi%")
+            ->whereNull('check_out_at')
+            ->first();
+    
+        if ($existingVisitor) {
+            // Jika sudah check-in, tampilkan konfirmasi untuk checkout
+            return view('visitor.confirm_checkout', [
+                'visitor' => $existingVisitor,
+            ]);
+        }
+    
         if ($user) {
+            // Jika user terdaftar, gunakan data dari database
             $name = $user->name;
             $instansi = 'Teknik Komputer'; // Instansi otomatis jika terdaftar
     
@@ -41,21 +55,15 @@ class VisitorController extends Controller
                 'check_in_at' => now(),
             ]);
     
-            // Redirect dengan notifikasi sukses
             return redirect()->route('visitor.index')->with('success', "Selamat datang, $name!");
         }
     
         // Jika NIM/NIP tidak ditemukan dan nama tidak diisi
-        if (!$name) {
-            return redirect()->back()->with('error', 'NIM/NIP tidak terdaftar, mohon masukan nama dan instansi.');
+        if (!$name || !$instansi) {
+            return redirect()->back()->with('error', 'Identitas tidak terdaftar, mohon masukkan nama dan instansi.');
         }
     
-        // Jika pengunjung tidak terdaftar, simpan data dengan nama dan instansi manual
-        if (!$instansi) {
-            return redirect()->back()->with('error', 'Mohon masukan instansi.');
-        }
-    
-        // Simpan data ke tabel visitor
+        // Simpan data untuk pengunjung tanpa NIM/NIP
         Visitor::create([
             'userid' => $userid,
             'name' => $name,
@@ -63,12 +71,26 @@ class VisitorController extends Controller
             'check_in_at' => now(),
         ]);
     
-        // Redirect dengan notifikasi sukses
         return redirect()->route('visitor.index')->with('success', "Selamat datang, $name!");
     }
     
+    public function confirmCheckout(Request $request)
+    {
+        // Validasi input
+        $visitorId = $request->input('visitor_id');
     
+        // Temukan visitor berdasarkan ID
+        $visitor = Visitor::findOrFail($visitorId);
     
+        // Update checkout jika konfirmasi
+        $visitor->update([
+            'check_out_at' => now(),
+        ]);
+    
+        return redirect()->route('visitor.index')->with('success', "Sampai jumpa, {$visitor->name}!");
+    }
+    
+
 
     public function index()
     {

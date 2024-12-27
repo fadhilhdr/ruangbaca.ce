@@ -9,6 +9,18 @@
             <p class="text-xl font-light max-w-2xl mx-auto">Temukan referensi dan resource yang Anda butuhkan untuk mendukung perjalanan akademik Anda</p>
         </div>
 
+        @if(session('error'))
+        <div id="notification" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white py-2 px-4 rounded-md shadow-md z-50">
+            {{ session('error') }}
+        </div>
+        @endif
+
+        @if(session('success'))
+            <div id="notification" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white py-2 px-4 rounded-md shadow-md z-50">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <div class="search-container max-w-4xl mx-auto rounded-2xl shadow-xl p-8">
             <div class="flex space-x-6 mb-8 border-b border-gray-200">
                 <button class="px-6 py-3 text-blue-600 border-b-2 border-blue-600 font-medium transition-all duration-200 hover:text-blue-700">
@@ -22,28 +34,31 @@
             <form method="POST" action="{{ route('visitor.store') }}" class="space-y-4">
                 @csrf
                 <div>
-                    <label for="userid" class="block text-sm font-medium text-gray-700">NIM atau NIP</label>
-                    <input type="text" name="userid" id="userid" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <label for="identifier" class="block text-sm font-medium text-gray-700">Nama atau NIM</label>
+                    <input 
+                        type="text" 
+                        name="identifier" 
+                        id="identifier" 
+                        placeholder="Masukkan Nama atau NIM Anda" 
+                        class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" 
+                        required>
                 </div>
 
-                <div class="bg-gray-50 p-4 rounded-lg">
-                    <h3 class="text-lg font-medium text-gray-800 mb-4">Bukan dari Teknik Komputer?</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700">Nama</label>
-                            <input type="text" name="name" id="name" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label for="instansi" class="block text-sm font-medium text-gray-700">Instansi</label>
-                            <input type="text" name="instansi" id="instansi" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                        </div>
-                    </div>
+                <div>
+                    <label for="instansi" class="block text-sm font-medium text-gray-700">Instansi</label>
+                    <input 
+                        type="text" 
+                        name="instansi" 
+                        id="instansi" 
+                        placeholder="Masukkan instansi Anda (opsional)" 
+                        class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                 </div>
-
+            
                 <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition">
                     Check-in
                 </button>
             </form>
+            
 
             <form action="{{ route('public.books.index') }}" method="GET" class="hidden space-y-4">
                 <div class="relative">

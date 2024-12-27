@@ -15,25 +15,23 @@ class VisitorController extends Controller
     {
         // Validasi input
         $request->validate([
-            'userid' => 'nullable|string',
-            'name' => 'nullable|string',
+            'identifier' => 'required|string', // Nama atau NIM
             'instansi' => 'nullable|string',
         ]);
     
-        $userid = $request->input('userid');
-        $name = $request->input('name');
-        $instansi = $request->input('instansi', 'Teknik Komputer'); // Default instansi dengan kapital yang benar
+        $identifier = $request->input('identifier');
+        $instansi = $request->input('instansi', 'Teknik Komputer'); // Default instansi
     
-        // Jika ada userid (NIM/NIP), cari pengguna
-        $user = Student::where('nim', $userid)->first()
-            ?? Lecturer::where('nip', $userid)->first()
-            ?? Employee::where('nip', $userid)->first();
+        // Cari di database berdasarkan NIM/NIP
+        $user = Student::where('nim', $identifier)->first()
+            ?? Lecturer::where('nip', $identifier)->first()
+            ?? Employee::where('nip', $identifier)->first();
     
         // Periksa apakah pengguna sudah check-in dan belum checkout
-        $existingVisitor = Visitor::where('name', 'LIKE', "%$name%")
-            ->where('instansi', 'LIKE', "%$instansi%")
-            ->whereNull('check_out_at')
-            ->first();
+        $existingVisitor = Visitor::where(function ($query) use ($identifier) {
+            $query->where('userid', $identifier)
+                  ->orWhere('name', $identifier);
+        })->whereNull('check_out_at')->first();
     
         if ($existingVisitor) {
             // Jika sudah check-in, tampilkan konfirmasi untuk checkout
@@ -45,34 +43,34 @@ class VisitorController extends Controller
         if ($user) {
             // Jika user terdaftar, gunakan data dari database
             $name = $user->name;
-            $instansi = 'Teknik Komputer'; // Instansi otomatis jika terdaftar
     
             // Simpan data ke tabel visitor
             Visitor::create([
-                'userid' => $userid,
+                'userid' => $identifier,
                 'name' => $name,
-                'instansi' => $instansi,
+                'instansi' => 'Teknik Komputer', // Instansi default
                 'check_in_at' => now(),
             ]);
     
             return redirect()->route('visitor.index')->with('success', "Selamat datang, $name!");
         }
     
-        // Jika NIM/NIP tidak ditemukan dan nama tidak diisi
-        if (!$name || !$instansi) {
-            return redirect()->back()->with('error', 'Identitas tidak terdaftar, mohon masukkan nama dan instansi.');
+        if (!empty($instansi)) {
+            // Simpan data untuk pengunjung tanpa NIM/NIP
+            Visitor::create([
+                'userid' => null,
+                'name' => $identifier,
+                'instansi' => $instansi,
+                'check_in_at' => now(),
+            ]);
+    
+            return redirect()->route('visitor.index')->with('success', "Selamat datang, $identifier!");
         }
     
-        // Simpan data untuk pengunjung tanpa NIM/NIP
-        Visitor::create([
-            'userid' => $userid,
-            'name' => $name,
-            'instansi' => $instansi,
-            'check_in_at' => now(),
-        ]);
-    
-        return redirect()->route('visitor.index')->with('success', "Selamat datang, $name!");
+        // Jika Nama dan NIM tidak ditemukan di database
+        return redirect()->back()->with('error', 'Data tidak ditemukan di database. Tolong masukkan Nama dan Instansi Anda.');
     }
+    
     
     public function confirmCheckout(Request $request)
     {

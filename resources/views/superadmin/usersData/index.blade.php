@@ -1,41 +1,40 @@
-@extends('admin.layouts.base')
+@extends('superadmin.layouts.base')
 
-@section('title', 'Index Students')
+@section('title', 'Index Users')
 
 @section('content')
     <div class="card mb-4">
         <div class="card-header">
-            <h3 class="card-title">Data Students</h3>
+            <h3 class="card-title">Data Users</h3>
         </div> <!-- /.card-header -->
         <div class="card-body">
             <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th style="width: 10px">#</th>
-                        <th>NIM</th>
-                        <th>Nama</th>
-                        <th>Angkatan</th>
-                        <th>Gender</th>
-                        <th>Status</th>
+                        <th>User ID</th>
+                        <th>Name</th>
+                        <th>Role ID</th>
                         <th>Created At</th>
                         <th>Updated At</th>
-                        <th>Action</th> <!-- Tambahkan kolom Action -->
+                        <th style="width: 100px">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($students as $index => $student)
+                    @forelse($users as $index => $user)
                         <tr class="align-middle">
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $student->nim }}</td>
-                            <td>{{ $student->name }}</td>
-                            <td>{{ $student->angkatan }}</td>
-                            <td>{{ $student->gender }}</td>
-                            <td>{{ $student->status }}</td>
-                            <td>{{ $student->created_at }}</td>
-                            <td>{{ $student->updated_at }}</td>
+                            <td>{{ $user->userid }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->role_id }}</td>
+                            <td>{{ $user->created_at ?? '-' }}</td>
+                            <td>{{ $user->updated_at ?? '-' }}</td>
                             <td>
-                                <a href="{{ route('admin.students.edit', $student->nim) }}"
-                                    class="btn btn-sm btn-primary">Edit</a> <!-- Tombol Edit -->
+                                <!-- Tombol Edit -->
+                                <a href="{{ route('superadmin.users.edit', $user->id) }}" class="btn btn-sm btn-warning">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
+                                {{ route('superadmin.users.edit', $user->id) }}
                             </td>
                         </tr>
                     @empty
@@ -44,13 +43,12 @@
                         </tr>
                     @endforelse
                 </tbody>
-
             </table>
         </div> <!-- /.card-body -->
         <div class="card-footer clearfix">
             <ul class="pagination pagination-sm m-0 float-end">
                 {{-- Tambahkan pagination --}}
-                {{ $students->links('pagination::bootstrap-5') }}
+                {{ $users->links('pagination::bootstrap-5') }}
             </ul>
         </div>
     </div> <!-- /.card -->

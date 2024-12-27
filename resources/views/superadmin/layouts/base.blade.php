@@ -34,6 +34,7 @@
         @include('superadmin.layouts.navbar')
         @include('superadmin.layouts.sidebar')
         @include('superadmin.layouts.footer')
+        @yield('content')
     </div> <!--end::App Wrapper-->
     @include('superadmin.layouts.scripts')
 </body><!--end::Body-->

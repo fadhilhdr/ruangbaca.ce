@@ -31,6 +31,11 @@
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
     <div class="app-wrapper"> <!--begin::Sidebar-->
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
         @include('admin.layouts.navbar')
         @include('admin.layouts.sidebar')
         @include('admin.layouts.footer')

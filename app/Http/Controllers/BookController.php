@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Specialization;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -10,28 +11,30 @@ class BookController extends Controller
     // Menampilkan daftar buku (public)
     public function index(Request $request)
     {
-        // Pencarian buku berdasarkan judul, pengarang, atau spesialisasi
-        $query = Book::query();
+        $query = Book::query()->with('specialization'); // Eager loading
 
-        // Filter berdasarkan judul
-        if ($request->has('title')) {
-            $query->where('title', 'like', '%' . $request->input('title') . '%');
+        // Pencarian berdasarkan kata kunci tunggal
+        if ($request->has('keyword')) {
+            $keyword = $request->input('keyword');
+            $query->where(function ($q) use ($keyword) {
+                $q->where('title', 'like', '%' . $keyword . '%')
+                ->orWhere('author', 'like', '%' . $keyword . '%')
+                ->orWhere('isbn', 'like', '%' . $keyword . '%');
+            });
         }
 
-        // Filter berdasarkan pengarang
-        if ($request->has('author')) {
-            $query->where('author', 'like', '%' . $request->input('author') . '%');
+        // Filter lanjutan berdasarkan kolom tertentu
+        if ($request->has('filter') && $request->filter != 'all') {
+            $filter = $request->filter;
+            if (in_array($filter, ['title', 'author', 'isbn', 'specialization_id'])) {
+                $query->where($filter, 'like', '%' . $request->input('keyword') . '%');
+            }
         }
 
-        // Filter berdasarkan spesialisasi
-        if ($request->has('specialization_id')) {
-            $query->where('specialization_id', $request->input('specialization_id'));
-        }
+        $books = $query->paginate(10); // Ambil data buku dengan pagination
+        $specializations = Specialization::all(); // Ambil data spesialisasi
 
-        // Ambil data buku dengan pagination
-        $books = $query->paginate(10);
-
-        return view('public.books.index', compact('books'));
+        return view('public.books.index', compact('books', 'specializations'));
     }
 
     // Menampilkan detail buku

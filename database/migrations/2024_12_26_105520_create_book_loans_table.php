@@ -12,12 +12,12 @@ class CreateBookLoansTable extends Migration
             $table->id();
             $table->foreignId('book_id')->constrained('books');
             $table->string('user_id'); // NIM/NIP
-            $table->timestamp('loan_date');
-            $table->timestamp('due_date');
-            $table->timestamp('return_date')->nullable();
+            $table->dateTime('loan_date'); // Ganti ke DATETIME
+            $table->dateTime('due_date'); // Ganti ke DATETIME
+            $table->dateTime('return_date')->nullable(); // Ganti ke DATETIME
             $table->integer('renewal_count')->default(0);
             $table->decimal('fine_amount', 10, 2)->default(0.00);
-            $table->enum('loan_status', ['On Loan', 'Renewed', 'Returned', 'Overdue']); // ENUM untuk status pinjaman
+            $table->enum('loan_status', ['On Loan', 'Renewed', 'Returned', 'Overdue']);
             $table->timestamps();
         });
     }

@@ -14,6 +14,7 @@ class CreateBooksTable extends Migration
             $table->string('title');
             $table->string('author');
             $table->integer('stock');
+            $table->string('thumbnail')->nullable(); //path gambarbuku
             $table->foreignId('specialization_id')->constrained('specializations');
             $table->text('synopsis')->nullable(); // Menambahkan sinopsis buku, bisa null
             $table->timestamps();

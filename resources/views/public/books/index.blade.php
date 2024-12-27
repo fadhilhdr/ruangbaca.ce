@@ -1,65 +1,79 @@
 <x-app-layout>
-    <div class="container py-5">
-        <h1 class="my-4 text-center fw-bold">Daftar Buku</h1>
-
-        <!-- Form Pencarian Buku -->
-        <form method="GET" action="{{ route('public.books.index') }}" class="mb-5">
-            <div class="row g-3">
-                <div class="col-md-3">
-                    <div class="input-group">
-                        <span class="input-group-text" id="title-search">Judul</span>
-                        <input type="text" name="title" class="form-control" placeholder="Cari judul buku" value="{{ request()->get('title') }}" aria-label="Judul" aria-describedby="title-search">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="input-group">
-                        <span class="input-group-text" id="author-search">Pengarang</span>
-                        <input type="text" name="author" class="form-control" placeholder="Cari pengarang" value="{{ request()->get('author') }}" aria-label="Pengarang" aria-describedby="author-search">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="input-group">
-                        <span class="input-group-text" id="specialization-search">Spesialisasi</span>
-                        <select name="specialization_id" class="form-select" aria-label="Spesialisasi" aria-describedby="specialization-search">
-                            <option value="">Semua</option>
-                            <option value="1" {{ request()->get('specialization_id') == 1 ? 'selected' : '' }}>Software</option>
-                            <option value="2" {{ request()->get('specialization_id') == 2 ? 'selected' : '' }}>Networking</option>
-                            <option value="3" {{ request()->get('specialization_id') == 3 ? 'selected' : '' }}>Multimedia</option>
-                            <option value="4" {{ request()->get('specialization_id') == 4 ? 'selected' : '' }}>Embedded System</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-3 d-grid">
-                    <button type="submit" class="btn btn-primary">Cari</button>
-                </div>
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <!-- Search Section -->
+        <div class="mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h1 class="text-2xl font-semibold text-gray-800">Koleksi Buku</h1>
             </div>
-        </form>
+            <form method="GET" action="{{ route('public.books.index') }}">
+                <div class="flex gap-4">
+                    <!-- Search Input -->
+                    <div class="flex-1">
+                        <div class="relative">
+                            <input type="text" name="keyword" value="{{ request('keyword') }}" 
+                                   placeholder="Cari buku..." 
+                                   class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <button type="submit" class="absolute right-2 top-2.5">
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
 
-        <!-- Daftar Buku -->
-        <div class="row">
-            @forelse($books as $book)
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">{{ Str::limit($book->title, 50) }}</h5>
-                            <p class="card-text text-muted mb-1"><strong>Pengarang:</strong> {{ $book->author }}</p>
-                            <p class="card-text mb-3"><strong>Spesialisasi:</strong> {{ $book->specialization->name }}</p>
-                            <a href="{{ route('public.books.show', $book->id) }}" class="btn btn-info mt-auto">Lihat Detail</a>
+                    <!-- Filter Options -->
+                    <select name="filter" class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="all" {{ request('filter') == 'all' ? 'selected' : '' }}>Semua</option>
+                        <option value="title" {{ request('filter') == 'title' ? 'selected' : '' }}>Judul</option>
+                        <option value="author" {{ request('filter') == 'author' ? 'selected' : '' }}>Pengarang</option>
+                        <option value="isbn" {{ request('filter') == 'isbn' ? 'selected' : '' }}>ISBN</option>
+                    </select>
+                </div>
+            </form>
+            <p class="mt-2 text-sm text-gray-600">Ditemukan {{ $books->total() }} hasil pencarian.</p>
+        </div>
+
+        <!-- Book List -->
+        <div class="space-y-4">
+            @forelse ($books as $book)
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <div class="flex gap-4">
+                    <!-- Book Thumbnail -->
+                    <div class="w-24 h-32 bg-gray-200 rounded-md flex items-center justify-center overflow-hidden">
+                        @if ($book->thumbnail && Storage::exists('public/' . $book->thumbnail))
+                            <!-- Jika ada thumbnail, tampilkan -->
+                            <img src="{{ asset('storage/' . $book->thumbnail) }}" alt="{{ $book->title }}" class="object-cover w-full h-full">
+                        @else
+                            <!-- Placeholder jika tidak ada thumbnail -->
+                            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        @endif
+                    </div>
+
+                        <div class="flex-1">
+                            <h2 class="text-lg font-semibold mb-1">{{ $book->title }}</h2>
+                            <p class="text-sm text-gray-600 mb-2">Penulis: {{ $book->author }}</p>
+                            <p class="text-sm text-gray-500">{{ Str::limit($book->synopsis, 100) }}</p>
+                            <div class="mt-2">
+                                <a href="{{ route('public.books.show', $book) }}" class="text-sm text-blue-600 hover:text-blue-800">Lihat Detail</a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <span class="text-lg font-semibold">{{ $book->stock }}</span>
+                            <p class="text-xs text-gray-500">Copy</p>
                         </div>
                     </div>
                 </div>
             @empty
-                <div class="col-12">
-                    <div class="alert alert-warning text-center" role="alert">
-                        Tidak ada buku yang ditemukan.
-                    </div>
-                </div>
+                <p class="text-gray-500">Tidak ada buku yang ditemukan.</p>
             @endforelse
         </div>
 
+
         <!-- Pagination -->
-        <div class="d-flex justify-content-center">
-            {{ $books->withQueryString()->links('pagination::bootstrap-5') }}
+        <div class="flex justify-center mt-6 gap-2">
+            {{ $books->links() }}
         </div>
     </div>
 </x-app-layout>

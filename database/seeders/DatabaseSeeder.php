@@ -17,7 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersSeeder::class);
 
         // Tahap 2 perbukuan
-        $this->call(SpecializationsTableSeeder::class);
         $this->call(BookSeeder::class);
         $this->call(BookLoansSeeder::class);
         $this->call(LostBooksSeeder::class);

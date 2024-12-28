@@ -31,15 +31,31 @@
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
     <div class="app-wrapper"> <!--begin::Sidebar-->
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
         @include('admin.layouts.navbar')
         @include('admin.layouts.sidebar')
+
+        <main class="app-main"> <!--begin::App Content Header-->
+            <div class="app-content-header"> <!--begin::Container-->
+                <div class="container-fluid">
+                    @if ($errors->has('import'))
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->get('import') as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    @yield('content')
+                </div>
+            </div>
+        </main>
         @include('admin.layouts.footer')
-        @yield('content')
     </div> <!--end::App Wrapper-->
     @include('admin.layouts.scripts')
 </body><!--end::Body-->

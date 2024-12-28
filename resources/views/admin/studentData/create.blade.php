@@ -4,7 +4,10 @@
 
 @section('content')
     <div class="card card-primary card-outline mb-4"> <!--begin::Header-->
-        <div class="card-header">
+        <div class="card-header d-flex align-items-center">
+            <a href="javascript:history.back()" class="me-3">
+                <i class="bi bi-arrow-left-circle"></i>
+            </a>
             <div class="card-title">Tambah Data Mahasiswa</div>
         </div> <!--end::Header-->
 

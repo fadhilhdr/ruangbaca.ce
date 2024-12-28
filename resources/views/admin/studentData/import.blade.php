@@ -4,8 +4,11 @@
 
 @section('content')
     <div class="card card-primary card-outline mb-4">
-        <div class="card-header">
-            <h3 class="card-title">Upload Excel</h3>
+        <div class="card-header d-flex align-items-center">
+            <a href="javascript:history.back()" class="me-3">
+                <i class="bi bi-arrow-left-circle"></i>
+            </a>
+            <h3 class="card-title">Upload Students Data From Excel</h3>
         </div> <!-- /.card-header -->
         <form action="{{ route('admin.students.import') }}" method="POST" enctype="multipart/form-data">
             @csrf

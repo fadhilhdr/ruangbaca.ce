@@ -17,7 +17,7 @@
                         <th>Role ID</th>
                         <th>Created At</th>
                         <th>Updated At</th>
-                        <th style="width: 100px">Action</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,10 +31,16 @@
                             <td>{{ $user->updated_at ?? '-' }}</td>
                             <td>
                                 <!-- Tombol Edit -->
-                                <a href="{{ route('superadmin.users.edit', $user->id) }}" class="btn btn-sm btn-warning">
+                                <a href="{{ route('superadmin.users.edit', $user->userid) }}" class="btn btn-sm btn-warning">
                                     <i class="fa fa-edit"></i> Edit
                                 </a>
-                                {{ route('superadmin.users.edit', $user->id) }}
+                                <form action="{{ route('superadmin.users.destroy', $user->userid) }}" method="POST"
+                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');"
+                                    style="display: inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
                             </td>
                         </tr>
                     @empty

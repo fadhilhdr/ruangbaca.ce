@@ -33,8 +33,19 @@
     <div class="app-wrapper"> <!--begin::Sidebar-->
         @include('superadmin.layouts.navbar')
         @include('superadmin.layouts.sidebar')
+        <main class="app-main"> <!--begin::App Content Header-->
+            <div class="app-content-header"> <!--begin::Container-->
+                <div class="container-fluid">
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    @yield('content')
+                </div>
+            </div>
+        </main>
         @include('superadmin.layouts.footer')
-        @yield('content')
     </div> <!--end::App Wrapper-->
     @include('superadmin.layouts.scripts')
 </body><!--end::Body-->

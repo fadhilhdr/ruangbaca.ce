@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
@@ -49,18 +50,20 @@ Route::get('/dashboard', function () {
 // Rute dashboard berdasarkan role pengguna
 Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
-        return view('admin.layouts.base'); // Pastikan file view `admin.dashboard` ada
+        return view('admin.welcome.content'); // Pastikan file view `admin.dashboard` ada
     })->name('dashboard');
     Route::resource('students', StudentController::class); // Manage students
     Route::resource('lecturers', LecturerController::class); // Manage lecturers
-    Route::get('/upload-data', [LecturerController::class, 'upload'])->name('lecturers.upload');
-    Route::get('/upload-data', [StudentController::class, 'upload'])->name('students.upload');
+    Route::resource('books', BookController::class); // Manage books
+    Route::get('/books', [BookController::class, 'adminIndex'])->name('get-all-books.index');
+    Route::get('/upload-data-lecturer', [LecturerController::class, 'upload'])->name('lecturers.upload');
+    Route::get('/upload-data-student', [StudentController::class, 'upload'])->name('students.upload');
     Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
 });
 
 Route::middleware(['auth', 'role:Superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
     Route::get('/dashboard', function () {
-        return view('superadmin.layouts.base'); // Pastikan file view `superadmin.layouts.base` ada
+        return view('superadmin.welcome.content'); // Pastikan file view `superadmin.layouts.base` ada
     })->name('dashboard');
     Route::resource('users', UsersController::class);
     Route::get('/users/{id}/edit', [UsersController::class, 'edit'])->name('users.edit');
@@ -71,6 +74,13 @@ Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->g
     Route::get('/dashboard', function () {
         return view('member.dashboard'); // Pastikan file view `member.dashboard` ada
     })->name('dashboard');
+});
+
+#PUBLIC ROUTES
+
+Route::prefix('public/books')->name('public.books.')->group(function () {
+    Route::get('/', [BookController::class, 'index'])->name('index');
+    Route::get('/{id}', [BookController::class, 'show'])->name('show');
 });
 
 // Include rute autentikasi default Laravel Breeze

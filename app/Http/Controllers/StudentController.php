@@ -93,10 +93,16 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Student $student)
+    public function destroy($nim)
     {
-        //
+        // Cari data student berdasarkan NIM
+        $student = Student::findOrFail($nim);
+        // Hapus data student
+        $student->delete();
+        // Redirect ke halaman index dengan pesan sukses
+        return redirect()->route('admin.students.index')->with('success', 'Data student berhasil dihapus.');
     }
+
     public function upload()
     {
         return view('admin.studentData.import');

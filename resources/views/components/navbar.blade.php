@@ -34,6 +34,9 @@
                         </x-slot>
 
                         <x-slot name="content">
+                            <x-dropdown-link :href="url('/profile')">
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
                             <x-dropdown-link :href="url('/dashboard')" class="py-2 px-4">
                                 {{ __('Dashboard') }}
                             </x-dropdown-link>
@@ -83,6 +86,7 @@
                     <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
                 </div>
                 <div class="mt-3 space-y-1">
+                    <a href="{{ url('/profile') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Profile</a>
                     <a href="{{ url('/dashboard') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Dashboard</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

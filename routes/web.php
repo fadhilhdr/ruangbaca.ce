@@ -83,9 +83,5 @@ Route::prefix('public/books')->name('public.books.')->group(function () {
 });
 
 
-
-
-
-
 // Include rute autentikasi default Laravel Breeze
 require __DIR__ . '/auth.php';

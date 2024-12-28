@@ -1,4 +1,3 @@
-// resources/views/components/layouts/app.blade.php
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -57,7 +56,7 @@
     <div class="min-h-screen">
         <x-navbar />
         
-        <main>
+        <main class="mt-16">
             {{ $slot }}
         </main>
         

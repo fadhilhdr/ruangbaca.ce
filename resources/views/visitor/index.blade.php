@@ -8,6 +8,12 @@
             </div>
         @endif
 
+        <!-- Loading Bar -->
+        <div id="loading-bar-container" class="relative w-full bg-gray-300 rounded-full h-2 mb-4">
+            <div id="loading-bar" class="absolute bg-blue-500 h-2 rounded-full" style="width: 0%;"></div>
+        </div>
+
+        <!-- Tabel Visitor -->
         <div class="overflow-x-auto bg-white shadow-md rounded-lg">
             <table class="table-auto w-full border-collapse bg-white text-left text-sm text-gray-500">
                 <thead class="bg-gray-50">
@@ -31,7 +37,7 @@
                                 {{ $visitor->check_in_at ? \Carbon\Carbon::parse($visitor->check_in_at)->format('H:i:s') : '-' }}
                             </td>
                             <td class="px-4 py-2 text-gray-700">
-                                {{ $visitor->check_out_at ? \Carbon\Carbon::parse($visitor->check_out_at)->format('H:i:s') : '-' }}
+                                {{ $visitor->check_out_at ? \Carbon\Carbon::parse($visitor->check_out_at)->format('H:i:s') : 'Belum Check-out' }}
                             </td>
                         </tr>
                     @empty
@@ -42,31 +48,25 @@
                 </tbody>
             </table>
         </div>
-
-        <div class="mt-6">
-            <div id="loading-bar-container" class="relative w-full bg-gray-300 rounded-full h-2">
-                <div id="loading-bar" class="absolute bg-blue-500 h-2 rounded-full" style="width: 0%;"></div>
-            </div>
-            <p class="text-sm text-gray-500 text-center mt-2">Anda akan diarahkan ke halaman utama dalam <span id="timer-countdown">10</span> detik...</p>
-        </div>
     </div>
 
     <script>
-        const timerCountdown = document.getElementById('timer-countdown');
         const loadingBar = document.getElementById('loading-bar');
-        let countdown = 10;
         let progress = 0;
+        const duration = 8000; // 8 detik
+        const interval = 10; // Update setiap 10ms
+        const step = (100 / (duration / interval));
 
-        const interval = setInterval(() => {
-            countdown--;
-            progress += 10;
-            timerCountdown.textContent = countdown;
+        const loadingInterval = setInterval(() => {
+            progress += step;
             loadingBar.style.width = `${progress}%`;
 
-            if (countdown <= 0) {
-                clearInterval(interval);
-                window.location.href = "{{ url('/') }}";
+            if (progress >= 100) {
+                clearInterval(loadingInterval);
+                setTimeout(() => {
+                    window.location.href = "{{ url('/') }}";
+                }, 1000); // Redirect 1 detik setelah selesai
             }
-        }, 1000); // Setiap 1 detik
+        }, interval);
     </script>
 </x-app-layout>

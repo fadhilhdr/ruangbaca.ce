@@ -87,25 +87,32 @@
 
         <div class="container mx-auto px-4">
             <div class="visitor-section">
-                <h3 class="text-xl font-semibold mb-4">Check-in Visitor</h3>
+                <h3 class="text-xl font-semibold mb-4">Check-in dan Check-out Visitor</h3>
                 <form method="POST" action="{{ route('visitor.store') }}">
                     @csrf
                     <div class="mb-4">
                         <label for="userid" class="block text-sm font-medium text-gray-700">NIM atau NIP</label>
                         <input type="text" name="userid" id="userid" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
-            
-                    <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium text-gray-700">Nama </label>
-                        <input type="text" name="name" id="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Bukan dari Teknik Komputer?</h2>
+                        <p class="text-gray-600 mb-4">Silakan isi nama dan instansi manual di bawah ini:</p>
+                    
+                        <div class="mb-4">
+                            <label for="name" class="block text-sm font-medium text-gray-700">Nama </label>
+                            <input type="text" name="name" id="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                
+                        <div class="mb-4">
+                            <label for="instansi" class="block text-sm font-medium text-gray-700">Instansi</label>
+                            <input type="text" name="instansi" id="instansi" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Teknik Komputer">
+                        </div>
                     </div>
             
-                    <div class="mb-4">
-                        <label for="instansi" class="block text-sm font-medium text-gray-700">Instansi</label>
-                        <input type="text" name="instansi" id="instansi" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Teknik Komputer">
-                    </div>
             
-                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 w-full">Check-in</button>
+            
+                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 w-full">Submit</button>
                 </form>
             
                 @if(session('error'))

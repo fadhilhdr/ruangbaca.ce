@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookController;
-use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VisitorController;
@@ -18,6 +18,7 @@ Route::get('/', function () {
 // Rute pengelolaan visitor
 Route::post('/visitor', [VisitorController::class, 'store'])->name('visitor.store');
 Route::get('/visitor', [VisitorController::class, 'index'])->name('visitor.index');
+Route::post('/visitor/confirmCheckout', [VisitorController::class, 'confirmCheckout'])->name('visitor.confirmCheckout');
 
 // Rute registrasi pengguna
 Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
@@ -75,6 +76,18 @@ Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->g
         return view('member.dashboard'); // Pastikan file view `member.dashboard` ada
     })->name('dashboard');
 });
+
+#PUBLIC ROUTES
+
+Route::prefix('public/books')->name('public.books.')->group(function () {
+    Route::get('/', [BookController::class, 'index'])->name('index');
+    Route::get('/{id}', [BookController::class, 'show'])->name('show');
+});
+
+
+
+
+
 
 #PUBLIC ROUTES
 

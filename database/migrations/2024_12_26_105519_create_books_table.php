@@ -13,10 +13,11 @@ class CreateBooksTable extends Migration
             $table->string('isbn')->unique();
             $table->string('title');
             $table->string('author');
-            $table->integer('stock');
-            $table->string('thumbnail')->nullable(); //path gambarbuku
+            $table->integer('total_stock');
+            $table->integer('available_stock');
+            $table->string('thumbnail')->nullable(); 
             $table->foreignId('specialization_id')->constrained('specializations');
-            $table->text('synopsis')->nullable(); // Menambahkan sinopsis buku, bisa null
+            $table->text('synopsis')->nullable(); 
             $table->timestamps();
         });
     }

@@ -10,9 +10,7 @@ class CreateLostBooksTable extends Migration
     {
         Schema::create('lost_books', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('book_loan_id')->constrained('book_loans');
-            $table->foreignId('book_id')->constrained('books');
-            $table->string('user_id'); // NIM/NIP
+            $table->foreignId('book_loan_id')->constrained('book_loans')->cascadeOnDelete();
             $table->timestamp('date_reported');
             $table->enum('replacement_status', ['Pending', 'Completed']); // ENUM untuk status penggantian
             $table->timestamps();

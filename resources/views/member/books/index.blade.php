@@ -60,7 +60,7 @@
                             </div>
                         </div>
                         <div class="text-center">
-                            <span class="text-lg font-semibold">{{ $book->available_stock }} </span>
+                            <span class="text-lg font-semibold">{{ $book->available_stock }}</span>
                             <p class="text-xs text-gray-500">Copy</p>
                         </div>
                     </div>

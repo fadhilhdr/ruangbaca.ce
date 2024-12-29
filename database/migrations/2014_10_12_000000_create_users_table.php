@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id(); // Primary key tetap menggunakan ID sebagai integer
-            $table->string('userid')->unique(); // NIM/NIP sebagai unique identifier
+            $table->id(); 
+            $table->string('userid')->unique(); 
             $table->string('name');
             $table->string('password');
             $table->foreignId('role_id')->constrained('roles')->cascadeOnDelete();

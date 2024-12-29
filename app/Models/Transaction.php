@@ -9,11 +9,24 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['book_loan_id', 'transaction_type', 'amount'];
+    protected $fillable = [
+        'book_loan_id', 
+        'transaction_type_id', 
+    ];
 
     public function bookLoan()
     {
-        return $this->belongsTo(BookLoan::class);
+        return $this->belongsTo(BookLoan::class, 'book_loan_id');
+    }
+
+    public function transactionType()
+    {
+        return $this->belongsTo(TransactionType::class);
+    }
+
+    public function fines()
+    {
+        return $this->hasMany(Fine::class);
     }
 }
 

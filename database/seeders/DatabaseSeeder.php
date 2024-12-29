@@ -18,8 +18,6 @@ class DatabaseSeeder extends Seeder
 
         // Tahap 2 perbukuan
         $this->call(BookSeeder::class);
-        $this->call(BookLoansSeeder::class);
-        $this->call(LostBooksSeeder::class);
-        $this->call(TransactionsSeeder::class);
+        $this->call(TransactionTypeSeeder::class);
     }
 }

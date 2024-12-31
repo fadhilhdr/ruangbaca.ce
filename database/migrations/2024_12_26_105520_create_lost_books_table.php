@@ -12,7 +12,7 @@ class CreateLostBooksTable extends Migration
             $table->id();
             $table->foreignId('book_loan_id')->constrained('book_loans')->cascadeOnDelete();
             $table->timestamp('date_reported');
-            $table->enum('replacement_status', ['Pending', 'Completed']); // ENUM untuk status penggantian
+            $table->enum('replacement_status', ['awaiting_verif', 'verified', 'decline']); // ENUM untuk status penggantian
             $table->timestamps();
         });
     }

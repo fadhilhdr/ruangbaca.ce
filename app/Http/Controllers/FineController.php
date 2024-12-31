@@ -31,6 +31,24 @@ class FineController extends Controller
         //
     }
 
+    public function pay(Request $request)
+    {
+        $fine = Fine::where('book_loan_id', $request->book_loan_id)
+                    ->where('status', 'awaiting_verif')
+                    ->firstOrFail();
+    
+        if ($fine->bookLoan->user_id != auth()->id()) {
+            return back()->with('error', 'You do not have permission to pay this fine.');
+        }
+    
+        $fine->status = 'verified';
+        $fine->save();
+    
+        return redirect()->route('member.loans.history')->with('success', 'Fine paid successfully.');
+    }
+    
+    
+
     /**
      * Display the specified resource.
      */

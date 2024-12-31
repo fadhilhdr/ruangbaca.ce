@@ -49,6 +49,5 @@ class BookLoan extends Model
     {
         return $this->return_date === null && $this->due_date >= now();
     }
-
 }
 

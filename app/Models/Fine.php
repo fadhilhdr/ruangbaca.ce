@@ -32,6 +32,5 @@ class Fine extends Model
     {
         return $this->status === 'verified';
     }
-
 }
 

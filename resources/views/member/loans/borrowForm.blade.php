@@ -1,6 +1,18 @@
 <x-app-layout>
-    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-        <h1 class="text-2xl font-bold mb-6 text-gray-800">Detail Buku</h1>
+    <div class="container mx-auto px-4 py-6">
+        <h2 class="text-2xl font-bold mb-4">Pinjam Buku</h2>
+
+        <!-- Success and Error Messages -->
+        @if (session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+                {{ session('error') }}
+            </div>
+        @endif
 
         <!-- Book Detail Section -->
         <div class="bg-white shadow-md rounded-lg p-6">
@@ -24,27 +36,32 @@
                     <p class="text-sm text-gray-600 mb-2"><strong>ISBN:</strong> {{ $book->isbn }}</p>
                     <p class="text-sm text-gray-600 mb-2"><strong>Spesialisasi:</strong> {{ $book->specialization->name ?? 'Tidak Ada' }}</p>
                     <p class="text-sm text-gray-600 mb-2"><strong>Sinopsis:</strong> {{ $book->synopsis }}</p>
-                    <p class="text-sm text-gray-600 mb-4"><strong>Stok:</strong> {{ $book->available_stock }} </p>
+                    <p class="text-sm text-gray-600 mb-4"><strong>Stok:</strong> {{ $book->available_stock }}</p>
 
-                    <!-- Button for Borrowing Restrictions (Member Only) -->
-                    <div class="flex items-center gap-2">
-                        @auth
-                            @if (auth()->user()->role_id == 1) <!-- Check if user is a Member -->
-                                <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Pinjam Buku</a>
-                            @else
-                                <button class="bg-gray-500 text-white px-4 py-2 rounded-md" disabled>Hanya Member yang Bisa Meminjam Buku</button>
-                            @endif
-                        @else
-                            <button class="bg-gray-500 text-white px-4 py-2 rounded-md" disabled>Harap Login untuk Meminjam Buku</button>
-                        @endauth
+                    <!-- Aturan Peminjaman -->
+                    <div class="mb-4">
+                        <h3 class="font-bold">Aturan Peminjaman:</h3>
+                        <ul class="list-disc list-inside">
+                            <li>Peminjaman maksimal 2 buku.</li>
+                            <li>Peminjaman maksimal selama 2 minggu, bisa diperpanjang.</li>
+                            <li>Jika buku hilang, wajib mencari buku pengganti yang sama.</li>
+                            <li>Keterlambatan pengembalian akan dikenakan denda Rp. 1000,00 x jumlah hari terlambat.</li>
+                        </ul>
                     </div>
+
+                    <!-- Borrow Form -->
+                    <form method="POST" action="{{ route('member.loans.borrow', $book->id) }}">
+                        @csrf
+                        <button 
+                            type="submit" 
+                            class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                            @if ($book->available_stock <= 0) disabled @endif
+                        >
+                            Pinjam Buku
+                        </button>
+                    </form>
                 </div>
             </div>
-        </div>
-
-        <!-- Back to Books List -->
-        <div class="mt-6">
-            <a href="{{ route('public.books.index') }}" class="text-blue-600 hover:text-blue-800">Kembali ke Daftar Buku</a>
         </div>
     </div>
 </x-app-layout>

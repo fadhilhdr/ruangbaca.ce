@@ -35,11 +35,8 @@ class Book extends Model
         return $this->hasMany(LostBook::class, 'book_id');
     }
 
-    //untuk otomatis update available stock
-    public function updateStock()
+    public function getAvailableStock()
     {
-        $this->available_stock = $this->total_stock - $this->loans()->whereNull('return_date')->count();
-        $this->save();
-    }
-    
+        return $this->total_stock - $this->loans()->whereNull('return_date')->count();
+    }    
 }

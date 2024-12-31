@@ -26,11 +26,12 @@
                     <p class="text-sm text-gray-600 mb-2"><strong>Sinopsis:</strong> {{ $book->synopsis }}</p>
                     <p class="text-sm text-gray-600 mb-4"><strong>Stok:</strong> {{ $book->available_stock }} </p>
 
-                    <!-- Button for Borrowing Restrictions (Member Only) -->
                     <div class="flex items-center gap-2">
                         @auth
-                            @if (auth()->user()->role_id == 1) <!-- Check if user is a Member -->
-                                <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Pinjam Buku</a>
+                            @if (auth()->user()->role_id == 1) 
+                            <a href="{{ route('member.loans.borrowForm', $book->id) }}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                                Next
+                            </a>                            
                             @else
                                 <button class="bg-gray-500 text-white px-4 py-2 rounded-md" disabled>Hanya Member yang Bisa Meminjam Buku</button>
                             @endif

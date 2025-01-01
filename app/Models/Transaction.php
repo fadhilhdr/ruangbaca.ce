@@ -19,9 +19,9 @@ class Transaction extends Model
         return $this->belongsTo(BookLoan::class, 'book_loan_id');
     }
 
-    public function transactionType()
+    public function type()
     {
-        return $this->belongsTo(TransactionType::class);
+        return $this->belongsTo(TransactionType::class, 'transaction_type_id');
     }
 
     public function fines()

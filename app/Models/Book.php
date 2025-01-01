@@ -10,33 +10,29 @@ class Book extends Model
     use HasFactory;
 
     protected $fillable = [
+        'judul', 
+        'penulis',
+        'penerbit', 
         'isbn', 
-        'title', 
-        'author', 
-        'total_stock', 
-        'available_stock',
-        'thumbnail', 
-        'specialization_id', 
-        'synopsis'
+        'peminatan', 
+        'sub_peminatan',
+        'kode_unik',
+        'thumbnail',  
+        'synopsis',
+        'is_available',
     ];
 
-    public function specialization()
-    {
-        return $this->belongsTo(Specialization::class, 'specialization_id');
-    }
+    protected $casts = [
+        'is_available' => 'boolean',
+    ];
 
     public function loans()
     {
-        return $this->hasMany(BookLoan::class, 'book_id');
+        return $this->hasMany(BookLoan::class, 'kode_unik_buku', 'kode_unik');
     }
 
     public function lostBooks()
     {
-        return $this->hasMany(LostBook::class, 'book_id');
+        return $this->hasMany(LostBook::class, 'kode_unik_buku');
     }
-
-    public function getAvailableStock()
-    {
-        return $this->total_stock - $this->loans()->whereNull('return_date')->count();
-    }    
 }

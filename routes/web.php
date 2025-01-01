@@ -26,7 +26,7 @@ Route::post('/visitor/confirmCheckout', [VisitorController::class, 'confirmCheck
 // Rute public
 Route::prefix('public/books')->name('public.books.')->group(function () {
     Route::get('/', [BookController::class, 'index'])->name('index');
-    Route::get('/{id}', [BookController::class, 'show'])->name('show');
+    Route::get('/{isbn}', [BookController::class, 'show'])->name('show');
 });
 
 // Rute public (registrasi menjadi user)
@@ -67,15 +67,20 @@ Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->g
     // Book Loans Routes
     Route::prefix('loans')->name('loans.')->group(function () {
         Route::get('/', [BookLoanController::class, 'index'])->name('index');
+        Route::get('/history', [BookLoanController::class, 'history'])->name('history');
         Route::get('/{id}', [BookLoanController::class, 'show'])->name('show');
         
         // Borrow Routes
-        Route::get('/{id}/borrowForm', [BookLoanController::class, 'showBorrowForm'])->name('borrowForm');
-        Route::post('/{id}/borrow', [BookLoanController::class, 'borrowBook'])->name('borrow');
+        Route::get('/borrow/{isbn}', [BookLoanController::class, 'showBorrowForm'])->name('borrowForm');
+        Route::post('/borrow/{isbn}', [BookLoanController::class, 'borrowBook'])->name('borrow');
 
-        // Return Routes
-        Route::get('/{id}/returnForm', [BookLoanController::class, 'showReturnForm'])->name('returnForm');
-        Route::post('/{id}/return', [BookLoanController::class, 'returnBook'])->name('return');
+        // Di dalam group loans
+        Route::get('/renew/{id}', [BookLoanController::class, 'showRenewForm'])->name('renewForm');
+        Route::post('/renew/{id}', [BookLoanController::class, 'renewBook'])->name('renew');
+
+        Route::get('/return/{id}', [BookLoanController::class, 'showReturnForm'])->name('returnForm');
+        Route::post('/return/{id}', [BookLoanController::class, 'returnBook'])->name('return');
+
     });
 });
 

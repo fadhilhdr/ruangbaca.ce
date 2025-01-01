@@ -27,7 +27,6 @@ class Fine extends Model
         return $this->belongsTo(BookLoan::class);
     }
 
-    //VALIDASI
     public function isVerified()
     {
         return $this->status === 'verified';

@@ -10,7 +10,8 @@ class CreateBookLoansTable extends Migration
     {
         Schema::create('book_loans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('book_id')->constrained('books')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('kode_unik_buku');
+            $table->foreign('kode_unik_buku')->references('kode_unik')->on('books')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('user_id');
             $table->foreign('user_id')->references('userid')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->dateTime('loan_date'); 

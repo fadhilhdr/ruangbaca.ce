@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,7 +12,7 @@ class BookLoan extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'book_id', 
+        'kode_unik_buku', 
         'user_id', 
         'loan_date', 
         'due_date', 
@@ -21,7 +22,7 @@ class BookLoan extends Model
 
     public function book()
     {
-        return $this->belongsTo(Book::class, 'book_id');
+        return $this->belongsTo(Book::class, 'kode_unik_buku', 'kode_unik');
     }
 
     public function user()
@@ -42,7 +43,9 @@ class BookLoan extends Model
     //UNTUK VALIDASI TERKAIT LOANS
     public function canRenew()
     {
-        return $this->renewal_count < 1 && $this->due_date >= now();
+    return $this->renewal_count < 1 
+        && Carbon::parse($this->due_date)->greaterThanOrEqualTo(now())
+        && is_null($this->return_date);
     }
 
     public function canReturn()

@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('specializations', function (Blueprint $table) {
+        Schema::create('transaction_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); /* Software, Networking, Multimedia, and Embedded System */
+            $table->string('type_name'); // (borrow, renewal, return, fine_payment, lost_book_replacement)
             $table->timestamps();
-        });        
+        });
     }
 
     /**
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('specializations');
+        Schema::dropIfExists('transaction_types');
     }
 };

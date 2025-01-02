@@ -10,9 +10,8 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('book_loan_id')->constrained('book_loans');
-            $table->enum('transaction_type', ['Borrow', 'Return', 'Renewal', 'Fine Payment', 'Lost Book Replacement']); 
-            $table->decimal('amount', 10, 2); // Amount dalam IDR
+            $table->foreignId('book_loan_id')->constrained('book_loans')->cascadeOnDelete();
+            $table->foreignId('transaction_type_id')->constrained('transaction_types')->cascadeOnDelete();
             $table->timestamps();
         });
     }

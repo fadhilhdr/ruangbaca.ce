@@ -10,12 +10,16 @@ class CreateBooksTable extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->string('isbn')->unique();
-            $table->string('title');
-            $table->string('author');
-            $table->integer('stock');
-            $table->foreignId('specialization_id')->constrained('specializations');
-            $table->text('synopsis')->nullable(); // Menambahkan sinopsis buku, bisa null
+            $table->string('judul');
+            $table->string('penulis');
+            $table->string('penerbit');
+            $table->string('isbn');
+            $table->string('peminatan');
+            $table->string('sub_peminatan');
+            $table->string('kode_unik')->unique(); 
+            $table->string('thumbnail')->nullable(); 
+            $table->text('synopsis')->nullable(); 
+            $table->boolean('is_available')->default(true);
             $table->timestamps();
         });
     }

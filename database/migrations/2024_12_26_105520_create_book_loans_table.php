@@ -10,14 +10,15 @@ class CreateBookLoansTable extends Migration
     {
         Schema::create('book_loans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('book_id')->constrained('books');
-            $table->string('user_id'); // NIM/NIP
-            $table->timestamp('loan_date');
-            $table->timestamp('due_date');
-            $table->timestamp('return_date')->nullable();
+            $table->string('kode_unik_buku');
+            $table->foreign('kode_unik_buku')->references('kode_unik')->on('books')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('user_id');
+            $table->foreign('user_id')->references('userid')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->dateTime('loan_date'); 
+            $table->dateTime('due_date'); 
+            $table->dateTime('return_date')->nullable(); 
             $table->integer('renewal_count')->default(0);
-            $table->decimal('fine_amount', 10, 2)->default(0.00);
-            $table->enum('loan_status', ['On Loan', 'Renewed', 'Returned', 'Overdue']); // ENUM untuk status pinjaman
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -9,20 +9,30 @@ class Book extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['isbn', 'title', 'author', 'stock', 'specialization_id'];
+    protected $fillable = [
+        'judul', 
+        'penulis',
+        'penerbit', 
+        'isbn', 
+        'peminatan', 
+        'sub_peminatan',
+        'kode_unik',
+        'thumbnail',  
+        'synopsis',
+        'is_available',
+    ];
 
-    public function specialization()
-    {
-        return $this->belongsTo(Specialization::class);
-    }
+    protected $casts = [
+        'is_available' => 'boolean',
+    ];
 
-    public function bookLoans()
+    public function loans()
     {
-        return $this->hasMany(BookLoan::class);
+        return $this->hasMany(BookLoan::class, 'kode_unik_buku', 'kode_unik');
     }
 
     public function lostBooks()
     {
-        return $this->hasMany(LostBook::class);
+        return $this->hasMany(LostBook::class, 'kode_unik_buku');
     }
 }

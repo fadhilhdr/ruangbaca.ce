@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Specialization extends Model
+class TransactionType extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['type_name'];
 
-    public function books()
+    public function transactions()
     {
-        return $this->hasMany(Book::class);
+        return $this->hasMany(Transaction::class);
     }
 }

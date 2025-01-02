@@ -2,9 +2,13 @@
 
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BookLoanController;
+use App\Http\Controllers\FineController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VisitorController;
 use Illuminate\Support\Facades\Auth;
@@ -15,23 +19,29 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Rute pengelolaan visitor
+// Rute visitor
 Route::post('/visitor', [VisitorController::class, 'store'])->name('visitor.store');
 Route::get('/visitor', [VisitorController::class, 'index'])->name('visitor.index');
 Route::post('/visitor/confirmCheckout', [VisitorController::class, 'confirmCheckout'])->name('visitor.confirmCheckout');
 
-// Rute registrasi pengguna
+// Rute public
+Route::prefix('public/books')->name('public.books.')->group(function () {
+    Route::get('/', [BookController::class, 'index'])->name('index');
+    Route::get('/{isbn}', [BookController::class, 'show'])->name('show');
+});
+
+// Rute public (registrasi menjadi user)
 Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
 Route::post('register', [RegisteredUserController::class, 'store']);
 
-// Rute profil pengguna (hanya untuk pengguna yang sudah login)
+// Rute user (profile)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Rute pengalihan otomatis ke dashboard berdasarkan peran pengguna setelah login
+// Rute user (dashboard berdasarkan role) 
 Route::get('/dashboard', function () {
     $user = Auth::user();
 
@@ -48,7 +58,34 @@ Route::get('/dashboard', function () {
     }
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Rute dashboard berdasarkan role pengguna
+// Rute member
+Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->group(function () {
+    // Dashboard Member
+    Route::get('/dashboard', function () {
+        return view('member.dashboard'); 
+    })->name('dashboard');
+
+    // Book Loans Routes
+    Route::prefix('loans')->name('loans.')->group(function () {
+        Route::get('/', [BookLoanController::class, 'index'])->name('index');
+        Route::get('/history', [BookLoanController::class, 'history'])->name('history');
+        Route::get('/{id}', [BookLoanController::class, 'show'])->name('show');
+        
+        // Borrow Routes
+        Route::get('/borrow/{isbn}', [BookLoanController::class, 'showBorrowForm'])->name('borrowForm');
+        Route::post('/borrow/{isbn}', [BookLoanController::class, 'borrowBook'])->name('borrow');
+
+        // Di dalam group loans
+        Route::get('/renew/{id}', [BookLoanController::class, 'showRenewForm'])->name('renewForm');
+        Route::post('/renew/{id}', [BookLoanController::class, 'renewBook'])->name('renew');
+
+        Route::get('/return/{id}', [BookLoanController::class, 'showReturnForm'])->name('returnForm');
+        Route::post('/return/{id}', [BookLoanController::class, 'returnBook'])->name('return');
+
+    });
+});
+
+// Rute admin 
 Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.welcome.content'); // Pastikan file view `admin.dashboard` ada
@@ -63,6 +100,8 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
 });
 
+
+// Rute Superadmin
 Route::middleware(['auth', 'role:Superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
     Route::get('/dashboard', function () {
         return view('superadmin.welcome.content'); // Pastikan file view `superadmin.layouts.base` ada

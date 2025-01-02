@@ -114,7 +114,9 @@
                                 <div class="bg-gray-50 rounded-lg p-4">
                                     @forelse($loan->transactions as $transaction)
                                         <div class="flex items-center justify-between py-2 {{ !$loop->last ? 'border-b border-gray-200' : '' }}">
-                                            <span class="text-sm">{{ $transaction->transactionType->type_name }}</span>
+                                            <span class="text-sm">
+                                                {{ $transaction->type?->type_name ?? 'Unknown Transaction' }}
+                                            </span>
                                             <span class="text-xs text-gray-500">{{ $transaction->created_at->format('d M Y H:i') }}</span>
                                         </div>
                                     @empty
@@ -163,7 +165,7 @@
                 Apakah Anda yakin ingin melaporkan buku ini hilang? 
                 Anda akan dikenakan biaya penggantian sesuai dengan kebijakan perpustakaan.
             </p>
-            <form action="#" method="POST">
+            <form action="{{ route('member.loans.replacementForm', $loan->id) }}" method="POST">
                 @csrf
                 <div class="flex justify-end gap-4">
                     <button type="button" onclick="hideLostBookModal()" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">

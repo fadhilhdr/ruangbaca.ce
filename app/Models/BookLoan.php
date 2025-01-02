@@ -52,5 +52,15 @@ class BookLoan extends Model
     {
         return $this->return_date === null && $this->due_date >= now();
     }
+
+    public function isLate()
+    {
+        return Carbon::now()->greaterThan($this->due_date) && is_null($this->return_date);
+    }
+    
+    public function hasPaidFine()
+    {
+        return $this->transactions()->where('transaction_type_id', 4)->exists();
+    }
 }
 

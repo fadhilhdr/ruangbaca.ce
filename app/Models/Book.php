@@ -30,9 +30,4 @@ class Book extends Model
     {
         return $this->hasMany(BookLoan::class, 'kode_unik_buku', 'kode_unik');
     }
-
-    public function lostBooks()
-    {
-        return $this->hasMany(LostBook::class, 'kode_unik_buku');
-    }
 }

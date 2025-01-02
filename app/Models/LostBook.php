@@ -10,25 +10,27 @@ class LostBook extends Model
     use HasFactory;
 
     protected $fillable = [
-        'book_loan_id', 
-        'book_id', 
-        'user_id', 
-        'date_reported', 
-        'replacement_status'
+        'book_loan_id',
+        'date_reported',
+        'replacement_status',
     ];
 
+    // Relasi ke tabel BookLoan
     public function bookLoan()
     {
         return $this->belongsTo(BookLoan::class, 'book_loan_id');
     }
 
-    public function book()
-    {
-        return $this->belongsTo(Book::class, 'book_id');
-    }
-
+    // Relasi ke tabel User melalui BookLoan
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'userid');
+        return $this->bookLoan->user();
+    }
+
+    // Mengakses ISBN melalui relasi ke BookLoan dan Book
+    public function getIsbnAttribute()
+    {
+        return $this->bookLoan->book->isbn ?? null; // Mendapatkan ISBN dari tabel books
     }
 }
+

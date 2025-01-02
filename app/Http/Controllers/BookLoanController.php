@@ -10,6 +10,7 @@ use App\Models\TransactionType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BookLoanController extends Controller
 {
@@ -31,7 +32,7 @@ class BookLoanController extends Controller
     public function show($id)
     {
         $loan = BookLoan::where('user_id', auth()->id())
-                        ->with(['book', 'transactions'])
+                        ->with(['book', 'transactions.type'])
                         ->findOrFail($id);
     
         $isLate = $loan->due_date < now();
@@ -63,28 +64,51 @@ class BookLoanController extends Controller
     
         return view('member.loans.renewForm', compact('loan'));
     }
-    
+
     public function showReturnForm($id)
     {
-        $loan = BookLoan::with('book')->findOrFail($id);
+        $loan = BookLoan::findOrFail($id);
+        $isLate = Carbon::now()->greaterThan($loan->due_date);
+        $daysLate = $isLate ? Carbon::now()->diffInDays($loan->due_date) : 0;
+        $fineAmount = $daysLate * 1000; // Rp1.000 per day
+
+        return view('member.loans.returnForm', compact('loan', 'isLate', 'daysLate', 'fineAmount'));
+    }
+
+    
+    public function showPaymentForm($id)
+    {
+        $loan = BookLoan::findOrFail($id);
         
-        // Calculate late days and fine if applicable
-        $daysLate = 0;
-        $fineAmount = 0;
-        $isLate = false;
-        
-        if ($loan->due_date < now()) {
-            $isLate = true;
-            $daysLate = now()->diffInDays(Carbon::parse($loan->due_date));
-            $fineAmount = $daysLate * 1000; // Rp1.000 per day
+        // Check if there's an existing unpaid fine
+        $existingFine = Fine::where('book_loan_id', $loan->id)
+            ->where('status', '!=', 'verified')
+            ->first();
+
+        if ($existingFine) {
+            return redirect()->route('member.loans.returnForm', $loan->id)
+                ->with('error', 'Sudah ada pembayaran denda yang sedang diproses');
         }
 
-        // Check if there are any pending fines
-        $hasPendingFine = Fine::where('book_loan_id', $loan->id)
-            ->whereNotIn('status', ['verified'])
-            ->exists();
+        $daysLate = Carbon::now()->diffInDays($loan->due_date);
+        $fineAmount = $daysLate * 1000;
+
+        return view('member.loans.paymentForm', compact('loan', 'daysLate', 'fineAmount'));
+    }
+
+    public function showReplacementForm($id)
+    {
+        $loan = BookLoan::findOrFail($id);
         
-        return view('member.loans.returnForm', compact('loan', 'isLate', 'daysLate', 'fineAmount', 'hasPendingFine'));
+        // Check if there's an existing replacement request
+        $existingRequest = LostBook::where('book_loan_id', $loan->id)->first();
+        
+        if ($existingRequest) {
+            return redirect()->route('member.loans.returnForm', $loan->id)
+                ->with('error', 'Sudah ada laporan kehilangan buku yang sedang diproses');
+        }
+
+        return view('member.loans.replacementForm', compact('loan'));
     }
     
 
@@ -280,105 +304,37 @@ class BookLoanController extends Controller
             return back()->with('error', 'Terjadi kesalahan dalam proses perpanjangan.');
         }
     }
-    
-    private function createFineTransaction(BookLoan $loan, $fineAmount)
-    {
-        // Get or create fine transaction type
-        $transactionType = TransactionType::where('type_name', 'fine')->firstOrFail();
-    
-        // Create fine transaction
-        $transaction = Transaction::create([
-            'book_loan_id' => $loan->id,
-            'transaction_type_id' => $transactionType->id,
-        ]);
-    
-        // Create fine record
-        Fine::create([
-            'transaction_id' => $transaction->id,
-            'book_loan_id' => $loan->id,
-            'amount' => $fineAmount,
-            'status' => 'pending', // initial status before bukti_tf upload
-        ]);
-    
-        return $transaction;
-    }
-    
+
     public function returnBook(Request $request, $id)
     {
+        $loan = BookLoan::findOrFail($id);
+
         $request->validate([
-            'kode_unik_buku' => 'required',
-            'terms' => 'required|accepted',
-            'bukti_tf' => 'required_if:isLate,true|file|image|max:2048'
+            'kode_unik_buku' => 'required|string',
+            'terms' => 'required|accepted'
         ]);
-    
-        try {
-            DB::beginTransaction();
-    
-            $loan = BookLoan::with('book')->findOrFail($id);
-    
-            // Validate if the book code matches
-            if ($loan->kode_unik_buku !== $request->kode_unik_buku) {
-                return back()->with('error', 'Kode unik buku tidak sesuai.');
-            }
-    
-            // Check if there are any unverified fines
-            $hasUnverifiedFines = Fine::where('book_loan_id', $loan->id)
-                ->whereNotIn('status', ['verified'])
-                ->exists();
-    
-            if ($hasUnverifiedFines) {
-                return back()->with('error', 'Anda memiliki denda yang belum diverifikasi.');
-            }
-    
-            // Calculate late days and fine if applicable
-            $isLate = $loan->due_date < now();
-            if ($isLate) {
-                $daysLate = now()->diffInDays(Carbon::parse($loan->due_date));
-                $fineAmount = $daysLate * 1000;
-    
-                // Create fine transaction
-                $transaction = $this->createFineTransaction($loan, $fineAmount);
-    
-                // Handle bukti transfer upload
-                if ($request->hasFile('bukti_tf')) {
-                    $path = $request->file('bukti_tf')->store('public/bukti-transfer');
-                    $fine = Fine::where('transaction_id', $transaction->id)->first();
-                    $fine->update([
-                        'bukti_tf' => str_replace('public/', '', $path),
-                        'status' => 'awaiting_verif'
-                    ]);
-                }
-            }
-    
-            // Create return transaction
-            $returnTransactionType = TransactionType::where('type_name', 'return')->firstOrFail();
-            Transaction::create([
-                'book_loan_id' => $loan->id,
-                'transaction_type_id' => $returnTransactionType->id,
-            ]);
-    
-            // Update loan status
-            $loan->update([
-                'return_date' => now()
-            ]);
-    
-            // Update book availability
-            $loan->book->update([
-                'is_available' => true
-            ]);
-    
-            DB::commit();
-    
-            return redirect()->route('member.loans.index')
-                ->with('success', $isLate ? 
-                    'Buku berhasil dikembalikan. Pembayaran denda menunggu verifikasi admin.' : 
-                    'Buku berhasil dikembalikan.'
-                );
-    
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Terjadi kesalahan dalam proses pengembalian buku.');
+
+        // Validate unique code
+        if ($request->kode_unik_buku !== $loan->kode_unik_buku) {
+            return back()->with('error', 'Kode unik buku tidak sesuai');
         }
+
+        // Check if there are unpaid fines
+        if ($loan->isLate() && !$loan->hasPaidFine()) {
+            return back()->with('error', 'Harap selesaikan pembayaran denda terlebih dahulu');
+        }
+
+        // Process return
+        $loan->update([
+            'return_date' => now(),
+            'status' => 'returned'
+        ]);
+
+        // Update book availability
+        $loan->book->update(['is_available' => true]);
+
+        return redirect()->route('member.loans.index')
+            ->with('success', 'Buku berhasil dikembalikan');
     }
 
     public function reportLost(Request $request, $id)
@@ -446,4 +402,74 @@ class BookLoanController extends Controller
     
         return view('member.loans.history', compact('loans', 'transactionTypes'));
     }
+
+    public function storeReplacement(Request $request, $id)
+    {
+        $loan = BookLoan::findOrFail($id);
+
+        $request->validate([
+            'description' => 'required|string|min:10',
+            'agreement' => 'required|accepted'
+        ]);
+
+        // Create lost book record
+        LostBook::create([
+            'book_loan_id' => $loan->id,
+            'date_reported' => now(),
+            'description' => $request->description,
+            'replacement_status' => 'awaiting_verif'
+        ]);
+
+        // Update book status
+        $loan->book->update(['status' => 'lost']);
+
+        return redirect()->route('member.loans.show', $loan->id)
+            ->with('success', 'Laporan kehilangan buku berhasil diajukan');
+    }
+
+    public function storePayment(Request $request, $id)
+    {
+        $loan = BookLoan::findOrFail($id);
+    
+        // Validasi bukti transfer
+        $request->validate([
+            'bukti_tf' => 'required|image|max:2048',
+        ]);
+    
+        // Cek apakah ada denda yang harus dibayar
+        $daysLate = Carbon::now()->diffInDays($loan->due_date);
+        if ($daysLate <= 0) {
+            return redirect()->route('member.loans.returnForm', $loan->id)
+                             ->with('error', 'Tidak ada denda yang harus dibayar.');
+        }
+    
+        // Hitung jumlah denda
+        $fineAmount = $daysLate * 1000;
+    
+        // Store bukti pembayaran
+        $path = $request->file('bukti_tf')->store('public/bukti-transfer');
+    
+        // Menyimpan transaksi pembayaran denda
+        $fineTransactionType = TransactionType::where('type_name', 'Fine Payment')->firstOrFail();
+    
+        // Buat transaksi denda
+        $transaction = Transaction::create([
+            'book_loan_id' => $loan->id,
+            'transaction_type_id' => $fineTransactionType->id,
+        ]);
+    
+        // Buat entri denda
+        Fine::create([
+            'transaction_id' => $transaction->id,
+            'book_loan_id' => $loan->id,
+            'amount' => $fineAmount,
+            'status' => 'awaiting_verif', // Status awal denda
+            'bukti_tf' => $path,
+            'paid_at' => now(), // Jika sudah dibayar, set tanggal pembayaran
+        ]);
+    
+        return redirect()->route('member.loans.returnForm', $loan->id)
+                         ->with('success', 'Bukti pembayaran denda berhasil diupload dan sedang diverifikasi');
+    }
+    
 }

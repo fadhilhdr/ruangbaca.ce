@@ -81,6 +81,13 @@ Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->g
         Route::get('/return/{id}', [BookLoanController::class, 'showReturnForm'])->name('returnForm');
         Route::post('/return/{id}', [BookLoanController::class, 'returnBook'])->name('return');
 
+        // Fine payment routes
+        Route::get('/payment/{id}', [BookLoanController::class, 'showPaymentForm'])->name('paymentForm');
+        Route::post('/payment/{id}', [BookLoanController::class, 'storePayment'])->name('payment.store');
+
+        // Lost book replacement routes
+        Route::get('/replacement/{id}', [BookLoanController::class, 'showReplacementForm'])->name('replacementForm');
+        Route::post('/replacement/{id}', [BookLoanController::class, 'storeReplacement'])->name('replacement.store');
     });
 });
 

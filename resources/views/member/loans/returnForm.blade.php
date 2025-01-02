@@ -67,6 +67,23 @@
                             </div>
                         </dl>
 
+
+                    </div>
+                </div>
+
+                <!-- Return Form Section -->
+                <div class="md:w-1/2 p-6 md:border-l border-gray-200">
+                    <div class="space-y-6">
+                        <!-- Return Rules -->
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="font-medium text-gray-900 mb-2">Informasi Pengembalian:</h3>
+                            <ul class="list-disc list-inside space-y-1 text-gray-600">
+                                <li>Pastikan buku dalam kondisi baik sebelum pengembalian</li>
+                                <li>Denda keterlambatan: Rp1.000/hari</li>
+                                <li>Pembayaran denda melalui QRIS</li>
+                                <li>Upload bukti pembayaran untuk verifikasi</li>
+                            </ul>
+                        </div>                        
                         <!-- Loan Timeline -->
                         <div class="mt-6 space-y-4">
                             <!-- Loan Date -->
@@ -81,7 +98,6 @@
                                     <p class="font-medium">{{ Carbon\Carbon::parse($loan->loan_date)->format('d M Y') }}</p>
                                 </div>
                             </div>
-
                             <!-- Due Date -->
                             <div class="flex items-center">
                                 <div class="w-8 h-8 rounded-full {{ $isLate ? 'bg-red-500' : 'bg-green-500' }} flex items-center justify-center">
@@ -98,25 +114,20 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Return Form Section -->
-                <div class="md:w-1/2 p-6 md:border-l border-gray-200">
-                    <div class="space-y-6">
-                        <!-- Return Rules -->
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <h3 class="font-medium text-gray-900 mb-2">Informasi Pengembalian:</h3>
-                            <ul class="list-disc list-inside space-y-1 text-gray-600">
-                                <li>Pastikan buku dalam kondisi baik sebelum pengembalian</li>
-                                <li>Denda keterlambatan: Rp1.000/hari</li>
-                                <li>Pembayaran denda melalui QRIS</li>
-                                <li>Upload bukti pembayaran untuk verifikasi</li>
-                            </ul>
-                        </div>
+                        <!-- Additional Actions -->
+                        @if($isLate)
+                            <div class="mb-6">
+                                <p class="text-red-600 font-medium mb-2">Denda Keterlambatan: Rp {{ number_format($fineAmount, 0, ',', '.') }}</p>
+                                <a href="{{ route('member.loans.paymentForm', $loan->id) }}" 
+                                   class="inline-block w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    Upload Bukti Pembayaran Denda
+                                </a>
+                            </div>
+                        @endif
 
                         <!-- Return Form -->
-                        <form id="returnForm" action="{{ route('member.loans.return', $loan->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                        <form id="returnForm" action="{{ route('member.loans.return', $loan->id) }}" method="POST" class="space-y-6">
                             @csrf
                             <input type="hidden" name="isLate" value="{{ $isLate }}">
                             
@@ -125,7 +136,7 @@
                                 <label for="kode_unik_buku" class="block text-sm font-medium text-gray-700">
                                     Kode Unik Buku
                                 </label>
-                                <div class="mt-1 flex space-x-2">
+                                <div class="mt-1">
                                     <input type="text" 
                                            name="kode_unik_buku" 
                                            id="kode_unik_buku"
@@ -135,51 +146,6 @@
                                 </div>
                                 <div id="kodeUnikStatus" class="mt-2 text-sm"></div>
                             </div>
-
-                            <!-- Fine Payment Section (shown if late) -->
-                            @if($isLate)
-                                <div id="fineSection" class="border rounded-lg p-4 bg-red-50">
-                                    <h4 class="font-medium text-red-800 mb-2">Informasi Denda</h4>
-                                    <div class="flex justify-between items-center mb-4">
-                                        <div>
-                                            <p class="text-red-600">Keterlambatan: {{ $daysLate }} hari</p>
-                                            <p class="text-red-600 font-medium">Total Denda: Rp{{ number_format($fineAmount, 0, ',', '.') }}</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- QRIS Code -->
-                                    <div class="mt-4">
-                                        <p class="text-sm text-gray-600 mb-2">Scan QRIS untuk pembayaran:</p>
-                                        <div class="bg-white p-4 rounded-lg mb-4">
-                                            <img src="{{ asset('images/dummy-qris.png') }}" 
-                                                 alt="QRIS Code" 
-                                                 class="w-48 h-48 mx-auto">
-                                        </div>
-                                    </div>
-
-                                    <!-- Upload Bukti Transfer -->
-                                    <div class="mt-4">
-                                        <label for="bukti_tf" class="block text-sm font-medium text-gray-700">
-                                            Upload Bukti Transfer
-                                        </label>
-                                        <input type="file"
-                                               id="bukti_tf"
-                                               name="bukti_tf"
-                                               accept="image/*"
-                                               required
-                                               class="mt-1 block w-full text-sm text-gray-500
-                                                      file:mr-4 file:py-2 file:px-4
-                                                      file:rounded-md file:border-0
-                                                      file:text-sm file:font-medium
-                                                      file:bg-blue-50 file:text-blue-700
-                                                      hover:file:bg-blue-100">
-                                        <p class="mt-1 text-sm text-gray-500">Format: JPG, PNG (Max. 2MB)</p>
-                                        @error('bukti_tf')
-                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                </div>
-                            @endif
 
                             <!-- Terms Checkbox -->
                             <div class="flex items-start">
@@ -192,18 +158,17 @@
                                 </div>
                                 <div class="ml-3 text-sm">
                                     <label for="terms" class="font-medium text-gray-700">
-                                        Saya menyatakan buku dalam kondisi baik dan {{ $isLate ? 'telah membayar denda keterlambatan' : 'akan mengembalikan tepat waktu' }}
+                                        Saya menyatakan buku dalam kondisi baik
                                     </label>
                                 </div>
                             </div>
 
                             <!-- Action Buttons -->
                             <div class="flex gap-4">
-                                <button type="button" 
-                                        onclick="showLostBookModal()"
-                                        class="flex-1 py-2 px-4 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                <a href="{{ route('member.loans.replacementForm', $loan->id) }}"
+                                   class="flex-1 py-2 px-4 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 text-center">
                                     Laporkan Buku Hilang
-                                </button>
+                                </a>
 
                                 <button type="submit" 
                                         id="submitButton"
@@ -219,31 +184,6 @@
         </div>
     </div>
 
-    <!-- Lost Book Modal -->
-    <div id="lostBookModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 class="text-lg font-bold mb-4">Konfirmasi Laporan Buku Hilang</h3>
-            <p class="text-gray-600 mb-6">
-                Apakah Anda yakin ingin melaporkan buku ini hilang? 
-                Anda akan dikenakan biaya penggantian sesuai dengan kebijakan perpustakaan.
-            </p>
-            <div class="flex justify-end gap-4">
-                <button type="button" 
-                        onclick="hideLostBookModal()" 
-                        class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                    Batal
-                </button>
-                <form action="#" method="POST">
-                    @csrf
-                    <button type="submit" 
-                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                        Konfirmasi
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-
     @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -252,19 +192,13 @@
             const termsCheckbox = document.getElementById('terms');
             const submitButton = document.getElementById('submitButton');
             const kodeUnikStatus = document.getElementById('kodeUnikStatus');
-            const buktiTfInput = document.getElementById('bukti_tf');
-            
             let isKodeUnikValid = false;
             let scanTimeout;
 
-            // Function to check if form can be submitted
             function updateSubmitButton() {
-                const isLate = @json($isLate);
-                const hasBuktiTf = isLate ? buktiTfInput && buktiTfInput.files.length > 0 : true;
-                submitButton.disabled = !(isKodeUnikValid && termsCheckbox.checked && hasBuktiTf);
+                submitButton.disabled = !(isKodeUnikValid && termsCheckbox.checked);
             }
 
-            // Validate kode unik
             async function validateKodeUnik(kodeUnik) {
                 try {
                     const response = await fetch(`/api/validate-return-kode-unik/${kodeUnik}/${@json($loan->id)}`);
@@ -284,7 +218,6 @@
                 }
             }
 
-            // Handle input events
             kodeUnikInput.addEventListener('input', (e) => {
                 clearTimeout(scanTimeout);
                 scanTimeout = setTimeout(() => {
@@ -297,34 +230,6 @@
                     }
                 }, 100);
             });
-
-            // Handle file upload
-            if (buktiTfInput) {
-                buktiTfInput.addEventListener('change', () => {
-                    const file = buktiTfInput.files[0];
-                    if (file) {
-                        if (file.size > 2 * 1024 * 1024) {
-                            alert('Ukuran file maksimal 2MB');
-                            buktiTfInput.value = '';
-                        } else if (!['image/jpeg', 'image/png'].includes(file.type)) {
-                            alert('Format file harus JPG atau PNG');
-                            buktiTfInput.value = '';
-                        }
-                    }
-                    updateSubmitButton();
-                });
-            }
-
-            // Modal functions
-            window.showLostBookModal = function() {
-                document.getElementById('lostBookModal').classList.remove('hidden');
-                document.getElementById('lostBookModal').classList.add('flex');
-            }
-
-            window.hideLostBookModal = function() {
-                document.getElementById('lostBookModal').classList.add('hidden');
-                document.getElementById('lostBookModal').classList.remove('flex');
-            }
 
             termsCheckbox.addEventListener('change', updateSubmitButton);
             

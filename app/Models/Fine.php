@@ -17,19 +17,14 @@ class Fine extends Model
         'verified_at',
     ];
 
-    public function transaction()
+    public function transaction_types()
     {
-        return $this->belongsTo(Transaction::class);
+        return $this->belongsTo(TransactionType::class);
     }
 
     public function bookLoan()
     {
         return $this->belongsTo(BookLoan::class);
-    }
-
-    public function isVerified()
-    {
-        return $this->status === 'verified';
     }
 }
 

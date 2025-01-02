@@ -36,6 +36,14 @@
                             <td>
                                 <a href="{{ route('admin.students.edit', $student->nim) }}"
                                     class="btn btn-sm btn-primary">Edit</a> <!-- Tombol Edit -->
+                                <form action="{{ route('admin.students.destroy', $student->nim) }}" method="POST"
+                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');"
+                                    style="display: inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+
                             </td>
                         </tr>
                     @empty

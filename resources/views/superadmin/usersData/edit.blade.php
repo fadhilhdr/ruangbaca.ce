@@ -4,11 +4,14 @@
 
 @section('content')
     <div class="card mb-4">
-        <div class="card-header">
+        <div class="card-header d-flex align-items-center">
+            <a href="javascript:history.back()" class="me-3">
+                <i class="bi bi-arrow-left-circle"></i>
+            </a>
             <h3 class="card-title">Edit User</h3>
         </div>
         <div class="card-body">
-            <form action="{{ route('superadmin.users.update', $user->id) }}" method="POST">
+            <form action="{{ route('superadmin.users.update', $user->userid) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -20,12 +23,12 @@
 
                 <div class="form-group mb-3">
                     <label for="role_id">Role ID</label>
-                    <input type="number" name="role_id" id="role_id" class="form-control"
+                    <input type="number" max="3" min="1" name="role_id" id="role_id" class="form-control"
                         value="{{ old('role_id', $user->role_id) }}" required>
                 </div>
-
                 <button type="submit" class="btn btn-primary">Update</button>
             </form>
+
         </div>
     </div>
 @endsection

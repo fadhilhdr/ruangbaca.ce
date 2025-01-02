@@ -22,7 +22,7 @@
                         <th>Kepakaran 2</th>
                         <th>Created At</th>
                         <th>Updated At</th>
-                        <th style="width: 100px">Action</th> <!-- Tambahkan kolom Action -->
+                        <th>Action</th> <!-- Tambahkan kolom Action -->
                     </tr>
                 </thead>
                 <tbody>

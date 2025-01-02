@@ -13,25 +13,33 @@ class UsersController extends Controller
         return view('superadmin.usersData.index', compact('users'));
     }
 
-    public function edit($id)
+    public function edit($userid)
     {
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($userid);
         return view('superadmin.usersData.edit', compact('user'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $userid)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'role_id' => 'required|integer',
         ]);
 
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($userid);
         $user->update([
             'name' => $request->name,
             'role_id' => $request->role_id,
         ]);
 
-        return redirect()->route('superadmin.usersData.index')->with('success', 'User updated successfully.');
+        return redirect()->route('superadmin.users.index')->with('success', 'User updated successfully.');
+    }
+
+    public function destroy($userid)
+    {
+        $user = User::findOrFail($userid);
+        $user->delete();
+
+        return redirect()->route('superadmin.users.index')->with('success', 'User deleted successfully.');
     }
 }

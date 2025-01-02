@@ -4,7 +4,10 @@
 
 @section('content')
     <div class="card card-primary card-outline mb-4">
-        <div class="card-header">
+        <div class="card-header d-flex align-items-center">
+            <a href="javascript:history.back()" class="me-3">
+                <i class="bi bi-arrow-left-circle"></i>
+            </a>
             <h3 class="card-title">Edit Data Lecturer</h3>
         </div>
         <form method="POST" action="{{ route('admin.lecturers.update', $lecturer->nip) }}">

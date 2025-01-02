@@ -33,7 +33,6 @@
     <div class="app-wrapper"> <!--begin::Sidebar-->
         @include('admin.layouts.navbar')
         @include('admin.layouts.sidebar')
-
         <main class="app-main"> <!--begin::App Content Header-->
             <div class="app-content-header"> <!--begin::Container-->
                 <div class="container-fluid">

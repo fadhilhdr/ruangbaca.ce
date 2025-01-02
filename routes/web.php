@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LecturerController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VisitorController;
@@ -58,6 +58,7 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('books', BookController::class); // Manage books
     Route::get('/books', [BookController::class, 'adminIndex'])->name('get-all-books.index');
     Route::get('/upload-data-lecturer', [LecturerController::class, 'upload'])->name('lecturers.upload');
+    Route::post('/upload-data-lecturer', [LecturerController::class, 'import'])->name('lecturers.import');
     Route::get('/upload-data-student', [StudentController::class, 'upload'])->name('students.upload');
     Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
 });
@@ -83,11 +84,6 @@ Route::prefix('public/books')->name('public.books.')->group(function () {
     Route::get('/', [BookController::class, 'index'])->name('index');
     Route::get('/{id}', [BookController::class, 'show'])->name('show');
 });
-
-
-
-
-
 
 #PUBLIC ROUTES
 

@@ -34,11 +34,11 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            <x-dropdown-link :href="url('/profile')">
-                                {{ __('Profile') }}
-                            </x-dropdown-link>
                             <x-dropdown-link :href="url('/dashboard')" class="py-2 px-4">
                                 {{ __('Dashboard') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="url('/profile')">
+                                {{ __('Profile') }}
                             </x-dropdown-link>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf

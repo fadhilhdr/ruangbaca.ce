@@ -72,7 +72,7 @@
                             <div>
                                 <dt class="font-medium text-gray-500">Tenggat Setelah Perpanjangan</dt>
                                 <dd class="mt-1 text-gray-900 font-semibold">
-                                    {{ \Carbon\Carbon::parse($loan->due_date)->addDays(14)->format('d M Y H:i') }}
+                                    {{ \Carbon\Carbon::parse($loan->due_date)->addDays(7)->format('d M Y H:i') }}
                                 </dd>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                             <h3 class="font-medium text-gray-900 mb-2">Aturan Perpanjangan:</h3>
                             <ul class="list-disc list-inside space-y-1 text-gray-600">
                                 <li>Perpanjangan hanya dapat dilakukan 1 kali</li>
-                                <li>Durasi perpanjangan 14 hari dari tenggat waktu saat ini</li>
+                                <li>Durasi perpanjangan 7 hari dari tenggat waktu saat ini</li>
                                 <li>Perpanjangan hanya dapat dilakukan sebelum tenggat waktu</li>
                                 <li>Pastikan buku dalam kondisi baik sebelum perpanjangan</li>
                             </ul>

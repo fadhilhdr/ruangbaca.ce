@@ -20,6 +20,14 @@ class BookLoan extends Model
         'renewal_count', 
     ];
 
+    protected $dates = [
+        'loan_date',
+        'due_date',
+        'return_date',
+        'created_at',
+        'updated_at'
+    ];
+
     public function book()
     {
         return $this->belongsTo(Book::class, 'kode_unik_buku', 'kode_unik');
@@ -50,7 +58,7 @@ class BookLoan extends Model
 
     public function canReturn()
     {
-        return $this->return_date === null && $this->due_date >= now();
+        return $this->return_date === null;
     }
 
     public function isLate()
@@ -61,6 +69,10 @@ class BookLoan extends Model
     public function hasPaidFine()
     {
         return $this->transactions()->where('transaction_type_id', 4)->exists();
+    }
+    public function isReturned()
+    {
+        return $this->transactions()->where('transaction_type_id', 3)->exists();
     }
 }
 

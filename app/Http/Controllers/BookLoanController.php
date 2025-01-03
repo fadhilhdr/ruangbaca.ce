@@ -14,6 +14,72 @@ use Illuminate\Support\Facades\Log;
 
 class BookLoanController extends Controller
 {
+    public function dashboard()
+    {
+        // Get all loans (both active and returned) ordered by loan date
+        $allLoans = BookLoan::where('user_id', auth()->id())
+                          ->with('book') // eager load book relationship
+                          ->whereNotNull('loan_date') // memastikan ada tanggal peminjaman
+                          ->orderByDesc('loan_date') // urutkan dari yang terbaru
+                          ->take(5) // ambil 5 peminjaman terakhir
+                          ->get()
+                          ->map(function($loan) {
+                              // Add status for each loan
+                              $loan->status = $this->getLoanStatus($loan);
+                              return $loan;
+                          });
+         
+        // Get count of active loans (untuk perhitungan quota)
+        $activeLoanCount = BookLoan::where('user_id', auth()->id())
+                                  ->whereNull('return_date')
+                                  ->count();
+    
+        // Get count of late loans
+        $lateLoanCount = BookLoan::where('user_id', auth()->id())
+                                ->whereNull('return_date')
+                                ->where('due_date', '<', now())
+                                ->count();
+    
+        // Calculate remaining loan quota
+        $remainingQuota = 2 - $activeLoanCount; // Maximum 2 books allowed
+    
+        return view('member.dashboard', compact(
+            'allLoans',
+            'activeLoanCount',
+            'lateLoanCount',
+            'remainingQuota'
+        ));
+    }
+
+    private function getLoanStatus($loan)
+    {
+        if ($loan->return_date) {
+            return [
+                'label' => 'Returned',
+                'class' => 'bg-green-100 text-green-800'
+            ];
+        }
+        
+        if ($loan->due_date < now()) {
+            return [
+                'label' => 'Late',
+                'class' => 'bg-red-100 text-red-800'
+            ];
+        }
+        
+        if ($loan->due_date <= now()->addDays(3)) {
+            return [
+                'label' => 'Due Soon',
+                'class' => 'bg-yellow-100 text-yellow-800'
+            ];
+        }
+        
+        return [
+            'label' => 'Active',
+            'class' => 'bg-blue-100 text-blue-800'
+        ];
+    }
+
     public function index()
     {
         $loans = BookLoan::where('user_id', auth()->id())
@@ -324,6 +390,17 @@ class BookLoanController extends Controller
             return back()->with('error', 'Harap selesaikan pembayaran denda terlebih dahulu');
         }
 
+        // Create return transaction record
+        $transactionType = TransactionType::where('type_name', 'Return')->first();
+        if (!$transactionType) {
+            throw new \Exception('Tipe transaksi Return tidak ditemukan');
+        }
+
+        Transaction::create([
+            'book_loan_id' => $loan->id,
+            'transaction_type_id' => $transactionType->id,
+        ]);
+
         // Process return
         $loan->update([
             'return_date' => now(),
@@ -335,43 +412,6 @@ class BookLoanController extends Controller
 
         return redirect()->route('member.loans.index')
             ->with('success', 'Buku berhasil dikembalikan');
-    }
-
-    public function reportLost(Request $request, $id)
-    {
-        try {
-            DB::beginTransaction();
-    
-            $loan = BookLoan::findOrFail($id);
-    
-            // Create lost book record
-            LostBook::create([
-                'book_loan_id' => $loan->id,
-                'status' => 'reported',
-                'report_date' => now()
-            ]);
-    
-            // Create lost book transaction
-            $lostTransactionType = TransactionType::where('type_name', 'lost')->firstOrFail();
-            Transaction::create([
-                'book_loan_id' => $loan->id,
-                'transaction_type_id' => $lostTransactionType->id,
-            ]);
-    
-            // Update book status
-            $loan->book->update([
-                'status' => 'lost'
-            ]);
-    
-            DB::commit();
-    
-            return redirect()->route('member.loans.show', $loan->id)
-                ->with('info', 'Laporan buku hilang telah diterima. Silakan hubungi petugas untuk proses selanjutnya.');
-    
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Terjadi kesalahan dalam melaporkan buku hilang.');
-        }
     }
 
     public function history(Request $request)
@@ -410,18 +450,25 @@ class BookLoanController extends Controller
         $request->validate([
             'description' => 'required|string|min:10',
             'agreement' => 'required|accepted'
+        ]);            
+        
+        // Create Lost Book Replacement transaction record
+        $transactionType = TransactionType::where('type_name', 'Lost Book Replacement')->first();
+        if (!$transactionType) {
+            throw new \Exception('Tipe transaksi Lost Book Replacement tidak ditemukan');
+        }
+
+        Transaction::create([
+            'book_loan_id' => $loan->id,
+            'transaction_type_id' => $transactionType->id,
         ]);
 
-        // Create lost book record
         LostBook::create([
             'book_loan_id' => $loan->id,
             'date_reported' => now(),
             'description' => $request->description,
             'replacement_status' => 'awaiting_verif'
         ]);
-
-        // Update book status
-        $loan->book->update(['status' => 'lost']);
 
         return redirect()->route('member.loans.show', $loan->id)
             ->with('success', 'Laporan kehilangan buku berhasil diajukan');
@@ -450,12 +497,12 @@ class BookLoanController extends Controller
         $path = $request->file('bukti_tf')->store('public/bukti-transfer');
     
         // Menyimpan transaksi pembayaran denda
-        $fineTransactionType = TransactionType::where('type_name', 'Fine Payment')->firstOrFail();
+        $transactionType = TransactionType::where('type_name', 'Fine Payment')->firstOrFail();
     
         // Buat transaksi denda
         $transaction = Transaction::create([
             'book_loan_id' => $loan->id,
-            'transaction_type_id' => $fineTransactionType->id,
+            'transaction_type_id' => $transactionType->id,
         ]);
     
         // Buat entri denda

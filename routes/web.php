@@ -60,9 +60,7 @@ Route::get('/dashboard', function () {
 // Rute member
 Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->group(function () {
     // Dashboard Member
-    Route::get('/dashboard', function () {
-        return view('member.dashboard'); 
-    })->name('dashboard');
+    Route::get('/dashboard',  [BookLoanController::class, 'dashboard'])->name('dashboard');
 
     // Book Loans Routes
     Route::prefix('loans')->name('loans.')->group(function () {
@@ -113,8 +111,6 @@ Route::middleware(['auth', 'role:Superadmin'])->prefix('superadmin')->name('supe
     Route::get('/users/{id}/edit', [UsersController::class, 'edit'])->name('users.edit');
 
 });
-
-
 
 
 // Include rute autentikasi default Laravel Breeze

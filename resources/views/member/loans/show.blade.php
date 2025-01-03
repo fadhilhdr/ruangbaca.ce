@@ -3,11 +3,11 @@
         <div class="max-w-4xl mx-auto">
             <!-- Navigation -->
             <div class="mb-6">
-                <a href="{{ route('member.loans.index') }}" class="text-blue-600 hover:text-blue-800 inline-flex items-center">
+                <a href="{{ route('member.dashboard') }}" class="text-blue-600 hover:text-blue-800 inline-flex items-center">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                     </svg>
-                    Kembali ke Daftar Peminjaman
+                    Kembali ke Dashboard
                 </a>
             </div>
 
@@ -128,7 +128,7 @@
                             <!-- Action Buttons -->
                             <div class="flex gap-4">
                                 @if($loan->canRenew())
-                                    <form action="{{ route('member.loans.renewForm', $loan->id) }}" method="GET" class="flex-1">
+                                    <form action="{{ route('member.loans.renewForm', $loan->id) }}" method="GET" class="flex-2">
                                         @csrf
                                         <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
                                             Perpanjang Peminjaman
@@ -137,7 +137,7 @@
                                 @endif
 
                                 @if($loan->canReturn())
-                                    <form action="{{ route('member.loans.returnForm', $loan->id) }}" method="GET" class="flex-1">
+                                    <form action="{{ route('member.loans.returnForm', $loan->id) }}" method="GET" class="flex-2">
                                         @csrf
                                         <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors duration-200">
                                             Kembalikan Buku
@@ -146,9 +146,11 @@
                                 @endif
 
                                 <!-- Report Lost Book -->
-                                <button onclick="showLostBookModal()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200">
-                                    Laporkan Hilang
-                                </button>
+                                @if($loan->isReturned())
+                                    <button onclick="showLostBookModal()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200">
+                                        Laporkan Hilang
+                                    </button>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -165,7 +167,7 @@
                 Apakah Anda yakin ingin melaporkan buku ini hilang? 
                 Anda akan dikenakan biaya penggantian sesuai dengan kebijakan perpustakaan.
             </p>
-            <form action="{{ route('member.loans.replacementForm', $loan->id) }}" method="POST">
+            <form action="{{ route('member.loans.replacementForm', $loan->id) }}">
                 @csrf
                 <div class="flex justify-end gap-4">
                     <button type="button" onclick="hideLostBookModal()" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">

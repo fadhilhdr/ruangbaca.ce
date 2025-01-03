@@ -16,6 +16,10 @@ class Fine extends Model
         'paid_at',
         'verified_at',
     ];
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
+    }
 
     public function transaction_types()
     {

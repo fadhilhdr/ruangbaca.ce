@@ -37,14 +37,16 @@
                     @csrf
                     <div>
                         <label for="description" class="block text-sm font-medium text-gray-700">
-                            Keterangan Kehilangan
+                            Harap menyalin pernyataan di bawah ini 
+                            <p>"Saya sepakat akan mengikuti prosedur pengembalian buku sesuai aturan yang berlaku"</p>
+                            
                         </label>
                         <textarea id="description"
                                  name="description"
                                  rows="4"
                                  required
                                  class="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md"
-                                 placeholder="Jelaskan bagaimana buku tersebut hilang..."></textarea>
+                                 placeholder="Saya sepakat akan mengikuti prosedur pengembalian buku sesuai aturan yang berlaku"></textarea>
                         @error('description')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -53,10 +55,9 @@
                     <div class="bg-yellow-50 rounded-lg p-4">
                         <h4 class="font-medium text-yellow-800 mb-2">Ketentuan Penggantian Buku:</h4>
                         <ul class="list-disc list-inside space-y-1 text-yellow-700 text-sm">
+                            <li>Akun pengguna tidak dapat melakukan peminjaman sampai penggantian buku terkonfirmasi oleh Admin</li>
                             <li>Penggantian harus dengan buku yang sama (judul, pengarang, penerbit)</li>
-                            <li>Kondisi buku harus baru</li>
-                            <li>Waktu penggantian maksimal 30 hari</li>
-                            <li>Denda keterlambatan tetap berlaku sampai buku pengganti diterima</li>
+                            <li>Kondisi buku harus baik</li>
                         </ul>
                     </div>
 

@@ -7,6 +7,21 @@
     <title>{{ config('app.name', 'Ruang Baca CE - UNDIP') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
+        .body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .main {
+            flex: 1 0 auto; 
+        }
+
+        .footer {
+            flex-shrink: 0; 
+        }
+
         .hero-section {
             min-height: 70vh;
             background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
@@ -53,10 +68,10 @@
 
 
 <body class="bg-gray-50">
-    <div class="min-h-screen">
+    <div class="min-h-screen flex flex-col">
         <x-navbar />
         
-        <main class="mt-16">
+        <main class="flex-grow mt-16">
             {{ $slot }}
         </main>
         

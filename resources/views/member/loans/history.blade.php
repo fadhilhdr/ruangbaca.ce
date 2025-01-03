@@ -3,16 +3,17 @@
         <div class="max-w-7xl mx-auto">
             <!-- Header -->
             <div class="mb-6 flex justify-between items-center">
-                <h1 class="text-2xl font-bold text-gray-800">Riwayat Peminjaman</h1>
-                <a href="{{ route('member.loans.index') }}" class="text-blue-600 hover:text-blue-800 inline-flex items-center">
+                <a href="{{ route('member.dashboard') }}" class="text-blue-600 hover:text-blue-800 inline-flex items-center">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                     </svg>
-                    Kembali ke Peminjaman Aktif
+                    Kembali ke Dashboard
                 </a>
             </div>
 
             <!-- Filters -->
+            <h1 class="text-2xl font-bold text-gray-800">Riwayat Peminjaman</h1>
+            
             <div class="bg-white rounded-lg shadow-md p-6 mb-6">
                 <form method="GET" action="{{ route('member.loans.history') }}" class="space-y-4 md:space-y-0 md:flex md:gap-4">
                     <div class="flex-1">

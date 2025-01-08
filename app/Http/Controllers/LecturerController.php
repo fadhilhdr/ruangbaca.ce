@@ -12,9 +12,17 @@ class LecturerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $lecturers = Lecturer::paginate(5);
+        $query = Lecturer::query();
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('nip', 'LIKE', "%{$search}%");
+        }
+
+        $lecturers = $query->paginate(10);
         return view('admin.lecturersData.index', compact('lecturers'));
     }
 

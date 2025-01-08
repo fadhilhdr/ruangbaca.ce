@@ -12,11 +12,18 @@ class StudentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $students = Student::paginate(10);
-        return view('admin.studentData.index', compact('students'));
+        $query = Student::query();
 
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('nim', 'LIKE', "%{$search}%");
+        }
+
+        $students = $query->paginate(10);
+        return view('admin.studentData.index', compact('students'));
     }
 
     /**
@@ -93,10 +100,14 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Student $student)
+    public function destroy($nim)
     {
-        //
+        $student = Student::where('nim', $nim)->firstOrFail();
+        $student->delete();
+
+        return redirect()->route('admin.students.index')->with('success', 'Student deleted successfully.');
     }
+
     public function upload()
     {
         return view('admin.studentData.import');

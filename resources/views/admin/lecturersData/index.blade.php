@@ -6,23 +6,33 @@
     <div class="card mb-4">
         <div class="card-header">
             <h3 class="card-title">Data Lecturers</h3>
+            <div class="float-end">
+                <!-- Search Bar -->
+                <form action="{{ route('admin.lecturers.index') }}" method="GET" class="d-flex">
+                    <div class="input-group">
+                        <input type="search" name="search" id="search" class="form-control"
+                            placeholder="Cari dengan Nama/NIP" value="{{ request('search') }}">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i> </button>
+                    </div>
+                </form>
+            </div>
         </div> <!-- /.card-header -->
+
         <div class="card-body">
             <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th style="width: 10px">#</th>
                         <th>NIP</th>
-                        <th>Name</th>
+                        <th>Nama</th>
                         <th>Kode Dosen</th>
                         <th>Riwayat S1</th>
                         <th>Riwayat S2</th>
                         <th>Riwayat S3</th>
                         <th>Kepakaran 1</th>
                         <th>Kepakaran 2</th>
-                        <th>Created At</th>
-                        <th>Updated At</th>
-                        <th style="width: 100px">Action</th> <!-- Tambahkan kolom Action -->
+                        <th style="width: 100px">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,11 +47,9 @@
                             <td>{{ $lecturer->riwayat_s3 ?? '-' }}</td>
                             <td>{{ $lecturer->kepakaran1 }}</td>
                             <td>{{ $lecturer->kepakaran2 ?? '-' }}</td>
-                            <td>{{ $lecturer->created_at ?? '-' }}</td>
-                            <td>{{ $lecturer->updated_at ?? '-' }}</td>
                             <td>
-                                <!-- Tombol Edit -->
-                                <a href="{{ route('admin.lecturers.edit', $lecturer->nip) }}" class="btn btn-sm btn-warning">
+                                <a href="{{ route('admin.lecturers.edit', $lecturer->nip) }}"
+                                    class="btn btn-sm btn-warning">
                                     <i class="fa fa-edit"></i> Edit
                                 </a>
                             </td>
@@ -54,9 +62,9 @@
                 </tbody>
             </table>
         </div> <!-- /.card-body -->
+
         <div class="card-footer clearfix">
             <ul class="pagination pagination-sm m-0 float-end">
-                {{-- Tambahkan pagination --}}
                 {{ $lecturers->links('pagination::bootstrap-5') }}
             </ul>
         </div>

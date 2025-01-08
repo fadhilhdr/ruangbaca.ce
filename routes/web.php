@@ -1,13 +1,15 @@
 <?php
 
+use App\Http\Controllers\Admin\BookController as AdminBookController;
+use App\Http\Controllers\Admin\BookLoanController as AdminBookLoanController;
+use App\Http\Controllers\Admin\HistoryOfController;
+use App\Http\Controllers\Admin\FinesBookController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookLoanController;
-use App\Http\Controllers\FineController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LecturerController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
-use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VisitorController;
 use Illuminate\Support\Facades\Auth;
@@ -40,7 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Rute user (dashboard berdasarkan role) 
+// Rute user (dashboard berdasarkan role)
 Route::get('/dashboard', function () {
     $user = Auth::user();
 
@@ -60,22 +62,21 @@ Route::get('/dashboard', function () {
 // Rute member
 Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->group(function () {
     // Dashboard Member
-    Route::get('/dashboard',  [BookLoanController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [BookLoanController::class, 'dashboard'])->name('dashboard');
 
     // Book Loans Routes
     Route::prefix('loans')->name('loans.')->group(function () {
         Route::get('/', [BookLoanController::class, 'index'])->name('index');
         Route::get('/history', [BookLoanController::class, 'history'])->name('history');
         Route::get('/{id}', [BookLoanController::class, 'show'])->name('show');
-        
         // Borrow Routes
+
         Route::get('/borrow/{isbn}', [BookLoanController::class, 'showBorrowForm'])->name('borrowForm');
         Route::post('/borrow/{isbn}', [BookLoanController::class, 'borrowBook'])->name('borrow');
-
         // Di dalam group loans
+
         Route::get('/renew/{id}', [BookLoanController::class, 'showRenewForm'])->name('renewForm');
         Route::post('/renew/{id}', [BookLoanController::class, 'renewBook'])->name('renew');
-
         Route::get('/return/{id}', [BookLoanController::class, 'showReturnForm'])->name('returnForm');
         Route::post('/return/{id}', [BookLoanController::class, 'returnBook'])->name('return');
 
@@ -89,18 +90,22 @@ Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->g
     });
 });
 
-// Rute admin 
+// Rute admin
 Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.layouts.base'); // Pastikan file view `admin.dashboard` ada
-    })->name('dashboard');
+    Route::get('/dashboard', [HistoryOfController::class, 'index'])->name('dashboard');
+    // Route::resource('/dashboard', HistoryOfController::class);
     Route::resource('students', StudentController::class); // Manage students
     Route::resource('lecturers', LecturerController::class); // Manage lecturers
+    Route::resource('books', AdminBookController::class); // Manage books
+    Route::resource('transaction', AdminBookLoanController::class); // Manage transaction
+    Route::resource('fines', FinesBookController::class); // Manage fines
     Route::get('/upload-data', [LecturerController::class, 'upload'])->name('lecturers.upload');
     Route::get('/upload-data', [StudentController::class, 'upload'])->name('students.upload');
     Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
-});
 
+    //Book History
+
+});
 
 // Rute Superadmin
 Route::middleware(['auth', 'role:Superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
@@ -111,7 +116,6 @@ Route::middleware(['auth', 'role:Superadmin'])->prefix('superadmin')->name('supe
     Route::get('/users/{id}/edit', [UsersController::class, 'edit'])->name('users.edit');
 
 });
-
 
 // Include rute autentikasi default Laravel Breeze
 require __DIR__ . '/auth.php';

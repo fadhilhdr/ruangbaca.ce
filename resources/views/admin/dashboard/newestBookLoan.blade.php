@@ -1,26 +1,7 @@
-@extends('admin.layouts.base')
-
-@section('title', 'Daftar Transaksi')
-
-@section('content')
-    <style>
-        /* style ini untuk dihalaman dashboard membuat tabel tidak ikut di skroll */
-        table thead th {
-            position: sticky;
-            top: 0;
-            background-color: #ffffff;
-            /* Warna background agar teks tetap terlihat */
-            z-index: 2;
-            /* Supaya tetap di atas konten tabel */
-            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
-            /* Opsional: menambahkan bayangan */
-        }
-
-        /* akhir style */
-    </style>
+<div class="col-lg">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Peminjaman Buku</h3>
+            <h3 class="card-title">Peminjaman Buku Terbaru</h3>
         </div>
         <div class="card-body" style="max-height: 200px; overflow-y: auto;">
             <!-- Set max-height dan scroll -->
@@ -68,5 +49,13 @@
                 </tbody>
             </table>
         </div>
+        <div class="card-footer text-end">
+            <a href="{{ route('admin.transaction.index') }}">Tampilkan lebih banyak<i
+                    class="bi bi-arrow-right-short"></i></a>
+            {{-- <a href="#"
+            class="btn btn-primary link-light link-underline-opacity-0 link-underline-opacity-50-hover">
+            Tampilkan lebih banyak transaksi
+        </a> --}}
+        </div>
     </div>
-@endsection
+</div>

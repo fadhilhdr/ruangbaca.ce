@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\BookLoanController as AdminBookLoanController;
-use App\Http\Controllers\Admin\HistoryOfController;
 use App\Http\Controllers\Admin\FinesBookController;
+use App\Http\Controllers\Admin\HistoryOfController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookLoanController;
@@ -92,6 +92,9 @@ Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->g
 
 // Rute admin
 Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', function () {
+        return redirect()->route('admin.dashboard');
+    })->name('index'); // Tambahkan rute untuk admin
     Route::get('/dashboard', [HistoryOfController::class, 'index'])->name('dashboard');
     // Route::resource('/dashboard', HistoryOfController::class);
     Route::resource('students', StudentController::class); // Manage students

@@ -1,13 +1,9 @@
 @extends('admin.layouts.base')
 
-@section('title', 'Create Lecturer')
+@section('title', 'Tambah Data Dosen')
 
 @section('content')
-    <div class="card card-primary card-outline mb-4"> <!--begin::Header-->
-        <div class="card-header">
-            <div class="card-title">Tambah Data Dosen</div>
-        </div> <!--end::Header-->
-
+    <div class="card card-primary card-outline mb-4">
         <!--begin::Form-->
         <form method="POST" action="{{ route('admin.lecturers.store') }}">
             @csrf
@@ -15,8 +11,8 @@
             <div class="card-body">
                 <div class="mb-3">
                     <label for="nip" class="form-label">NIP</label>
-                    <input type="text" class="form-control @error('nip') is-invalid @enderror" id="nip"
-                        name="nip" value="{{ old('nip') }}" required>
+                    <input type="text" class="form-control @error('nip') is-invalid @enderror" id="nip" name="nip"
+                        value="{{ old('nip') }}" required>
                     @error('nip')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

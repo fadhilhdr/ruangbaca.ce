@@ -28,7 +28,7 @@
         integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous"><!-- jsvectormap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
         integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous">
-    
+
 </head> <!--end::Head--> <!--begin::Body-->
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
@@ -40,8 +40,41 @@
                 <strong>Sukses!</strong> {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+            <!--begin::App Content Header-->
+            <div class="app-content-header"> <!--begin::Container-->
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3> @yield('title')
+                            </h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-end">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ url('/') }}">Home</a>
+                                </li>
+                                @foreach (\App\Helpers\BreadcrumbHelper::generateBreadcrumb() as $breadcrumb)
+                                    @if ($loop->last)
+                                        <li class="breadcrumb-item active" aria-current="page">
+                                            {{ $breadcrumb['name'] }}
+                                        </li>
+                                    @else
+                                        <li class="breadcrumb-item">
+                                            <a href="{{ url($breadcrumb['url']) }}">{{ $breadcrumb['name'] }}</a>
+                                        </li>
+                                    @endif
+                                @endforeach
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div> <!--end::App Content Header-->
             <div class="app-content">
-                @yield('content')
+                <div class="container-fluid">
+                    <div class="row">
+                        @yield('content')
+                    </div>
+                </div>
             </div>
         </main>
         @include('admin.layouts.sidebar')

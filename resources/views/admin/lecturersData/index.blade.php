@@ -1,6 +1,6 @@
 @extends('admin.layouts.base')
 
-@section('title', 'Index Lecturers')
+@section('title', 'Indeks Dosen')
 
 @section('content')
     <div class="card mb-4">

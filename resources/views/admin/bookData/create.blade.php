@@ -4,7 +4,6 @@
 
 @section('content')
     <div class="card">
-
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissible fade show mx-3 mt-3" role="alert">
                 <strong>Error!</strong>

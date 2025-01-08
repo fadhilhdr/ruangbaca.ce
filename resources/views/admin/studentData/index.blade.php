@@ -1,11 +1,10 @@
 @extends('admin.layouts.base')
 
-@section('title', 'Index Students')
+@section('title', 'Indeks Mahasiswa')
 
 @section('content')
     <div class="card mb-4">
         <div class="card-header">
-            <h3 class="card-title">Data Students</h3>
             <div class="float-end">
                 <!-- Search Bar -->
                 <form action="{{ route('admin.students.index') }}" method="GET" class="d-flex">

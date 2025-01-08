@@ -1,12 +1,9 @@
 @extends('admin.layouts.base')
 
-@section('title', 'Create Student')
+@section('title', 'Tambah Data Mahasiswa')
 
 @section('content')
-    <div class="card card-primary card-outline mb-4"> <!--begin::Header-->
-        <div class="card-header">
-            <div class="card-title">Tambah Data Mahasiswa</div>
-        </div> <!--end::Header-->
+    <div class="card card-primary card-outline mb-4">
 
         <!--begin::Form-->
         <form method="POST" action="{{ route('admin.students.store') }}">
@@ -15,8 +12,8 @@
             <div class="card-body">
                 <div class="mb-3">
                     <label for="nim" class="form-label">NIM</label>
-                    <input type="text" class="form-control @error('nim') is-invalid @enderror" id="nim"
-                        name="nim" value="{{ old('nim') }}" required>
+                    <input type="text" class="form-control @error('nim') is-invalid @enderror" id="nim" name="nim"
+                        value="{{ old('nim') }}" required>
                     @error('nim')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

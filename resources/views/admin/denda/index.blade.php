@@ -21,47 +21,45 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>ID Transaksi</th>
-                        <th>ID Peminjaman</th>
+                        <th>No</th>
+                        <th>ID Peminjam</th>
                         <th>Jumlah Denda</th>
                         <th>Status</th>
                         <th>Bukti Transfer</th>
                         <th>Dibayar Pada</th>
                         <th>Verifikasi Pada</th>
+                        <th>Action</th> <!-- Kolom untuk tombol aksi -->
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($denda as $fine)
+                    @foreach ($denda as $index => $item)
                         <tr>
-                            <td>{{ $fine->id }}</td>
-                            <td>{{ $fine->transaction_id }}</td>
-                            <td>{{ $fine->book_loan_id }}</td>
-                            <td>Rp {{ number_format($fine->amount, 2, ',', '.') }}</td>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $item->bookLoan->user->name ?? 'N/A' }}</td>
+                            <td>{{ $item->amount }}</td>
+                            <td>{{ $item->status }}</td>
                             <td>
-                                @switch($fine->status)
-                                    @case('awaiting_verif')
-                                        Menunggu Verifikasi
-                                    @break
-
-                                    @case('verified')
-                                        Terverifikasi
-                                    @break
-
-                                    @case('decline')
-                                        Ditolak
-                                    @break
-                                @endswitch
-                            </td>
-                            <td>
-                                @if ($fine->bukti_tf)
-                                    <a href="{{ asset('uploads/' . $fine->bukti_tf) }}" target="_blank">Lihat Bukti</a>
+                                @if ($item->bukti_tf)
+                                    <a href="{{ Storage::url($item->bukti_tf) }}" target="_blank">Lihat Bukti</a>
                                 @else
                                     Tidak Ada
                                 @endif
                             </td>
-                            <td>{{ $fine->paid_at ? $fine->paid_at->format('d-m-Y H:i:s') : 'Belum Dibayar' }}</td>
-                            <td>{{ $fine->verified_at ? $fine->verified_at->format('d-m-Y H:i:s') : 'Belum Diverifikasi' }}
+                            <td>
+                                {{ $item->paid_at ? \Carbon\Carbon::parse($item->paid_at)->format('d-m-Y H:i:s') : 'Belum Dibayar' }}
+                            </td>
+                            <td>
+                                {{ $item->verified_at ? \Carbon\Carbon::parse($item->verified_at)->format('d-m-Y H:i:s') : 'Belum Diverifikasi' }}
+                            </td>
+                            <td>
+                                <!-- Tombol untuk mengubah status verifikasi -->
+                                <form action="{{ route('admin.denda.updateStatus', $item->id) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        {{ $item->status === 'awaiting_verif' ? 'Verifikasi' : 'Batalkan Verifikasi' }}
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach

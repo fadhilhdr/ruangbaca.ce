@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Book;
+use App\Models\Fine;
 use App\Models\Student;
 use App\Models\Transaction;
 use App\Models\Visitor;
@@ -16,12 +17,8 @@ class HistoryOfController extends Controller
      */
     public function showTransaction()
     {
-        $transactions = Transaction::with(['bookLoan.book', 'bookLoan.user', 'type'])
-            ->latest() // Mengurutkan berdasarkan kolom created_at secara descending
-            ->take(3) // Membatasi hanya 3 data terbaru
-            ->get();
-
-        return view('admin.transaksi.index', compact('transactions'));
+        $denda = Fine::with('transaction', 'bookLoan')->orderBy('created_at', 'desc')->get();
+        return view('admin.dashboard.newestBookLoan', compact('transactions'));
     }
 
     public function index()

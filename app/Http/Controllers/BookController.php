@@ -55,7 +55,6 @@ class BookController extends Controller
             ->selectRaw('COUNT(CASE WHEN is_available = true THEN 1 END) as available_stock')
             ->selectRaw('COUNT(*) as total_copies')
             ->first();
-
         // Load loans jika diperlukan
         $activeLoans = BookLoan::whereIn('kode_unik_buku',
             Book::where('isbn', $isbn)->pluck('id')

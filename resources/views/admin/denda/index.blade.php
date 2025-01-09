@@ -13,11 +13,8 @@
             box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
         }
     </style>
-    <div class="card mt-3">
-        <div class="card-header">
-            <h3 class="card-title">Daftar Denda</h3>
-        </div>
-        <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+    <div class="card">
+        <div class="card-body">
             <table class="table table-bordered">
                 <thead>
                     <tr>

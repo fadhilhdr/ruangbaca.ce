@@ -26,7 +26,37 @@
                         <tr>
                             <td>{{ $transaction->id }}</td>
                             <td>{{ $transaction->bookLoan->user->name ?? 'N/A' }}</td>
-                            <td>{{ $transaction->type->type_name ?? 'N/A' }}</td>
+                            <td>
+                                @php
+                                    // Menentukan warna berdasarkan status transaksi
+                                    $status = $transaction->type->type_name ?? 'N/A';
+                                    $statusClass = '';
+
+                                    switch ($status) {
+                                        case 'Borrow':
+                                            $statusClass = 'bg-primary'; // Biru Tua
+                                            break;
+                                        case 'Renewal':
+                                            $statusClass = 'bg-info'; // Biru Muda
+                                            break;
+                                        case 'Return':
+                                            $statusClass = 'bg-warning'; // Kuning
+                                            break;
+                                        case 'Fine Payment':
+                                            $statusClass = 'bg-success'; // Hijau
+                                            break;
+                                        case 'Lost Book Replacement':
+                                            $statusClass = 'bg-warning'; // Kuning
+                                            break;
+                                        default:
+                                            $statusClass = 'bg-secondary'; // Default jika tidak sesuai
+                                    }
+                                @endphp
+
+                                <div class="text-white text-center font-semibold rounded {{ $statusClass }}">
+                                    {{ $status }}
+                                </div>
+                            </td>
                             <td>{{ $transaction->bookLoan->book->judul ?? 'N/A' }}</td>
                             <td>{{ $transaction->bookLoan->loan_date ?? 'N/A' }}</td>
                             <td>

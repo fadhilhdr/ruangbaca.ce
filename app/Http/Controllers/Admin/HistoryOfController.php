@@ -35,9 +35,11 @@ class HistoryOfController extends Controller
         $totalVisitor = Visitor::count();
 
         // Menampilkan tabel transaksi
-        $transactions = Transaction::with(['bookLoan.user', 'bookLoan', 'type'])->get();
+        $transactions = Transaction::with(['bookLoan.user', 'bookLoan', 'type'])
+            ->take(3) // atau bisa juga menggunakan ->limit(3)
+            ->get();
 
-        return view('admin.dashboard.index', compact('availableBooks', 'borrowedBooks', 'totalVisitor', "totalStudents", "transactions"));
+        return view('admin.dashboard.index', compact('availableBooks', 'borrowedBooks', 'totalVisitor', 'totalStudents', 'transactions'));
 
     }
 

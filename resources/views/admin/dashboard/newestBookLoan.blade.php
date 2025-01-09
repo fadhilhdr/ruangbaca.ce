@@ -6,22 +6,43 @@
         <div class="card-body" style="max-height: 200px; overflow-y: auto;">
             <!-- Set max-height dan scroll -->
             <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID Transaksi</th>
-                        <th>Nama</th>
-                        <th>Status</th>
-                        <th>Judul Buku</th>
-                        <th>Tanggal Pinjam</th>
-                        <th>Keterangan</th>
-                    </tr>
-                </thead>
+
                 <tbody>
                     @foreach ($transactions as $transaction)
                         <tr>
                             <td>{{ $transaction->id }}</td>
                             <td>{{ $transaction->bookLoan->user->name ?? 'N/A' }}</td>
-                            <td>{{ $transaction->type->type_name ?? 'N/A' }}</td>
+                            <td>
+                                @php
+                                    // Menentukan warna berdasarkan status transaksi
+                                    $status = $transaction->type->type_name ?? 'N/A';
+                                    $statusClass = '';
+
+                                    switch ($status) {
+                                        case 'Borrow':
+                                            $statusClass = 'bg-primary'; // Biru Tua
+                                            break;
+                                        case 'Renewal':
+                                            $statusClass = 'bg-info'; // Biru Muda
+                                            break;
+                                        case 'Return':
+                                            $statusClass = 'bg-warning'; // Kuning
+                                            break;
+                                        case 'Fine Payment':
+                                            $statusClass = 'bg-success'; // Hijau
+                                            break;
+                                        case 'Lost Book Replacement':
+                                            $statusClass = 'bg-warning'; // Kuning
+                                            break;
+                                        default:
+                                            $statusClass = 'bg-secondary'; // Default jika tidak sesuai
+                                    }
+                                @endphp
+
+                                <div class="text-white text-center font-semibold rounded {{ $statusClass }}">
+                                    {{ $status }}
+                                </div>
+                            </td>
                             <td>{{ $transaction->bookLoan->book->judul ?? 'N/A' }}</td>
                             <td>{{ $transaction->bookLoan->loan_date ?? 'N/A' }}</td>
                             <td>
@@ -52,10 +73,6 @@
         <div class="card-footer text-end">
             <a href="{{ route('admin.transaction.index') }}">Tampilkan lebih banyak<i
                     class="bi bi-arrow-right-short"></i></a>
-            {{-- <a href="#"
-            class="btn btn-primary link-light link-underline-opacity-0 link-underline-opacity-50-hover">
-            Tampilkan lebih banyak transaksi
-        </a> --}}
         </div>
     </div>
 </div>

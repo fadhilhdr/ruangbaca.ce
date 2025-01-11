@@ -35,7 +35,7 @@ class HistoryOfController extends Controller
         $totalVisitor = Visitor::count();
 
         // Menampilkan tabel transaksi
-        $transactions = Transaction::with(['bookLoan.user', 'bookLoan', 'type'])
+        $transactions = Transaction::with(['bookLoan.user', 'bookLoan', 'type'])->orderBy("created_at", "desc")
             ->take(3) // atau bisa juga menggunakan ->limit(3)
             ->get();
 

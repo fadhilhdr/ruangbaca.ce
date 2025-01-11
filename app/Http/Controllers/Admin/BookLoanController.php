@@ -17,7 +17,7 @@ class BookLoanController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::with(['bookLoan.book', 'bookLoan.user', 'type'])->get();
+        $transactions = Transaction::with(['bookLoan.book', 'bookLoan.user', 'type'])->orderBy("created_at", "desc")->get();
         return view('admin.transaksi.index', compact('transactions'));
     }
 

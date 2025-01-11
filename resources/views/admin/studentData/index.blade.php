@@ -35,7 +35,7 @@
                 <tbody>
                     @forelse($students as $index => $student)
                         <tr class="align-middle">
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $loop->iteration + ($students->currentPage() - 1) * $students->perPage() }}</td>
                             <td>{{ $student->nim }}</td>
                             <td>{{ $student->name }}</td>
                             <td>{{ $student->angkatan }}</td>

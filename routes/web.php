@@ -102,6 +102,7 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('books', AdminBookController::class); // Manage books
     Route::resource('transaction', AdminBookLoanController::class); // Manage transaction
     Route::resource('fines', FinesBookController::class); // Manage fines
+    Route::get('visitor', [VisitorController::class, 'adminVisitorController'])->name('visitor.index');
     Route::patch('/admin/denda/{id}/update-status', [FinesBookController::class, 'updateStatus'])->name('denda.updateStatus');
     Route::get('/upload-data', [LecturerController::class, 'upload'])->name('lecturers.upload');
     Route::get('/upload-data', [StudentController::class, 'upload'])->name('students.upload');

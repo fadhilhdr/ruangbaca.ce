@@ -8,7 +8,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th style="width: 10px">#</th>
+                        <th>NO</th>
                         <th>Judul</th>
                         <th>Penulis</th>
                         <th>Penerbit</th>
@@ -24,7 +24,7 @@
                 <tbody>
                     @forelse($books as $index => $book)
                         <tr class="align-middle">
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $loop->iteration + ($books->currentPage() - 1) * $books->perPage() }}</td>
                             <td>{{ $book->judul }}</td>
                             <td>{{ $book->penulis }}</td>
                             <td>{{ $book->penerbit }}</td>

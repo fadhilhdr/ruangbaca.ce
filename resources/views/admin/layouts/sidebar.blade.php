@@ -127,7 +127,7 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item"> <a href="{{ route('admin.fines.index') }}" class="nav-link">
+                <li class="nav-item"> <a href="{{ route('admin.visitor.index') }}" class="nav-link">
                         <i class="bi bi-bar-chart"></i>
                         <p>
                             Visitor

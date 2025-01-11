@@ -6,7 +6,16 @@
         <div class="card-body" style="max-height: 200px; overflow-y: auto;">
             <!-- Set max-height dan scroll -->
             <table class="table table-bordered">
-
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Status</th>
+                        <th>Judul Buku</th>
+                        <th>Tanggal Pinjam</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
                 <tbody>
                     @foreach ($transactions as $transaction)
                         <tr>

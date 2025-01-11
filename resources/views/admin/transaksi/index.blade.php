@@ -13,7 +13,8 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>ID Transaksi</th>
+                        <th>NO</th>
+                        {{-- <th>ID Transaksi</th> --}}
                         <th>Nama</th>
                         <th>Status</th>
                         <th>Judul Buku</th>
@@ -22,9 +23,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($transactions as $transaction)
+                    @foreach ($transactions as $index => $transaction)
                         <tr>
-                            <td>{{ $transaction->id }}</td>
+                            <td>{{ $loop->iteration }}</td>
+                            {{-- <td>{{ $transaction->id }}</td> --}}
                             <td>{{ $transaction->bookLoan->user->name ?? 'N/A' }}</td>
                             <td>
                                 @php

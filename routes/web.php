@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/credit', function () {
+    return view('credit');
+})->name('credit');
 
 // Rute visitor
 Route::post('/visitor', [VisitorController::class, 'store'])->name('visitor.store');
@@ -69,12 +72,12 @@ Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->g
         Route::get('/', [BookLoanController::class, 'index'])->name('index');
         Route::get('/history', [BookLoanController::class, 'history'])->name('history');
         Route::get('/{id}', [BookLoanController::class, 'show'])->name('show');
-        
+
         // Borrow Routes
 
         Route::get('/borrow/{isbn}', [BookLoanController::class, 'showBorrowForm'])->name('borrowForm');
         Route::post('/borrow/{isbn}', [BookLoanController::class, 'borrowBook'])->name('borrow');
-        
+
         // Di dalam group loans
 
         Route::get('/renew/{id}', [BookLoanController::class, 'showRenewForm'])->name('renewForm');
@@ -97,6 +100,7 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/', function () {
         return redirect()->route('admin.dashboard');
     })->name('index'); // Tambahkan rute untuk admin
+
     Route::get('/dashboard', [HistoryOfController::class, 'index'])->name('dashboard');
     // Route::resource('/dashboard', HistoryOfController::class);
     Route::resource('students', StudentController::class); // Manage students

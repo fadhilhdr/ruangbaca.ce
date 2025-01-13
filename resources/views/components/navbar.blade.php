@@ -12,7 +12,7 @@
 
                 <!-- Desktop Navigation Links -->
                 <div class="hidden space-x-8 sm:flex sm:items-center sm:ms-10">
-                    <a href="#" class="text-gray-700 hover:text-gray-900 transition">Beranda</a>
+                    <a href="{{ url('/') }}" class="text-gray-700 hover:text-gray-900 transition">Beranda</a>
                     <a href="#" class="text-gray-700 hover:text-gray-900 transition">Informasi</a>
                     <a href="#" class="text-gray-700 hover:text-gray-900 transition">Bantuan</a>
                 </div>
@@ -73,7 +73,7 @@
     <!-- Mobile Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Beranda</a>
+            <a href="{{ url('/') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Beranda</a>
             <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Informasi</a>
             <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Bantuan</a>
         </div>

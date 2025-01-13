@@ -57,7 +57,6 @@ class VisitorController extends Controller
                 'nim_nip_nppu_nupk' => $identifier,
                 'name' => $name,
                 'instansi' => $instansi,
-                'tanggal' => now(),
                 'check_in_at' => now(),
             ]);
     
@@ -71,7 +70,6 @@ class VisitorController extends Controller
                 'nim_nip_nppu_nupk' => $identifier,
                 'name' => $identifier, // menggunakan identifier sebagai nama
                 'instansi' => $request->input('instansi'),
-                'tanggal' => now(),
                 'check_in_at' => now(),
             ]);
     
@@ -101,12 +99,13 @@ class VisitorController extends Controller
         return redirect()->route('visitor.index')->with('success', "Sampai jumpa, {$visitor->name}!");
     }
 
-    public function index(Request $request)
+    public function index()
     {
-
-        $todayVisitors = Visitor::whereDate('check_in_at', Carbon::today())->get();
+        $todayVisitors = Visitor::whereDate('check_in_at', Carbon::today())
+            ->orderByDesc('check_in_at')
+            ->paginate(10);
+        
         return view('visitor.index', compact('todayVisitors'));
-
     }
     
     public function adminVisitorController(Request $request)

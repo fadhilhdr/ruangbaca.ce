@@ -15,24 +15,21 @@ class VisitorController extends Controller
     {
         // Validasi input
         $request->validate([
-            'identifier' => 'required|string', // Nama atau NIM
+            'identifier' => 'required|string', 
             'instansi' => 'nullable|string',
         ]);
 
         $identifier = $request->input('identifier');
-        $instansi = $request->input('instansi', 'Teknik Komputer'); // Default instansi
+        $instansi = $request->input('instansi', 'Teknik Komputer'); 
 
-        // Cari di database berdasarkan NIM/NIP
         $user = Student::where('nim', $identifier)->first() ?? Lecturer::where('nip', $identifier)->first() ?? Employee::where('nip', $identifier)->first();
 
-        // Periksa apakah pengguna sudah check-in dan belum checkout
         $existingVisitor = Visitor::where(function ($query) use ($identifier) {
             $query->where('userid', $identifier)
                 ->orWhere('name', $identifier);
         })->whereNull('check_out_at')->first();
 
         if ($existingVisitor) {
-            // Jika sudah check-in, tampilkan konfirmasi untuk checkout
             return view('visitor.confirm_checkout', [
                 'visitor' => $existingVisitor,
             ]);

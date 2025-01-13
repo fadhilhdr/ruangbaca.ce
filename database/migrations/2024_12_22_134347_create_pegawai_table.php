@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pegawais', function (Blueprint $table) {
-            $table->id();
             $table->string('nama_lengkap');
-            $table->string('nip_nppu_nupk')->unique();
+            $table->string('nip_nppu_nupk')->unique()->primary();
             $table->string('nidn_nidk_nup_nitk')->nullable();
             $table->string('nuptk')->nullable();
             $table->string('pangkat_golongan')->nullable();

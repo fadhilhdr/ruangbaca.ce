@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Lecturer;
+use App\Models\Pegawai;
 use App\Models\Student;
 use App\Models\Visitor;
 use Carbon\Carbon;
@@ -15,55 +16,73 @@ class VisitorController extends Controller
     {
         // Validasi input
         $request->validate([
-            'identifier' => 'required|string', 
+            'identifier' => 'required|string',
             'instansi' => 'nullable|string',
         ]);
-
+    
         $identifier = $request->input('identifier');
-        $instansi = $request->input('instansi', 'Teknik Komputer'); 
-
-        $user = Student::where('nim', $identifier)->first() ?? Lecturer::where('nip', $identifier)->first() ?? Employee::where('nip', $identifier)->first();
-
-        $existingVisitor = Visitor::where(function ($query) use ($identifier) {
-            $query->where('userid', $identifier)
-                ->orWhere('name', $identifier);
-        })->whereNull('check_out_at')->first();
-
+        $name = null;
+        $instansi = null;
+    
+        // Cek di tabel students
+        $student = Student::where('nim', $identifier)->first();
+        if ($student) {
+            $name = $student->name;
+            $instansi = $student->prodi;
+        }
+    
+        // Jika tidak ditemukan di students, cek di pegawais
+        if (!$student) {
+            $pegawai = Pegawai::where('nip_nppu_nupk', $identifier)->first();
+            if ($pegawai) {
+                $name = $pegawai->nama_lengkap;
+                $instansi = $pegawai->bagian;
+            }
+        }
+    
+        // Cek apakah pengunjung sudah check-in dan belum check-out
+        $existingVisitor = Visitor::where('nim_nip_nppu_nupk', $identifier)
+            ->whereNull('check_out_at')
+            ->first();
+    
         if ($existingVisitor) {
             return view('visitor.confirm_checkout', [
                 'visitor' => $existingVisitor,
             ]);
         }
-
-        if ($user) {
-            // Jika user terdaftar, gunakan data dari database
-            $name = $user->name;
-
-            // Simpan data ke tabel visitor
+    
+        // Jika ditemukan di database (student atau pegawai)
+        if ($name && $instansi) {
             Visitor::create([
-                'userid' => $identifier,
+                'nim_nip_nppu_nupk' => $identifier,
                 'name' => $name,
-                'instansi' => 'Teknik Komputer', // Instansi default
-                'check_in_at' => now(),
-            ]);
-
-            return redirect()->route('visitor.index')->with('success', "Selamat datang, $name!");
-        }
-
-        if (!empty($instansi)) {
-            // Simpan data untuk pengunjung tanpa NIM/NIP
-            Visitor::create([
-                'userid' => null,
-                'name' => $identifier,
                 'instansi' => $instansi,
+                'tanggal' => now(),
                 'check_in_at' => now(),
             ]);
-
-            return redirect()->route('visitor.index')->with('success', "Selamat datang, $identifier!");
+    
+            return redirect()->route('visitor.index')
+                ->with('success', "Selamat datang, $name!");
         }
-
-        // Jika Nama dan NIM tidak ditemukan di database
-        return redirect()->back()->with('error', 'Data tidak ditemukan di database. Tolong masukkan Nama dan Instansi Anda.');
+    
+        // Jika tidak ditemukan di database, gunakan input manual
+        if ($request->filled('instansi')) {
+            Visitor::create([
+                'nim_nip_nppu_nupk' => $identifier,
+                'name' => $identifier, // menggunakan identifier sebagai nama
+                'instansi' => $request->input('instansi'),
+                'tanggal' => now(),
+                'check_in_at' => now(),
+            ]);
+    
+            return redirect()->route('visitor.index')
+                ->with('success', "Selamat datang, $identifier!");
+        }
+    
+        // Jika tidak ditemukan dan instansi kosong
+        return redirect()->back()
+            ->with('error', 'Data tidak ditemukan di database. Tolong masukkan Instansi Anda.')
+            ->withInput();
     }
 
     public function confirmCheckout(Request $request)

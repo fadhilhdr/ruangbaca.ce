@@ -9,7 +9,9 @@
             </div>
             <div class="text-right">
                 <p class="text-gray-400">&copy; 2024 — S1T24K06</p>
-                <p class="text-gray-400 mt-2">Developed with ❤️ by Team S1T24K06</p>
+                <a href="{{ route('credit') }}" class="text-gray-400 mt-2">
+                    <p>Developed with ❤️ by Team S1T24K06</p>
+                </a>
             </div>
         </div>
     </div>

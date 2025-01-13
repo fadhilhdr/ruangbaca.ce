@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Specialization;
+use App\Models\Pegawai;
 use Illuminate\Http\Request;
 
-class SpecializationController extends Controller
+class PegawaiController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class SpecializationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Specialization $specialization)
+    public function show(Pegawai $pegawai)
     {
         //
     }
@@ -42,7 +42,7 @@ class SpecializationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Specialization $specialization)
+    public function edit(Pegawai $pegawai)
     {
         //
     }
@@ -50,7 +50,7 @@ class SpecializationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Specialization $specialization)
+    public function update(Request $request, Pegawai $pegawai)
     {
         //
     }
@@ -58,7 +58,7 @@ class SpecializationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Specialization $specialization)
+    public function destroy(Pegawai $pegawai)
     {
         //
     }

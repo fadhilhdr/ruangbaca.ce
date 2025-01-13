@@ -69,10 +69,12 @@ Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->g
         Route::get('/', [BookLoanController::class, 'index'])->name('index');
         Route::get('/history', [BookLoanController::class, 'history'])->name('history');
         Route::get('/{id}', [BookLoanController::class, 'show'])->name('show');
+        
         // Borrow Routes
 
         Route::get('/borrow/{isbn}', [BookLoanController::class, 'showBorrowForm'])->name('borrowForm');
         Route::post('/borrow/{isbn}', [BookLoanController::class, 'borrowBook'])->name('borrow');
+        
         // Di dalam group loans
 
         Route::get('/renew/{id}', [BookLoanController::class, 'showRenewForm'])->name('renewForm');

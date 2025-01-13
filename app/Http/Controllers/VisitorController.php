@@ -91,7 +91,9 @@ class VisitorController extends Controller
         $todayVisitors = Visitor::whereDate('check_in_at', Carbon::today())->get();
         return view('visitor.index', compact('todayVisitors'));
 
-    }public function adminVisitorController(Request $request)
+    }
+    
+    public function adminVisitorController(Request $request)
     {
         $query = Visitor::query();
 

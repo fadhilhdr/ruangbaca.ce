@@ -6,27 +6,18 @@
             <span class="brand-text fw-light">RBC</span>
         </a>
     </div>
-    <div class="sidebar-body">
-
-    </div>
     <div class="sidebar-wrapper">
         <nav class="mt-2">
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
-                <li class="nav-item"> <a href="{{ route('admin.dashboard') }}" class="nav-link"> <i
-                            class="bi bi-speedometer"></i>
-                        <p>
-                            Dashboard
-                        </p>
+                <li class="nav-item">
+                    <a href="{{ route('admin.dashboard') }}" class="nav-link">
+                        <i class="bi bi-speedometer"></i>
+                        <p>Dashboard</p>
                     </a>
                 </li>
-                <li class="nav-item"> <a href="{{ route('admin.transaction.index') }}" class="nav-link"> <i
-                            class="bi bi-receipt"></i>
-                        <p>
-                            Transaksi
-                        </p>
-                    </a>
-                </li>
-                <!-- Students Menu -->
+                <div class="divider"></div>
+                <li class="nav-header">MASTER DATA</li>
+
                 <li class="nav-item has-treeview {{ request()->is('admin/students*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('admin/students*') ? 'active' : '' }}">
                         <i class="bi bi-person"></i>
@@ -60,7 +51,6 @@
                     </ul>
                 </li>
 
-                <!-- Lecturers Menu -->
                 <li class="nav-item {{ request()->is('admin/lecturers*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('admin/lecturers*') ? 'active' : '' }}">
                         <i class="bi bi-person-badge"></i>
@@ -93,8 +83,7 @@
                         </li>
                     </ul>
                 </li>
-
-                <!-- Book Menu -->
+                {{-- book data --}}
                 <li class="nav-item {{ request()->is('admin/books*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('admin/books*') ? 'active' : '' }}">
                         <i class="bi bi-book"></i>
@@ -120,20 +109,28 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item"> <a href="{{ route('admin.fines.index') }}" class="nav-link">
-                        <i class="bi bi-cash-stack"></i>
-                        <p>
-                            Denda
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item"> <a href="{{ route('admin.visitor.index') }}" class="nav-link">
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.visitor.index') }}" class="nav-link">
                         <i class="bi bi-bar-chart"></i>
-                        <p>
-                            Visitor
-                        </p>
+                        <p>Visitor</p>
                     </a>
                 </li>
+                <hr>
+                <li class="nav-item">
+                    <a href="{{ route('admin.transaction.index') }}" class="nav-link">
+                        <i class="bi bi-receipt"></i>
+                        <p>Transaksi</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.fines.index') }}" class="nav-link">
+                        <i class="bi bi-cash-stack"></i>
+                        <p>Denda</p>
+                    </a>
+                </li>
+
             </ul>
         </nav>
     </div>

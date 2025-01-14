@@ -10,6 +10,7 @@ use App\Http\Controllers\BookLoanController;
 use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TugasakhirController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VisitorController;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +33,12 @@ Route::post('/visitor/confirmCheckout', [VisitorController::class, 'confirmCheck
 Route::prefix('public/books')->name('public.books.')->group(function () {
     Route::get('/', [BookController::class, 'index'])->name('index');
     Route::get('/{isbn}', [BookController::class, 'show'])->name('show');
+});
+
+// Rute Public untuk Tugas Akhir 
+Route::prefix('public/tugasakhirs')->name('public.tugasakhirs.')->group(function () {
+    Route::get('/', [TugasakhirController::class, 'index'])->name('index'); 
+    Route::get('/{id}', [TugasakhirController::class, 'show'])->name('show'); 
 });
 
 // Rute public (registrasi menjadi user)
@@ -92,6 +99,17 @@ Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->g
         // Lost book replacement routes
         Route::get('/replacement/{id}', [BookLoanController::class, 'showReplacementForm'])->name('replacementForm');
         Route::post('/replacement/{id}', [BookLoanController::class, 'storeReplacement'])->name('replacement.store');
+    });
+
+    // Tugas Akhir Routes
+    Route::prefix('tugasakhirs')->name('tugasakhirs.')->group(function () {
+        Route::get('/', [TugasakhirController::class, 'index'])->name('index');
+        Route::get('/create', [TugasakhirController::class, 'create'])->name('create');
+        Route::post('/', [TugasakhirController::class, 'store'])->name('store');
+        Route::get('/{id}', [TugasakhirController::class, 'memberShow'])->name('show');
+        Route::get('/{id}/edit', [TugasakhirController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [TugasakhirController::class, 'update'])->name('update');
+        Route::delete('/{id}', [TugasakhirController::class, 'destroy'])->name('destroy');
     });
 });
 

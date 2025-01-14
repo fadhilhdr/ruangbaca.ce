@@ -41,7 +41,12 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center">No data available</td>
+                            <td colspan="8" class="text-center py-4">
+                                <div class="d-flex flex-column align-items-center">
+                                    <i class="bi bi-inbox text-muted" style="font-size: 2rem;"></i>
+                                    <p class="text-muted mt-2">Tidak ada data denda tersedia</p>
+                                </div>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>

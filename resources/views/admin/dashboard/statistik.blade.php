@@ -1,49 +1,100 @@
-<div class="row"> <!--begin::Col-->
-    <div class="col-lg-3 col-6"> <!--begin::Small Box Widget 1-->
-        <div class="small-box text-bg-primary">
-            <div class="inner">
-                <h3>{{ $availableBooks }}</h3>
-                <p>Buku Tersedia</p>
+<div class="row gy-4 mb-4"> <!-- Baris dengan spasi antar elemen -->
+    <!-- Buku Tersedia -->
+    <div class="col-lg-6 col-xl-3">
+        <div class="card card-statistik shadow-sm border-0 bg-light">
+            <div class="card-body d-flex align-items-center">
+                <div class="icon-square bg-primary text-white me-3 d-flex align-items-center justify-content-center">
+                    <i class="bi bi-book fs-3"></i>
+                </div>
+                <div>
+                    <h4 class="mb-1">{{ $availableBooks }}</h4>
+                    <p class="mb-0 text-muted">Buku Tersedia</p>
+                </div>
             </div>
-            <i class="bi bi-book small-box-icon"></i>
-            <a href="{{ route('admin.books.index') }}"
-                class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
-                More info <i class="bi bi-link-45deg"></i>
+            <a href="{{ route('admin.books.index') }}" class="card-footer text-muted text-decoration-none py-2">
+                More info <i class="bi bi-arrow-right-short"></i>
             </a>
         </div>
-        <!--end::Small Box Widget 1-->
-    </div> <!--end::Col-->
-    <div class="col-lg-3 col-6"> <!--begin::Small Box Widget 2-->
-        <div class="small-box text-bg-success">
-            <div class="inner">
-                <h3>{{ $borrowedBooks }}</h3>
-                <p>Buku Terpinjam</p>
-            </div>
-            <i class="bi bi-book-half small-box-icon"></i><a href="#"
-                class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
-                More info <i class="bi bi-link-45deg"></i> </a>
-        </div> <!--end::Small Box Widget 2-->
-    </div> <!--end::Col-->
-    <div class="col-lg-3 col-6"> <!--begin::Small Box Widget 3-->
-        <div class="small-box text-bg-warning">
-            <div class="inner">
-                <h3>{{ $totalVisitor }}</h3>
-                <p>Pengunjung</p>
-            </div>
-            <i class="bi bi-person-check small-box-icon"></i><a href="#"
-                class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
-                More info <i class="bi bi-link-45deg"></i> </a>
-        </div> <!--end::Small Box Widget 3-->
     </div>
-    <div class="col-lg-3 col-6"> <!--begin::Small Box Widget 3-->
-        <div class="small-box text-bg-danger">
-            <div class="inner">
-                <h3>{{ $totalStudents }}</h3>
-                <p>Jumlah Mahasiswa</p>
+
+    <!-- Buku Terpinjam -->
+    <div class="col-lg-6 col-xl-3">
+        <div class="card card-statistik shadow-sm border-0 bg-light">
+            <div class="card-body d-flex align-items-center">
+                <div class="icon-square bg-success text-white me-3 d-flex align-items-center justify-content-center">
+                    <i class="bi bi-book-half fs-3"></i>
+                </div>
+                <div>
+                    <h4 class="mb-1">{{ $borrowedBooks }}</h4>
+                    <p class="mb-0 text-muted">Buku Terpinjam</p>
+                </div>
             </div>
-            <i class="bi bi-person-vcard small-box-icon"></i><a href="{{ route('admin.students.index') }}"
-                class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover">
-                More info <i class="bi bi-link-45deg"></i> </a>
-        </div> <!--end::Small Box Widget 3-->
-    </div> <!--end::Col-->
-</div> <!--end::Row-->
+            <a href="#" class="card-footer text-muted text-decoration-none py-2">
+                More info <i class="bi bi-arrow-right-short"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Pengunjung -->
+    <div class="col-lg-6 col-xl-3">
+        <div class="card card-statistik shadow-sm border-0 bg-light">
+            <div class="card-body d-flex align-items-center">
+                <div class="icon-square bg-warning text-white me-3 d-flex align-items-center justify-content-center">
+                    <i class="bi bi-person-check fs-3"></i>
+                </div>
+                <div>
+                    <h4 class="mb-1">{{ $totalVisitor }}</h4>
+                    <p class="mb-0 text-muted">Pengunjung</p>
+                </div>
+            </div>
+            <a href="#" class="card-footer text-muted text-decoration-none py-2">
+                More info <i class="bi bi-arrow-right-short"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Jumlah Mahasiswa -->
+    <div class="col-lg-6 col-xl-3">
+        <div class="card card-statistik shadow-sm border-0 bg-light">
+            <div class="card-body d-flex align-items-center">
+                <div class="icon-square bg-danger text-white me-3 d-flex align-items-center justify-content-center">
+                    <i class="bi bi-person-vcard fs-3"></i>
+                </div>
+                <div>
+                    <h4 class="mb-1">{{ $totalStudents }}</h4>
+                    <p class="mb-0 text-muted">Jumlah Mahasiswa</p>
+                </div>
+            </div>
+            <a href="{{ route('admin.students.index') }}" class="card-footer text-muted text-decoration-none py-2">
+                More info <i class="bi bi-arrow-right-short"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Tambahkan CSS -->
+<style>
+    .icon-square {
+        width: 50px;
+        height: 50px;
+        border-radius: 10%;
+        font-size: 1.5rem;
+    }
+
+    .card-footer:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .card-statistik {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card-statistik:hover {
+        transform: translateY(-5px);
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-body {
+        padding: 1rem 1.25rem;
+    }
+</style>

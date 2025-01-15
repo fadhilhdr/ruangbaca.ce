@@ -103,7 +103,7 @@ Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->g
 
     // Tugas Akhir Routes
     Route::prefix('tugasakhirs')->name('tugasakhirs.')->group(function () {
-        Route::get('/', [TugasakhirController::class, 'index'])->name('index');
+        Route::get('/', [TugasakhirController::class, 'memberIndex'])->name('index');
         Route::get('/create', [TugasakhirController::class, 'create'])->name('create');
         Route::post('/', [TugasakhirController::class, 'store'])->name('store');
         Route::get('/{id}', [TugasakhirController::class, 'memberShow'])->name('show');

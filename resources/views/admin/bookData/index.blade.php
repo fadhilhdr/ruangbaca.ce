@@ -18,8 +18,13 @@
                             <div class="col-md-3">
                                 <label for="peminatan" class="form-label">Peminatan</label>
                                 <select class="form-select" name="peminatan" id="peminatan">
-                                    <option value="">Semua Peminatan</option>
-                                    {{-- Add your peminatan options here --}}
+                                    <option value="Semua Peminatan">Semua Peminatan</option>
+                                    <option value="Perangkat Lunak & Mobile Computing">Perangkat Lunak & Mobile Computing
+                                    </option>
+                                    <option value="Jaringan & Keamanan Komputer">Jaringan & Keamanan Komputer</option>
+                                    <option value="Sistem Tertanam & Robotika">Sistem Tertanam & Robotika</option>
+                                    <option value="Multimedia">Multimedia</option>
+                                    <option value="Diluar Peminatan">Diluar Peminatans</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
@@ -43,9 +48,7 @@
                         <a href="{{ route('admin.books.create') }}" class="btn btn-success">
                             <i class="bi bi-plus-lg me-1"></i> Tambah
                         </a>
-                        <a href="#" class="btn btn-secondary ms-2">
-                            <i class="bi bi-upload me-1"></i> Import
-                        </a>
+                        
                     </div>
                 </div>
 

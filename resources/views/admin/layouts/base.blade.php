@@ -29,25 +29,38 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
         integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous">
     {{-- mdb css --}}
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.css" rel="stylesheet">
+    {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.css" rel="stylesheet"> --}}
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    {{-- sweetalert --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head> <!--end::Head--> <!--begin::Body-->
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
+    @if ($errors->any())
+        <script>
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: '{{ $errors->first() }}'
+            });
+        </script>
+    @endif
+    
     <div class="app-wrapper"> <!--begin::Sidebar-->
         @include('admin.layouts.navbar')
         <main class="app-main">
-            <div class="alert alert-success alert-dismissible fade show mx-3 mt-3 {{ session('success') ? '' : 'd-none' }}"
-                role="alert">
-                <strong>Sukses!</strong> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
             <!--begin::App Content Header-->
             <div class="app-content-header"> <!--begin::Container-->
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3> @yield('title')
+                            <h3>
                             </h3>
                         </div>
                         <div class="col-sm-6">
@@ -83,6 +96,9 @@
         @include('admin.layouts.footer')
     </div> <!--end::App Wrapper-->
     @include('admin.layouts.scripts')
+    {{-- include sweetalert --}}
+    @include('sweetalert::alert')
+
 </body><!--end::Body-->
 
 </html>

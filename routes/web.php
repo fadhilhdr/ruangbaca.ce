@@ -35,10 +35,10 @@ Route::prefix('public/books')->name('public.books.')->group(function () {
     Route::get('/{isbn}', [BookController::class, 'show'])->name('show');
 });
 
-// Rute Public untuk Tugas Akhir 
+// Rute Public untuk Tugas Akhir
 Route::prefix('public/tugasakhirs')->name('public.tugasakhirs.')->group(function () {
-    Route::get('/', [TugasakhirController::class, 'index'])->name('index'); 
-    Route::get('/{id}', [TugasakhirController::class, 'show'])->name('show'); 
+    Route::get('/', [TugasakhirController::class, 'index'])->name('index');
+    Route::get('/{id}', [TugasakhirController::class, 'show'])->name('show');
 });
 
 // Rute public (registrasi menjadi user)
@@ -120,17 +120,20 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     })->name('index'); // Tambahkan rute untuk admin
 
     Route::get('/dashboard', [HistoryOfController::class, 'index'])->name('dashboard');
-    // Route::resource('/dashboard', HistoryOfController::class);
+                                                           // Route::resource('/dashboard', HistoryOfController::class);
     Route::resource('students', StudentController::class); // Manage students
+    Route::post('/students/create', [StudentController::class, 'import'])->name('students.import');
+    Route::get('/download-template', [StudentController::class, 'downloadTemplate'])->name('download.template');
+
     Route::resource('lecturers', LecturerController::class); // Manage lecturers
-    Route::resource('books', AdminBookController::class); // Manage books
+    Route::post('/lecturers/create', [LecturerController::class, 'import'])->name('lecturers.import');
+
+    Route::resource('books', AdminBookController::class);           // Manage books
     Route::resource('transaction', AdminBookLoanController::class); // Manage transaction
-    Route::resource('fines', FinesBookController::class); // Manage fines
+    Route::resource('fines', FinesBookController::class);           // Manage fines
     Route::get('visitor', [VisitorController::class, 'adminVisitorController'])->name('visitor.index');
     Route::patch('/admin/denda/{id}/update-status', [FinesBookController::class, 'updateStatus'])->name('denda.updateStatus');
     Route::get('/upload-data', [LecturerController::class, 'upload'])->name('lecturers.upload');
-    Route::get('/upload-data', [StudentController::class, 'upload'])->name('students.upload');
-    Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
 
     //Book History
 

@@ -41,17 +41,10 @@
                                 <p>Insert Data</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.students.upload') }}"
-                                class="nav-link {{ request()->routeIs('admin.students.upload') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Upload Data From Excel</p>
-                            </a>
-                        </li>
                     </ul>
                 </li>
 
-                <li class="nav-item {{ request()->is('admin/lecturers*') ? 'menu-open' : '' }}">
+                {{-- <li class="nav-item {{ request()->is('admin/lecturers*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('admin/lecturers*') ? 'active' : '' }}">
                         <i class="bi bi-person-badge"></i>
                         <p>
@@ -74,15 +67,8 @@
                                 <p>Insert Data</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="#"
-                                class="nav-link {{ request()->routeIs('admin.lecturers.upload') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Upload Data From Excel</p>
-                            </a>
-                        </li>
                     </ul>
-                </li>
+                </li> --}}
                 {{-- book data --}}
                 <li class="nav-item {{ request()->is('admin/books*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('admin/books*') ? 'active' : '' }}">

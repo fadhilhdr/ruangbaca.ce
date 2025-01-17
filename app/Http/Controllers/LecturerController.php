@@ -1,8 +1,6 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Imports\LecturersImport;
 use App\Models\Lecturer;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -41,8 +39,8 @@ class LecturerController extends Controller
     {
         // Validasi input
         $validated = $request->validate([
-            'nip' => 'required|string|max:20|unique:lecturers,nip',
-            'name' => 'required|string|max:255',
+            'nip'        => 'required|string|max:20|unique:lecturers,nip',
+            'name'       => 'required|string|max:255',
             'kode_dosen' => 'required|string|max:10|unique:lecturers,kode_dosen',
             'riwayat_s1' => 'required|string|max:255',
             'riwayat_s2' => 'required|string|max:255',
@@ -53,8 +51,8 @@ class LecturerController extends Controller
 
         // Buat dosen baru
         Lecturer::create([
-            'nip' => $validated['nip'],
-            'name' => $validated['name'],
+            'nip'        => $validated['nip'],
+            'name'       => $validated['name'],
             'kode_dosen' => $validated['kode_dosen'],
             'riwayat_s1' => $validated['riwayat_s1'],
             'riwayat_s2' => $validated['riwayat_s2'],
@@ -66,23 +64,92 @@ class LecturerController extends Controller
         // Redirect ke halaman daftar dosen dengan pesan sukses
         return redirect()->route('admin.lecturers.index')->with('success', 'Data dosen berhasil ditambahkan.');
     }
-    public function upload()
-    {
-        return view("admin.lecturersData.import");
-    }
+
     public function import(Request $request)
     {
-        // Validasi file
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv',
+            'file' => 'required|mimes:xls,xlsx',
         ]);
 
-        // Proses import data dari file Excel
-        Excel::import(new LecturersImport, $request->file('file'));
+        // Membaca file Excel
+        $path = $request->file('file')->getRealPath();
+        $data = Excel::toArray([], $path);
 
-        // Redirect dengan pesan sukses
-        return redirect()->route('admin.lecturers.index')->with('success', 'Data dosen berhasil diimport.');
+        // Ambil sheet pertama
+        $sheet = $data[0];
+
+        // Validasi duplikasi di file Excel
+        $nipList       = [];
+        $kodeDosenList = [];
+        $errors        = [];
+
+        foreach ($sheet as $index => $row) {
+            if ($index === 0) {
+                continue; // Lewati header baris pertama
+            }
+
+            $nip        = $row[0];
+            $name       = $row[1];
+            $kodeDosen  = $row[2];
+            $riwayatS1  = $row[3];
+            $riwayatS2  = $row[4];
+            $riwayatS3  = $row[5];
+            $kepakaran1 = $row[6];
+            $kepakaran2 = $row[7];
+
+            // Cek duplikat di dalam Excel
+            if (in_array($nip, $nipList)) {
+                $errors[] = "Baris " . ($index + 1) . ": NIP '$nip' duplikat di file Excel.";
+            } else {
+                $nipList[] = $nip;
+            }
+
+            if (in_array($kodeDosen, $kodeDosenList)) {
+                $errors[] = "Baris " . ($index + 1) . ": Kode dosen '$kodeDosen' duplikat di file Excel.";
+            } else {
+                $kodeDosenList[] = $kodeDosen;
+            }
+
+            // Cek duplikat di database
+            if (Lecturer::where('nip', $nip)->exists()) {
+                $errors[] = "Baris " . ($index + 1) . ": NIP '$nip' sudah ada di database.";
+            }
+
+            if (Lecturer::where('kode_dosen', $kodeDosen)->exists()) {
+                $errors[] = "Baris " . ($index + 1) . ": Kode dosen '$kodeDosen' sudah ada di database.";
+            }
+
+            // Validasi data yang diperlukan
+            if (empty($riwayatS1) || empty($riwayatS2) || empty($kepakaran1)) {
+                $errors[] = "Baris " . ($index + 1) . ": Riwayat S1, Riwayat S2, dan Kepakaran 1 wajib diisi.";
+            }
+        }
+
+        // Jika ada error, kembali dengan pesan
+        if (! empty($errors)) {
+            return redirect()->back()->withErrors(['upload' => $errors]);
+        }
+
+        // Simpan data ke database
+        foreach ($sheet as $index => $row) {
+            if ($index === 0) {
+                continue; // Lewati header baris pertama
+            }
+
+            Lecturer::create([
+                'nip'        => $row[0],
+                'name'       => $row[1],
+                'kode_dosen' => $row[2],
+                'riwayat_s1' => $row[3],
+                'riwayat_s2' => $row[4],
+                'riwayat_s3' => $row[5],
+                'kepakaran1' => $row[6],
+                'kepakaran2' => $row[7],
+            ]);
+        }
+        return redirect()->route('admin.lecturers.index')->with('success', 'Data dosen berhasil diunggah.');
     }
+
     /**
      * Display the specified resource.
      */
@@ -99,8 +166,8 @@ class LecturerController extends Controller
     public function update(Request $request, $nip)
     {
         $request->validate([
-            'nip' => 'required|numeric|unique:lecturers,nip,' . $nip,
-            'name' => 'required|string|max:255',
+            'nip'        => 'required|numeric|unique:lecturers,nip,' . $nip,
+            'name'       => 'required|string|max:255',
             'kode_dosen' => 'required|string|max:50',
             'riwayat_s1' => 'required|string|max:255',
             'riwayat_s2' => 'required|string|max:255',

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -8,6 +7,7 @@ use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class BookController extends Controller
 {
@@ -34,32 +34,32 @@ class BookController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul' => 'required|string|max:255',
-            'penulis' => 'required|string|max:255',
-            'penerbit' => 'required|string|max:255',
-            'isbn' => 'required|string|max:255',
-            'peminatan' => 'required|string|max:255',
+            'judul'         => 'required|string|max:255',
+            'penulis'       => 'required|string|max:255',
+            'penerbit'      => 'required|string|max:255',
+            'isbn'          => 'required|string|max:255',
+            'peminatan'     => 'required|string|max:255',
             'sub_peminatan' => 'nullable|string|max:255',
-            'kode_unik' => 'required|string|max:255|unique:books,kode_unik',
-            'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,gif,bmp|max:2048',
-            'synopsis' => 'nullable|string',
-            'is_available' => 'required|boolean',
+            'kode_unik'     => 'required|string|max:255|unique:books,kode_unik',
+            'thumbnail'     => 'nullable|image|mimes:jpg,jpeg,png,gif,bmp|max:2048',
+            'synopsis'      => 'nullable|string',
+            'is_available'  => 'required|boolean',
         ], [
             'thumbnail.image' => 'File harus berupa gambar.',
             'thumbnail.mimes' => 'Format file harus berupa JPG, JPEG, atau PNG.',
-            'thumbnail.max' => 'Ukuran file maksimal adalah 2 MB.',
+            'thumbnail.max'   => 'Ukuran file maksimal adalah 2 MB.',
         ]);
 
         if ($request->hasFile('thumbnail')) {
-            $file = $request->file('thumbnail');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('thumbnails', $fileName, 'public');
+            $file                   = $request->file('thumbnail');
+            $fileName               = time() . '_' . $file->getClientOriginalName();
+            $filePath               = $file->storeAs('thumbnails', $fileName, 'public');
             $validated['thumbnail'] = $filePath; // Simpan path file ke validated array
         }
 
         Book::create($validated); // Simpan data termasuk thumbnail path
-
-        return redirect()->route('admin.books.index')->with('success', 'Buku berhasil ditambahkan!');
+        Alert::success('success', 'Buku berhasil ditambahkan!');
+        return redirect()->route('admin.books.index');
     }
 
     /**
@@ -87,16 +87,16 @@ class BookController extends Controller
     {
         // Validasi data input
         $validated = $request->validate([
-            'judul' => 'required|string|max:255',
-            'penulis' => 'required|string|max:255',
-            'penerbit' => 'required|string|max:255',
-            'isbn' => 'required|string|max:255',
-            'peminatan' => 'required|string|max:255',
+            'judul'         => 'required|string|max:255',
+            'penulis'       => 'required|string|max:255',
+            'penerbit'      => 'required|string|max:255',
+            'isbn'          => 'required|string|max:255',
+            'peminatan'     => 'required|string|max:255',
             'sub_peminatan' => 'nullable|string|max:255',
-            'kode_unik' => "required|string|max:255|unique:books,kode_unik,{$id}",
-            'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png,gif,bmp|max:2048',
-            'synopsis' => 'nullable|string',
-            'is_available' => 'required|boolean',
+            'kode_unik'     => "required|string|max:255|unique:books,kode_unik,{$id}",
+            'thumbnail'     => 'nullable|image|mimes:jpg,jpeg,png,gif,bmp|max:2048',
+            'synopsis'      => 'nullable|string',
+            'is_available'  => 'required|boolean',
         ]);
 
         // Temukan data buku berdasarkan ID
@@ -110,7 +110,7 @@ class BookController extends Controller
             }
 
             // Simpan file thumbnail baru
-            $file = $request->file('thumbnail');
+            $file     = $request->file('thumbnail');
             $fileName = time() . '_' . $file->getClientOriginalName();
             $filePath = $file->storeAs('thumbnails', $fileName, 'public');
 

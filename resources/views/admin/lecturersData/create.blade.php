@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-12">
                 <!-- Card -->
-                <div class="card card-primary">
+                <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">
                             <i class="bi bi-person-plus-fill me-2"></i>
@@ -144,11 +144,18 @@
                             </div>
                         </div>
 
-                        <div class="card-footer">
-                            <div class="d-flex justify-content-end gap-3">
+                        <div class="card-footer row">
+                            <div class=" col d-flex justify conntent-start">
                                 <a href="{{ route('admin.lecturers.index') }}" class="btn btn-secondary">
                                     <i class="bi bi-arrow-left me-1"></i> Kembali
                                 </a>
+
+                            </div>
+                            <div class=" col d-flex justify-content-end gap-3">
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                    data-bs-target="#uploadModal">
+                                    <i class="bi bi-upload me-1"></i> Unggah melalui excel
+                                </button>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="bi bi-save me-1"></i> Simpan
                                 </button>
@@ -158,5 +165,59 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="uploadModalLabel">Upload Data </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="{{ route('admin.lecturers.import') }}"
+                            enctype="multipart/form-data">
+                            @csrf
+                            <div class="form-group mb-3">
+                                <label for="file" class="form-label">Pilih File</label>
+                                <input type="file" class="form-control" id="file" name="file" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if ($errors->has('upload'))
+            <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-danger" id="errorModalLabel">Validasi Gagal</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <ul>
+                                @foreach ($errors->get('upload') as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                    errorModal.show();
+                });
+            </script>
+        @endif
     </div>
 @endsection

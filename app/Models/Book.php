@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,14 +9,14 @@ class Book extends Model
     use HasFactory;
 
     protected $fillable = [
-        'judul', 
+        'judul',
         'penulis',
-        'penerbit', 
-        'isbn', 
-        'peminatan', 
+        'penerbit',
+        'isbn',
+        'peminatan',
         'sub_peminatan',
         'kode_unik',
-        'thumbnail',  
+        'thumbnail',
         'synopsis',
         'is_available',
     ];

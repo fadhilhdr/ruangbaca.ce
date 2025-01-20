@@ -14,9 +14,33 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::paginate(10);
+        $validated = $request->validate([
+            'search'       => 'nullable|string|max:255',
+            'peminatan'    => 'nullable|string',
+            'is_available' => 'nullable|boolean',
+        ]);
+
+        $query = Book::query();
+
+        if (! empty($validated['search'])) {
+            $query->where(function ($q) use ($validated) {
+                $q->where('judul', 'LIKE', "%{$validated['search']}%")
+                    ->orWhere('penulis', 'LIKE', "%{$validated['search']}%")
+                    ->orWhere('isbn', 'LIKE', "%{$validated['search']}%");
+            });
+        }
+
+        if (! empty($validated['peminatan'])) {
+            $query->where('peminatan', $validated['peminatan']);
+        }
+
+        if (isset($validated['is_available'])) {
+            $query->where('is_available', $validated['is_available']);
+        }
+
+        $books = $query->paginate(10);
         return view('admin.bookData.index', compact('books'));
     }
 
@@ -120,8 +144,8 @@ class BookController extends Controller
 
         // Update data buku
         $book->update($validated);
-
-        return redirect()->route('admin.books.index')->with('success', 'Buku berhasil diperbarui!');
+        Alert::success('success', 'Buku berhasil diperbarui!');
+        return redirect()->route('admin.books.index');
     }
 
     /**
@@ -131,8 +155,8 @@ class BookController extends Controller
     {
         $book = Book::findOrFail($id);
         $book->delete();
-
-        return redirect()->route('admin.books.index')->with('success', 'Buku berhasil dihapus!');
+        Alert::success('success', 'Buku berhasil dihapus!');
+        return redirect()->route('admin.books.index');
     }
 
     /**
@@ -147,5 +171,11 @@ class BookController extends Controller
         Excel::import(new BooksImport, $request->file('file'));
 
         return redirect()->back()->with('success', 'Data buku berhasil diimpor!');
+    }
+    public function downloadTemplate()
+    {
+        $filePath = 'public/templates/book_template.xlsx';
+
+        return Storage::download($filePath);
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -7,6 +6,7 @@ use App\Models\Book;
 use App\Models\Fine;
 use App\Models\Student;
 use App\Models\Transaction;
+use App\Models\Tugasakhir;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
 
@@ -32,14 +32,15 @@ class HistoryOfController extends Controller
         $borrowedBooks = Book::where('is_available', 0)->count();
 
         $totalStudents = Student::count();
-        $totalVisitor = Visitor::count();
+        $totalVisitor  = Visitor::count();
+        $totalDocument = Tugasakhir::count();
 
         // Menampilkan tabel transaksi
         $transactions = Transaction::with(['bookLoan.user', 'bookLoan', 'type'])->orderBy("created_at", "desc")
             ->take(3) // atau bisa juga menggunakan ->limit(3)
             ->get();
 
-        return view('admin.dashboard.index', compact('availableBooks', 'borrowedBooks', 'totalVisitor', 'totalStudents', 'transactions'));
+        return view('admin.dashboard.index', compact('availableBooks', 'borrowedBooks', 'totalVisitor', 'totalStudents', 'transactions', 'totalDocument'));
 
     }
 

@@ -1,11 +1,12 @@
 <div class="col-lg">
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
-            <h3 class="card-title mb-0">Peminjaman Buku Terbaru</h3>
+            <h3 class="card-title mb-0"> <i class="bi bi-clock-history me-2"></i>
+                Peminjaman Buku Terbaru</h3>
         </div>
         <div class="card-body p-0" style="max-height: 200px; overflow-y: auto;">
             <!-- Set max-height dan scroll -->
-            <table class="table table-bordered table-hover mb-0">
+            <table class="table table-hover mb-0">
                 <thead class="table-light">
                     <tr>
                         <th class="text-center">No</th>

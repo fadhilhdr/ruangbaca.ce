@@ -37,7 +37,6 @@
                                 <div class="col-md-6">
                                     <!-- Basic Information -->
                                     <h5 class="border-bottom pb-2 mb-4">Informasi Dasar</h5>
-
                                     <div class="mb-4">
                                         <label for="judul" class="form-label">Judul Buku <span
                                                 class="text-danger">*</span></label>
@@ -172,23 +171,25 @@
                             </div>
                         </div>
 
-                        <div class="card-footer row">
-                            <div class="col">
-                                <a href="{{ route('admin.books.index') }}" class="btn btn-secondary">
-                                    <i class="bi bi-arrow-left me-1"></i> Kembali
-                                </a>
-                            </div>
-                            <div class="d-flex justify-content-end gap-2 col">
-
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#uploadModal">
-                                    <i class="bi bi-upload me-1"></i> Unggah melalui excel
-                                </button>
-
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-save me-1"></i> Simpan Buku
-                                </button>
-
+                        <div class="card-footer">
+                            <div class="row align-items-center">
+                                <div class="col-12 col-md-6 mb-2 mb-md-0">
+                                    <a href="{{ route('admin.books.index') }}" class="btn btn-secondary">
+                                        <i class="bi bi-arrow-left me-1"></i> Kembali
+                                    </a>
+                                    <a href="{{ route('admin.downloadBook.template') }}" class="btn btn-warning">
+                                        <i class="bi bi-download me-1"></i> Unduh Template
+                                    </a>
+                                </div>
+                                <div class="col-12 col-md-6 text-md-end text-center">
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                        data-bs-target="#uploadModal">
+                                        <i class="bi bi-upload me-1"></i> Unggah melalui excel
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-save me-1"></i> Simpan
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -211,7 +212,7 @@
                                 belum
                                 memilikinya.
                             </div>
-                            <form method="POST" action="{{ route('admin.students.import') }}"
+                            <form method="POST" action="{{ route('admin.books.import') }}"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group mb-3">

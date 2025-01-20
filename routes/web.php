@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\BookLoanController as AdminBookLoanController;
+use App\Http\Controllers\Admin\DokumentController;
 use App\Http\Controllers\Admin\FinesBookController;
 use App\Http\Controllers\Admin\HistoryOfController;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -123,12 +124,17 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
                                                            // Route::resource('/dashboard', HistoryOfController::class);
     Route::resource('students', StudentController::class); // Manage students
     Route::post('/students/create', [StudentController::class, 'import'])->name('students.import');
-    Route::get('/download-template', [StudentController::class, 'downloadTemplate'])->name('download.template');
+    Route::get('/download', [StudentController::class, 'downloadTemplate'])->name('download.template');
+
+    Route::resource('document', DokumentController::class); //Manage document
 
     Route::resource('lecturers', LecturerController::class); // Manage lecturers
     Route::post('/lecturers/create', [LecturerController::class, 'import'])->name('lecturers.import');
 
-    Route::resource('books', AdminBookController::class);           // Manage books
+    Route::resource('books', AdminBookController::class); // Manage books
+    Route::post('/books/create', [AdminBookController::class, 'import'])->name('books.import');
+    Route::get('/download-template', [AdminBookController::class, 'downloadTemplate'])->name('downloadBook.template');
+
     Route::resource('transaction', AdminBookLoanController::class); // Manage transaction
     Route::resource('fines', FinesBookController::class);           // Manage fines
     Route::get('visitor', [VisitorController::class, 'adminVisitorController'])->name('visitor.index');

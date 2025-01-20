@@ -1,100 +1,119 @@
-<div class="row gy-4 mb-4"> <!-- Baris dengan spasi antar elemen -->
-    <!-- Buku Tersedia -->
-    <div class="col-lg-6 col-xl-3">
-        <div class="card card-statistik shadow-sm border-0 bg-light">
-            <div class="card-body d-flex align-items-center">
-                <div class="icon-square bg-primary text-white me-3 d-flex align-items-center justify-content-center">
-                    <i class="bi bi-book fs-3"></i>
+<div class="row g-4 mb-5">
+    <!-- Available Books -->
+    <div class="col-12 col-md-6 col-lg-4 col-xl">
+        <div class="card h-100 shadow-sm border-0 transition-all hover:shadow-md">
+            <div class="card-body p-4 d-flex align-items-center">
+                <div class="icon-square rounded-circle bg-primary/10 p-3 me-3">
+                    <i class="bi bi-book text-primary fs-4"></i>
                 </div>
                 <div>
-                    <h4 class="mb-1">{{ $availableBooks }}</h4>
-                    <p class="mb-0 text-muted">Buku Tersedia</p>
+                    <h3 class="h2 fw-bold mb-1">{{ $availableBooks ?? 0 }}</h3>
+                    <p class="text-muted small mb-0">Buku Tersedia</p>
                 </div>
             </div>
-            <a href="{{ route('admin.books.index') }}" class="card-footer text-muted text-decoration-none py-2">
-                More info <i class="bi bi-arrow-right-short"></i>
+            <a href="{{ route('admin.books.index') }}"
+                class="card-footer bg-transparent border-top text-primary text-decoration-none p-3 d-flex align-items-center justify-content-between">
+                <span class="small fw-medium">Tampilkan Detail</span>
+                <i class="bi bi-arrow-right"></i>
             </a>
         </div>
     </div>
 
-    <!-- Buku Terpinjam -->
-    <div class="col-lg-6 col-xl-3">
-        <div class="card card-statistik shadow-sm border-0 bg-light">
-            <div class="card-body d-flex align-items-center">
-                <div class="icon-square bg-success text-white me-3 d-flex align-items-center justify-content-center">
-                    <i class="bi bi-book-half fs-3"></i>
+    <!-- Borrowed Books -->
+    <div class="col-12 col-md-6 col-lg-4 col-xl">
+        <div class="card h-100 shadow-sm border-0 transition-all hover:shadow-md">
+            <div class="card-body p-4 d-flex align-items-center">
+                <div class="icon-square rounded-circle bg-success/10 p-3 me-3">
+                    <i class="bi bi-book-half text-success fs-4"></i>
                 </div>
                 <div>
-                    <h4 class="mb-1">{{ $borrowedBooks }}</h4>
-                    <p class="mb-0 text-muted">Buku Terpinjam</p>
+                    <h3 class="h2 fw-bold mb-1">{{ $borrowedBooks }}</h3>
+                    <p class="text-muted small mb-0"> Buku Terpinjam</p>
                 </div>
             </div>
-            <a href="#" class="card-footer text-muted text-decoration-none py-2">
-                More info <i class="bi bi-arrow-right-short"></i>
+            <a href="#"
+                class="card-footer bg-transparent border-top text-success text-decoration-none p-3 d-flex align-items-center justify-content-between">
+                <span class="small fw-medium">Tampilkan Detail</span>
+                <i class="bi bi-arrow-right"></i>
             </a>
         </div>
     </div>
 
-    <!-- Pengunjung -->
-    <div class="col-lg-6 col-xl-3">
-        <div class="card card-statistik shadow-sm border-0 bg-light">
-            <div class="card-body d-flex align-items-center">
-                <div class="icon-square bg-warning text-white me-3 d-flex align-items-center justify-content-center">
-                    <i class="bi bi-person-check fs-3"></i>
+    <!-- Visitors -->
+    <div class="col-12 col-md-6 col-lg-4 col-xl">
+        <div class="card h-100 shadow-sm border-0 transition-all hover:shadow-md">
+            <div class="card-body p-4 d-flex align-items-center">
+                <div class="icon-square rounded-circle bg-warning/10 p-3 me-3">
+                    <i class="bi bi-person-check text-warning fs-4"></i>
                 </div>
                 <div>
-                    <h4 class="mb-1">{{ $totalVisitor }}</h4>
-                    <p class="mb-0 text-muted">Pengunjung</p>
+                    <h3 class="h2 fw-bold mb-1">{{ $totalVisitor }}</h3>
+                    <p class="text-muted small mb-0">Total Pengunjung</p>
                 </div>
             </div>
-            <a href="#" class="card-footer text-muted text-decoration-none py-2">
-                More info <i class="bi bi-arrow-right-short"></i>
+            <a href="#"
+                class="card-footer bg-transparent border-top text-warning text-decoration-none p-3 d-flex align-items-center justify-content-between">
+                <span class="small fw-medium">Tampilkan Detail</span>
+                <i class="bi bi-arrow-right"></i>
             </a>
         </div>
     </div>
 
-    <!-- Jumlah Mahasiswa -->
-    <div class="col-lg-6 col-xl-3">
-        <div class="card card-statistik shadow-sm border-0 bg-light">
-            <div class="card-body d-flex align-items-center">
-                <div class="icon-square bg-danger text-white me-3 d-flex align-items-center justify-content-center">
-                    <i class="bi bi-person-vcard fs-3"></i>
+    <!-- Total Students -->
+    <div class="col-12 col-md-6 col-lg-4 col-xl">
+        <div class="card h-100 shadow-sm border-0 transition-all hover:shadow-md">
+            <div class="card-body p-4 d-flex align-items-center">
+                <div class="icon-square rounded-circle bg-danger/10 p-3 me-3">
+                    <i class="bi bi-person-vcard text-danger fs-4"></i>
                 </div>
                 <div>
-                    <h4 class="mb-1">{{ $totalStudents }}</h4>
-                    <p class="mb-0 text-muted">Jumlah Mahasiswa</p>
+                    <h3 class="h2 fw-bold mb-1">{{ $totalStudents }}</h3>
+                    <p class="text-muted small mb-0">Total Mahasiswa</p>
                 </div>
             </div>
-            <a href="{{ route('admin.students.index') }}" class="card-footer text-muted text-decoration-none py-2">
-                More info <i class="bi bi-arrow-right-short"></i>
+            <a href="{{ route('admin.students.index') }}"
+                class="card-footer bg-transparent border-top text-danger text-decoration-none p-3 d-flex align-items-center justify-content-between">
+                <span class="small fw-medium">Tampilkan Detail</span>
+                <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Total Documents -->
+    <div class="col-12 col-md-6 col-lg-4 col-xl">
+        <div class="card h-100 shadow-sm border-0 transition-all hover:shadow-md">
+            <div class="card-body p-4 d-flex align-items-center">
+                <div class="icon-square rounded-circle bg-info/10 p-3 me-3">
+                    <i class="bi bi-file-earmark-text text-info fs-4"></i>
+                </div>
+                <div>
+                    <h3 class="h2 fw-bold mb-1">{{ $totalDocuments ?? 0 }}</h3>
+                    <p class="text-muted small mb-0">Total Dokumen</p>
+                </div>
+            </div>
+            <a href="{{ route('admin.document.index') }}"
+                class="card-footer bg-transparent border-top text-info text-decoration-none p-3 d-flex align-items-center justify-content-between">
+                <span class="small fw-medium">Tampilkan Detail</span>
+                <i class="bi bi-arrow-right"></i>
             </a>
         </div>
     </div>
 </div>
 
-<!-- Tambahkan CSS -->
 <style>
     .icon-square {
-        width: 50px;
-        height: 50px;
-        border-radius: 10%;
-        font-size: 1.5rem;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    .card-footer:hover {
-        background-color: rgba(0, 0, 0, 0.05);
+    .card {
+        transition: all 0.2s ease-in-out;
     }
 
-    .card-statistik {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .card-statistik:hover {
-        transform: translateY(-5px);
-        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-body {
-        padding: 1rem 1.25rem;
+    .card:hover {
+        transform: translateY(-2px);
     }
 </style>

@@ -17,7 +17,7 @@
                         <th>Role ID</th>
                         <th>Created At</th>
                         <th>Updated At</th>
-                        <th style="width: 100px">Action</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,7 +34,13 @@
                                 <a href="{{ route('superadmin.users.edit', $user->id) }}" class="btn btn-sm btn-warning">
                                     <i class="fa fa-edit"></i> Edit
                                 </a>
-                                {{ route('superadmin.users.edit', $user->id) }}
+                                <form action="{{ route('superadmin.users.destroy', $user->id) }}" method="POST"
+                                    style="display: inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
+                                </form>
                             </td>
                         </tr>
                     @empty
@@ -46,7 +52,7 @@
             </table>
         </div> <!-- /.card-body -->
         <div class="card-footer clearfix">
-            <ul class="pagination pagination-sm m-0 float-end">
+            <ul class="pagination pagination-sm m-0 float-start">
                 {{-- Tambahkan pagination --}}
                 {{ $users->links('pagination::bootstrap-5') }}
             </ul>

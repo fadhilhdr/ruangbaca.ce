@@ -32,9 +32,18 @@
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
     <div class="app-wrapper"> <!--begin::Sidebar-->
         @include('superadmin.layouts.navbar')
+        <main class="app-main">
+            <div class="alert alert-success alert-dismissible fade show mx-3 mt-3 {{ session('success') ? '' : 'd-none' }}"
+                role="alert">
+                <strong>Sukses!</strong> {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="app-content">
+                @yield('content')
+            </div>
+        </main>
         @include('superadmin.layouts.sidebar')
         @include('superadmin.layouts.footer')
-        @yield('content')
     </div> <!--end::App Wrapper-->
     @include('superadmin.layouts.scripts')
 </body><!--end::Body-->

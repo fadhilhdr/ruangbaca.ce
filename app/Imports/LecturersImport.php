@@ -12,8 +12,8 @@ class LecturersImport implements ToModel
     public function model(array $row)
     {
         return new Lecturer([
-            'nip' => $row[0], // Kolom pertama di Excel
-            'name' => $row[1], // Kolom kedua di Excel
+            'nip'        => $row[0], // Kolom pertama di Excel
+            'name'       => $row[1], // Kolom kedua di Excel
             'kode_dosen' => $row[2],
             'riwayat_s1' => $row[3],
             'riwayat_s2' => $row[4],

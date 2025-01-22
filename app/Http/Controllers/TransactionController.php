@@ -17,13 +17,12 @@ class TransactionController extends Controller
                                         ->with(['bookLoan', 'transactionType'])
                                         ->orderBy('created_at', 'desc')
                                         ->get();
-    
             return view('member.loans.history', compact('transactions'));
         }
-    
+
         return redirect()->route('login')->with('error', 'Please log in to view transactions.');
     }
-    
+
 
     /**
      * Show the form for creating a new resource.

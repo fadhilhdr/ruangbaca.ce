@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\BookLoan;
-use App\Models\Specialization;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -21,10 +20,10 @@ class BookController extends Controller
             $keyword = $request->input('keyword');
             $query->where(function ($q) use ($keyword) {
                 $q->where('judul', 'like', '%' . $keyword . '%')
-                  ->orWhere('penulis', 'like', '%' . $keyword . '%')
-                  ->orWhere('isbn', 'like', '%' . $keyword . '%')
-                  ->orWhere('peminatan', 'like', '%' . $keyword . '%')
-                  ->orWhere('sub_peminatan', 'like', '%' . $keyword . '%');
+                    ->orWhere('penulis', 'like', '%' . $keyword . '%')
+                    ->orWhere('isbn', 'like', '%' . $keyword . '%')
+                    ->orWhere('peminatan', 'like', '%' . $keyword . '%')
+                    ->orWhere('sub_peminatan', 'like', '%' . $keyword . '%');
             });
         }
 
@@ -50,21 +49,21 @@ class BookController extends Controller
     {
         // Ambil detail buku (menggunakan buku pertama sebagai referensi)
         $bookReference = Book::where('isbn', $isbn)->firstOrFail();
-        
+
         // Hitung stok yang tersedia dan total
         $stockInfo = Book::where('isbn', $isbn)
             ->selectRaw('COUNT(CASE WHEN is_available = true THEN 1 END) as available_stock')
             ->selectRaw('COUNT(*) as total_copies')
             ->first();
-        
         // Load loans jika diperlukan
-        $activeLoans = BookLoan::whereIn('kode_unik_buku', 
+        $activeLoans = BookLoan::whereIn('kode_unik_buku',
             Book::where('isbn', $isbn)->pluck('id')
         )
-        ->whereNull('return_date')
-        ->with('user:id,name')
-        ->get();
-    
+            ->whereNull('return_date')
+            ->with('user:id,name')
+            ->get();
+
         return view('public.books.show', compact('bookReference', 'stockInfo', 'activeLoans'));
     }
+
 }

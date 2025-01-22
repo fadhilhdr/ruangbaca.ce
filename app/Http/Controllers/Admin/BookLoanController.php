@@ -1,18 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Specialization;
+use App\Http\Controllers\Controller;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 
-class SpecializationController extends Controller
+class BookLoanController extends Controller
 {
+    public function showTransaction()
+    {
+
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $transactions = Transaction::with(['bookLoan.book', 'bookLoan.user', 'type'])->orderBy("created_at", "desc")->get();
+        return view('admin.transaksi.index', compact('transactions'));
     }
 
     /**
@@ -34,7 +40,7 @@ class SpecializationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Specialization $specialization)
+    public function show(string $id)
     {
         //
     }
@@ -42,7 +48,7 @@ class SpecializationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Specialization $specialization)
+    public function edit(string $id)
     {
         //
     }
@@ -50,7 +56,7 @@ class SpecializationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Specialization $specialization)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -58,7 +64,7 @@ class SpecializationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Specialization $specialization)
+    public function destroy(string $id)
     {
         //
     }

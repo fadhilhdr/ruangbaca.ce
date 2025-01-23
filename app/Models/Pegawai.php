@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,12 +8,13 @@ class Pegawai extends Model
 {
     use HasFactory;
 
-    protected $table = 'pegawais';
+    protected $table      = 'pegawais';
     protected $primaryKey = 'id';
-    public $incrementing = true;
-    protected $keyType = 'int';
+    public $incrementing  = true;
+    protected $keyType    = 'int';
 
     protected $fillable = [
+        'id',
         'nama_lengkap',
         'nip_nppu_nupk',
         'nidn_nidk_nup_nitk',
@@ -33,11 +33,11 @@ class Pegawai extends Model
         'jenis_pegawai',
         'unit_kerja',
         'bagian',
-        'subbagian'
+        'subbagian',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'nip_nppu_nupk', 'userid'); 
+        return $this->belongsTo(User::class, 'nip_nppu_nupk', 'userid');
     }
 }

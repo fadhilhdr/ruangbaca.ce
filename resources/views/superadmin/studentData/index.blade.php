@@ -1,6 +1,6 @@
 @extends('superadmin.layouts.base')
 
-@section('title', 'Indeks Pengguna')
+@section('title', 'Indeks Mahasiswa')
 
 @section('content')
     <div class="container-fluid">
@@ -9,13 +9,19 @@
             <div class="card-body">
                 <div class="row d-flex justify-content-between">
                     <div class="col-sm-4">
-                        <form action="{{ route('superadmin.users.index') }}" method="GET" class="d-flex">
+                        <form action="{{ route('superadmin.students.index') }}" method="GET" class="d-flex">
                             <input type="text" class="form-control me-2" id="search" name="search"
-                                value="{{ request('search') }}" placeholder="Cari nama...">
+                                value="{{ request('search') }}" placeholder="Cari nama atau NIM...">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-search me-1"></i>
                             </button>
                         </form>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <a href="{{ route('superadmin.students.create') }}" class="btn btn-success me-2">
+                            <i class="bi bi-plus-circle me-1"></i> Tambah
+                        </a>
+
                     </div>
                 </div>
             </div>
@@ -29,7 +35,7 @@
                 </h3>
                 <div class="card-tools">
                     <span class="badge bg-primary rounded-pill px-4 py-2">
-                        Total: {{ $users->total() }} Pengguna
+                        Total: {{ $students->total() }} Mahasiswa
                     </span>
                 </div>
 
@@ -40,29 +46,29 @@
                         <thead class="table-light">
                             <tr>
                                 <th class="text-center" style="width: 40px">NO</th>
-                                <th>User ID</th>
+                                <th>NIM</th>
                                 <th>Nama</th>
-                                <th>Role ID</th>
+                                <th>Angkatan</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Prodi</th>
+                                <th>Jalur Masuk</th>
+                                <th>Status</th>
                                 <th class="text-center" style="width: 100px">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($users as $index => $user)
-                                <tr class="align-middle">
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $user->userid }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>
-                                        @if ($user->role->name == 'Admin')
-                                            <span class="badge bg-primary">Admin</span>
-                                        @elseif($user->role->name == 'Superadmin')
-                                            <span class="badge bg-success">Super Admin</span>
-                                        @elseif($user->role->name == 'Member')
-                                            <span class="badge bg-warning text-dark">Member</span>
-                                        @else
-                                            <span class="badge bg-secondary">Unknown</span>
-                                        @endif
+                            @forelse($students as $index => $student)
+                                <tr>
+                                    <td class="text-center">
+                                        {{ $loop->iteration + ($students->currentPage() - 1) * $students->perPage() }}
                                     </td>
+                                    <td>{{ $student->nim }}</td>
+                                    <td>{{ $student->name }}</td>
+                                    <td>{{ $student->angkatan }}</td>
+                                    <td>{{ $student->gender }}</td>
+                                    <td>{{ $student->prodi }}</td>
+                                    <td>{{ $student->jalur_masuk }}</td>
+                                    <td>{{ $student->status_terakhir }}</td>
                                     <td class="text-center">
                                         <div class="dropdown">
                                             <button class="btn btn-light btn-sm border-0 rounded-circle shadow-sm"
@@ -71,7 +77,7 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
                                                 <li>
-                                                    <a href="{{ route('superadmin.users.edit', $user->userid) }}"
+                                                    <a href="{{ route('superadmin.students.edit', $student->nim) }}"
                                                         class="dropdown-item py-2 px-4">
                                                         <i class="bi bi-pencil-square me-2 text-warning"></i>
                                                         Edit Data
@@ -81,7 +87,8 @@
                                                     <hr class="dropdown-divider">
                                                 </li>
                                                 <li>
-                                                    <form action="{{ route('superadmin.users.destroy', $user->userid) }}"
+                                                    <form
+                                                        action="{{ route('superadmin.students.destroy', $student->nim) }}"
                                                         method="POST"
                                                         onsubmit="event.preventDefault();
                                                                    Swal.fire({
@@ -110,13 +117,14 @@
                                             </ul>
                                         </div>
                                     </td>
+
                                 </tr>
                             @empty
                                 <tr>
                                     <td colspan="9" class="text-center py-4">
                                         <div class="d-flex flex-column align-items-center">
                                             <i class="bi bi-inbox text-muted" style="font-size: 2rem;"></i>
-                                            <p class="text-muted mt-2">Tidak ada data pengguna tersedia</p>
+                                            <p class="text-muted mt-2">Tidak ada data mahasiswa tersedia</p>
                                         </div>
                                     </td>
                                 </tr>
@@ -127,7 +135,7 @@
             </div>
             <div class="card-footer clearfix">
                 <div class="float-end">
-                    {{ $users->links('pagination::bootstrap-5') }}
+                    {{ $students->links('pagination::bootstrap-5') }}
                 </div>
             </div>
         </div>

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -22,13 +21,13 @@ class UsersController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name'    => 'required|string|max:255',
             'role_id' => 'required|integer',
         ]);
 
         $user = User::findOrFail($id);
         $user->update([
-            'name' => $request->name,
+            'name'    => $request->name,
             'role_id' => $request->role_id,
         ]);
 

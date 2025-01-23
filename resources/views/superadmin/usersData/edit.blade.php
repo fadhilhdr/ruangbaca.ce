@@ -19,10 +19,15 @@
                 </div>
 
                 <div class="form-group mb-3">
-                    <label for="role_id">Role ID</label>
-                    <input type="number" name="role_id" id="role_id" class="form-control"
-                        value="{{ old('role_id', $user->role_id) }}" required>
+                    <label for="role_id">Role</label>
+                    <select name="role_id" id="role_id" class="form-control" required>
+                        <option value="1" {{ old('role_id', $user->role_id) == 1 ? 'selected' : '' }}>Member</option>
+                        <option value="2" {{ old('role_id', $user->role_id) == 2 ? 'selected' : '' }}>Admin</option>
+                        <option value="3" {{ old('role_id', $user->role_id) == 3 ? 'selected' : '' }}>Super Admin
+                        </option>
+                    </select>
                 </div>
+
 
                 <button type="submit" class="btn btn-primary">Update</button>
             </form>

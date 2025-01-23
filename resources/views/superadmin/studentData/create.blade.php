@@ -1,4 +1,4 @@
-@extends('admin.layouts.base')
+@extends('superadmin.layouts.base')
 
 @section('title', 'Tambah Data Mahasiswa')
 
@@ -14,7 +14,7 @@
                             Form Tambah Mahasiswa
                         </h3>
                     </div>
-                    <form method="POST" action="{{ route('admin.students.store') }}" class="form-horizontal">
+                    <form method="POST" action="{{ route('superadmin.students.store') }}" class="form-horizontal">
                         @csrf
                         <div class="card-body">
                             <!-- Two Column Layout -->

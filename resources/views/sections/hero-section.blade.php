@@ -119,7 +119,7 @@
                     </a>
 
                     <!-- Thesis Card -->
-                    <a href="#" class="group">
+                    <a href="{{ route('public.tugasakhirs.index') }}" class="group">
                         <div class="collection-card bg-white/10 backdrop-blur-xl rounded-2xl p-8 hover:shadow-xl border border-white/20 transition duration-300 hover:shadow-blue-500/10 hover:border-blue-200/30 h-full">
                             <div class="flex justify-between items-start mb-6">
                                 <h3 class="font-bold text-2xl text-white">Tugas Akhir</h3>

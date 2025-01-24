@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
@@ -16,14 +15,13 @@ class RoleMiddleware
      * @param  string  $roles
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function handle(Request $request, Closure $next, $role): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        // Cek apakah user sudah login dan memiliki role yang sesuai
-        if (!$request->user() || $request->user()->role->name !== $role) {
-            // Jika role tidak sesuai, beri response 403 Forbidden
+        if (! $request->user() || ! in_array($request->user()->role->name, $roles)) {
             return response()->view('errors.403', [], 403);
         }
 
         return $next($request);
     }
+
 }

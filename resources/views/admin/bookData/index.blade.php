@@ -13,23 +13,36 @@
                             <div class="col-md-4">
                                 <label for="search" class="form-label">Cari Buku</label>
                                 <input type="text" class="form-control" id="search" name="search"
-                                    value="{{ request('search') }}" placeholder="Cari judul, penulis, atau ISBN...">
+                                    value="{{ request('search') }}" placeholder="Masukkan judul/penulis...">
                             </div>
                             <div class="col-md-3">
                                 <label for="peminatan" class="form-label">Peminatan</label>
                                 <select class="form-select" name="peminatan" id="peminatan">
                                     <option value="">Semua Peminatan</option>
-                                    {{-- Add your peminatan options here --}}
+                                    <option value="Perangkat Lunak & Mobile Computing"
+                                        {{ request('peminatan') == 'Perangkat Lunak & Mobile Computing' ? 'selected' : '' }}>
+                                        Perangkat Lunak & Mobile Computing</option>
+                                    <option value="Jaringan & Keamanan Komputer"
+                                        {{ request('peminatan') == 'Jaringan & Keamanan Komputer' ? 'selected' : '' }}>
+                                        Jaringan & Keamanan Komputer</option>
+                                    <option value="Sistem Tertanam & Robotika"
+                                        {{ request('peminatan') == 'Sistem Tertanam & Robotika' ? 'selected' : '' }}>Sistem
+                                        Tertanam & Robotika</option>
+                                    <option value="Multimedia" {{ request('peminatan') == 'Multimedia' ? 'selected' : '' }}>
+                                        Multimedia</option>
+                                    <option value="Diluar Peminatan"
+                                        {{ request('peminatan') == 'Diluar Peminatan' ? 'selected' : '' }}>Diluar Peminatan
+                                    </option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <label for="status" class="form-label">Status</label>
-                                <select class="form-select" name="status" id="status">
+                                <label for="is_available" class="form-label">Status</label>
+                                <select class="form-select" name="is_available" id="is_available">
                                     <option value="">Semua Status</option>
-                                    <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Tersedia
+                                    <option value="1" {{ request('is_available') == '1' ? 'selected' : '' }}>Tersedia
                                     </option>
-                                    <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Terpinjam
-                                    </option>
+                                    <option value="0" {{ request('is_available') == '0' ? 'selected' : '' }}>Tidak
+                                        Tersedia</option>
                                 </select>
                             </div>
                             <div class="col-md-2 d-flex align-items-end">
@@ -43,9 +56,7 @@
                         <a href="{{ route('admin.books.create') }}" class="btn btn-success">
                             <i class="bi bi-plus-lg me-1"></i> Tambah
                         </a>
-                        <a href="#" class="btn btn-secondary ms-2">
-                            <i class="bi bi-upload me-1"></i> Import
-                        </a>
+
                     </div>
                 </div>
 
@@ -59,7 +70,7 @@
                     <i class="bi bi-book me-2"></i> Daftar Buku
                 </h3>
                 <div class="card-tools">
-                    <span class="badge bg-primary">Total: {{ $books->total() }} buku</span>
+                    <span class="badge bg-primary rounded-pill px-4 py-2">Total: {{ $books->total() }} buku</span>
                 </div>
             </div>
             <div class="card-body p-0">
@@ -107,21 +118,50 @@
                                         </span>
                                     </td>
                                     <td class="text-center">
-                                        <div class="btn-group">
-                                            <a href="{{ route('admin.books.edit', $book->id) }}"
-                                                class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Edit">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </a>
-                                            <form action="{{ route('admin.books.destroy', $book->id) }}" method="POST"
-                                                class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger"
-                                                    onclick="return confirm('Are you sure you want to delete this book?')"
-                                                    data-bs-toggle="tooltip" title="Delete">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </form>
+                                        <div class="dropdown">
+                                            <button class="btn btn-light btn-sm border-0 rounded-circle shadow-sm"
+                                                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="bi bi-three-dots-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                                <li>
+                                                    <a href="{{ route('admin.books.edit', $book->id) }}"
+                                                        class="dropdown-item py-2 px-4">
+                                                        <i class="bi bi-pencil-square me-2 text-warning"></i>
+                                                        Edit Data
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li>
+                                                    <form action="{{ route('admin.books.destroy', $book->id) }}"
+                                                        method="POST"
+                                                        onsubmit="event.preventDefault();
+                                                                   Swal.fire({
+                                                                       title: 'Apakah Anda yakin?',
+                                                                       text: 'Data mahasiswa ini akan dihapus permanen!',
+                                                                       icon: 'warning',
+                                                                       showCancelButton: true,
+                                                                       confirmButtonColor: '#d33',
+                                                                       cancelButtonColor: '#3085d6',
+                                                                       confirmButtonText: 'Ya, Hapus!',
+                                                                       cancelButtonText: 'Batal'
+                                                                   }).then((result) => {
+                                                                       if (result.isConfirmed) {
+                                                                           this.submit();
+                                                                       }
+                                                                   });
+                                                                   return false;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="dropdown-item py-2 px-4 text-danger">
+                                                            <i class="bi bi-trash me-2"></i>
+                                                            Hapus Data
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </td>
                                 </tr>

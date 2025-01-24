@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-12">
-                <div class="card card-primary">
+                <div class="card ">
                     <!-- Card Header -->
                     <div class="card-header">
                         <h3 class="card-title">
@@ -14,7 +14,6 @@
                             Tambah Data Buku
                         </h3>
                     </div>
-
                     <!-- Alert Errors -->
                     @if ($errors->any())
                         <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
@@ -30,7 +29,6 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
-
                     <form action="{{ route('admin.books.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="card-body">
@@ -39,7 +37,6 @@
                                 <div class="col-md-6">
                                     <!-- Basic Information -->
                                     <h5 class="border-bottom pb-2 mb-4">Informasi Dasar</h5>
-
                                     <div class="mb-4">
                                         <label for="judul" class="form-label">Judul Buku <span
                                                 class="text-danger">*</span></label>
@@ -120,7 +117,8 @@
                                     </div>
 
                                     <div class="mb-4">
-                                        <label for="sub_peminatan" class="form-label">Sub Peminatan</label>
+                                        <label for="sub_peminatan" class="form-label">Sub Peminatan<span
+                                                class="text-danger">*</span></label>
                                         <select class="form-select @error('sub_peminatan') is-invalid @enderror"
                                             id="sub_peminatan" name="sub_peminatan">
                                             <option value="" disabled selected>Pilih Sub Peminatan</option>
@@ -174,16 +172,65 @@
                         </div>
 
                         <div class="card-footer">
-                            <div class="d-flex justify-content-end gap-2">
-                                <a href="{{ route('admin.books.index') }}" class="btn btn-secondary">
-                                    <i class="bi bi-arrow-left me-1"></i> Kembali
-                                </a>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-save me-1"></i> Simpan Buku
-                                </button>
+                            <div class="row align-items-center">
+                                <div class="col-12 col-md-6 mb-2 mb-md-0">
+                                    <a href="{{ route('admin.books.index') }}" class="btn btn-secondary">
+                                        <i class="bi bi-arrow-left me-1"></i> Kembali
+                                    </a>
+                                    <a href="{{ route('admin.downloadBook.template') }}" class="btn btn-warning">
+                                        <i class="bi bi-download me-1"></i> Unduh Template
+                                    </a>
+                                </div>
+                                <div class="col-12 col-md-6 text-md-end text-center">
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                        data-bs-target="#uploadModal">
+                                        <i class="bi bi-upload me-1"></i> Unggah melalui excel
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-save me-1"></i> Simpan
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+            <!-- Upload modal -->
+            <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="uploadModalLabel">Upload Data Buku</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Pastikan format file dan data sesuai dengan template. Download template terlebih dahulu jika
+                                belum
+                                memilikinya.
+                            </div>
+                            <form method="POST" action="{{ route('admin.books.import') }}"
+                                enctype="multipart/form-data">
+                                @csrf
+                                <div class="form-group mb-3">
+                                    <label for="file" class="form-label">Pilih File Excel</label>
+                                    <input type="file" class="form-control" id="file" name="file"
+                                        accept=".xlsx,.xls,.csv" required>
+                                    <div class="form-text">Format yang didukung: .xlsx, .xls (maksimal 2MB)</div>
+                                </div>
+                                <div class="text-end">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-upload me-1"></i> Upload
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

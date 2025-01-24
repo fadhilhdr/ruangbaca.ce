@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,20 +9,22 @@ class Student extends Model
     use HasFactory;
 
     protected $primaryKey = 'nim';
-    protected $keyType = 'string';
-    public $incrementing = false;
+    protected $keyType    = 'string';
+    public $incrementing  = false;
 
     protected $fillable = [
-        'nim', 
-        'name', 
-        'angkatan', 
-        'gender', 
-        'status'
+        'nim',
+        'name',
+        'angkatan',
+        'gender',
+        'status_terakhir',
+        'jalur_masuk',
+        'prodi',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'nim', 'userid'); 
+        return $this->belongsTo(User::class, 'nim', 'userid');
     }
 
 }

@@ -2,14 +2,17 @@
 
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\BookLoanController as AdminBookLoanController;
+use App\Http\Controllers\Admin\DokumentController;
 use App\Http\Controllers\Admin\FinesBookController;
 use App\Http\Controllers\Admin\HistoryOfController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookLoanController;
-use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\Superadmin\DashboardController;
+use App\Http\Controllers\Superadmin\EmployeeController;
+use App\Http\Controllers\Superadmin\StudentController as SuperadminStudentController;
 use App\Http\Controllers\TugasakhirController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VisitorController;
@@ -36,10 +39,10 @@ Route::prefix('public/books')->name('public.books.')->group(function () {
     Route::get('/{isbn}', [BookController::class, 'show'])->name('show');
 });
 
-// Rute Public untuk Tugas Akhir 
+// Rute Public untuk Tugas Akhir
 Route::prefix('public/tugasakhirs')->name('public.tugasakhirs.')->group(function () {
-    Route::get('/', [TugasakhirController::class, 'index'])->name('index'); 
-    Route::get('/{id}', [TugasakhirController::class, 'show'])->name('show'); 
+    Route::get('/', [TugasakhirController::class, 'index'])->name('index');
+    Route::get('/{id}', [TugasakhirController::class, 'show'])->name('show');
 });
 
 // Rute public (registrasi menjadi user)
@@ -121,17 +124,21 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     })->name('index'); // Tambahkan rute untuk admin
 
     Route::get('/dashboard', [HistoryOfController::class, 'index'])->name('dashboard');
-    // Route::resource('/dashboard', HistoryOfController::class);
+                                                           // Route::resource('/dashboard', HistoryOfController::class);
     Route::resource('students', StudentController::class); // Manage students
-    Route::resource('lecturers', LecturerController::class); // Manage lecturers
+    Route::post('/students/create', [StudentController::class, 'import'])->name('students.import');
+    Route::get('/download', [StudentController::class, 'downloadTemplate'])->name('download.template');
+
+    Route::resource('document', DokumentController::class); //Manage document
+
     Route::resource('books', AdminBookController::class); // Manage books
+    Route::post('/books/create', [AdminBookController::class, 'import'])->name('books.import');
+    Route::get('/download-template', [AdminBookController::class, 'downloadTemplate'])->name('downloadBook.template');
+
     Route::resource('transaction', AdminBookLoanController::class); // Manage transaction
-    Route::resource('fines', FinesBookController::class); // Manage fines
+    Route::resource('fines', FinesBookController::class);           // Manage fines
     Route::get('visitor', [VisitorController::class, 'adminVisitorController'])->name('visitor.index');
     Route::patch('/admin/denda/{id}/update-status', [FinesBookController::class, 'updateStatus'])->name('denda.updateStatus');
-    Route::get('/upload-data', [LecturerController::class, 'upload'])->name('lecturers.upload');
-    Route::get('/upload-data', [StudentController::class, 'upload'])->name('students.upload');
-    Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
 
     //Book History
 
@@ -139,12 +146,24 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
 
 // Rute Superadmin
 Route::middleware(['auth', 'role:Superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('superadmin.layouts.base'); // Pastikan file view `superadmin.layouts.base` ada
-    })->name('dashboard');
+    Route::get('/', function () {
+        return redirect()->route('superadmin.dashboard');
+    })->name('index');
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('/students', SuperadminStudentController::class);
+
+    Route::resource('/employees', EmployeeController::class);
+
     Route::resource('users', UsersController::class);
     Route::get('/users/{id}/edit', [UsersController::class, 'edit'])->name('users.edit');
 
+});
+
+// route 404
+
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
 });
 
 // Include rute autentikasi default Laravel Breeze

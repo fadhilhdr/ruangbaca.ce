@@ -1,30 +1,21 @@
 <?php
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Superadmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Book;
-use App\Models\Fine;
 use App\Models\Student;
 use App\Models\Transaction;
 use App\Models\Tugasakhir;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
 
-class HistoryOfController extends Controller
+class DashboardController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function showTransaction()
-    {
-        $denda = Fine::with('transaction', 'bookLoan')->orderBy('created_at', 'desc')->get();
-        return view('admin.dashboard.newestBookLoan', compact('transactions'));
-    }
-
     public function index()
     {
-        // $totalUsers = User::count(); // Menghitung total pengguna
-
         // Menghitung jumlah buku yang tersedia (is_available = 1)
         $availableBooks = Book::where('is_available', 1)->count();
 
@@ -40,8 +31,7 @@ class HistoryOfController extends Controller
             ->take(3) // atau bisa juga menggunakan ->limit(3)
             ->get();
 
-        return view('admin.dashboard.index', compact('availableBooks', 'borrowedBooks', 'totalVisitor', 'totalStudents', 'transactions', 'totalDocument'));
-
+        return view('superadmin.dashboard.index', compact('availableBooks', 'borrowedBooks', 'totalVisitor', 'totalStudents', 'transactions', 'totalDocument'));
     }
 
     /**

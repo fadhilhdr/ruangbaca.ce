@@ -116,6 +116,13 @@
                             <label for="synopsis" class="form-label">Synopsis</label>
                             <textarea name="synopsis" id="synopsis" class="form-control" rows="4">{{ old('synopsis', $book->synopsis) }}</textarea>
                         </div>
+                        <div class="mb-4">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" name="is_available" id="is_available" class="form-check-input"
+                                    value="1" {{ old('is_available', 1) ? 'checked' : '' }}>
+                                <label for="is_available" class="form-check-label">Status Ketersediaan</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

@@ -36,13 +36,13 @@ class Tugasakhir extends Model
         return $query->where('title', 'LIKE', "%{$keyword}%");
     }
 
-    public function isFileAvailable()
-    {
-        return !empty($this->full_document);
-    }
-
     public function getDocumentUrl($file)
     {
         return $this->$file ? Storage::url($this->$file) : null;
+    }
+
+    public function isFileAvailable()
+    {
+        return !empty($this->full_document);
     }
 }

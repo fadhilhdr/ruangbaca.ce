@@ -14,12 +14,14 @@ class TugasakhirController extends Controller
         $tugasakhirs = Tugasakhir::when($keyword, function($query) use ($keyword) {
             return $query->search($keyword);
         });
-        
+
         $tugasakhirs = $tugasakhirs->paginate(10);
         return view('public.tugasakhirs.index', compact('tugasakhirs'));
+
+        
     }
-    
-   
+
+
     public function memberIndex()
     {
         $tugasakhirs = Tugasakhir::where('nim', auth()->user()->userid)->get();
@@ -50,14 +52,14 @@ class TugasakhirController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'full_document' => 'required|mimes:pdf|max:51200', 
-            'cover_abstract' => 'required|mimes:pdf|max:10240', 
-            'bab1_pendahuluan' => 'required|mimes:pdf|max:15360', 
-            'bab2_kajianpustaka' => 'required|mimes:pdf|max:15360', 
-            'bab3_perancangan' => 'required|mimes:pdf|max:15360', 
-            'bab4_hasilpembahasan' => 'required|mimes:pdf|max:20480', 
-            'bab5_penutup' => 'required|mimes:pdf|max:10240', 
-            'lampiran' => 'required|mimes:pdf|max:30720', 
+            'full_document' => 'required|mimes:pdf|max:51200',
+            'cover_abstract' => 'required|mimes:pdf|max:10240',
+            'bab1_pendahuluan' => 'required|mimes:pdf|max:15360',
+            'bab2_kajianpustaka' => 'required|mimes:pdf|max:15360',
+            'bab3_perancangan' => 'required|mimes:pdf|max:15360',
+            'bab4_hasilpembahasan' => 'required|mimes:pdf|max:20480',
+            'bab5_penutup' => 'required|mimes:pdf|max:10240',
+            'lampiran' => 'required|mimes:pdf|max:30720',
         ]);
 
         $data = $request->all();

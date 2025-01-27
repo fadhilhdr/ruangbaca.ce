@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\HistoryOfController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookLoanController;
+use App\Http\Controllers\CapstoneController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Superadmin\DashboardController;
@@ -43,6 +44,12 @@ Route::prefix('public/books')->name('public.books.')->group(function () {
 Route::prefix('public/tugasakhirs')->name('public.tugasakhirs.')->group(function () {
     Route::get('/', [TugasakhirController::class, 'index'])->name('index');
     Route::get('/{id}', [TugasakhirController::class, 'show'])->name('show');
+});
+
+// Rute Public untuk Tugas Akhir
+Route::prefix('public/capstones')->name('public.capstones.')->group(function () {
+    Route::get('/', [CapstoneController::class, 'index'])->name('index');
+    Route::get('/{id}', [CapstoneController::class, 'show'])->name('show');
 });
 
 // Rute public (registrasi menjadi user)
@@ -114,6 +121,17 @@ Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->g
         Route::get('/{id}/edit', [TugasakhirController::class, 'edit'])->name('edit');
         Route::put('/{id}', [TugasakhirController::class, 'update'])->name('update');
         Route::delete('/{id}', [TugasakhirController::class, 'destroy'])->name('destroy');
+    });
+
+    // Capstone Routes
+    Route::prefix('capstones')->name('capstones.')->group(function () {
+        Route::get('/', [CapstoneController::class, 'memberIndex'])->name('index');
+        Route::get('/create', [CapstoneController::class, 'create'])->name('create');
+        Route::post('/store', [CapstoneController::class, 'store'])->name('store');
+        Route::get('/{id}', [CapstoneController::class, 'memberShow'])->name('show');
+        Route::get('/{id}/edit', [CapstoneController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [CapstoneController::class, 'update'])->name('update');
+        Route::delete('/{id}', [CapstoneController::class, 'destroy'])->name('destroy');
     });
 });
 

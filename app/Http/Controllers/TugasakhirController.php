@@ -17,8 +17,6 @@ class TugasakhirController extends Controller
 
         $tugasakhirs = $tugasakhirs->paginate(10);
         return view('public.tugasakhirs.index', compact('tugasakhirs'));
-
-        
     }
 
 

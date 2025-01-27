@@ -43,6 +43,17 @@ class StudentSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now()
             ],
+            [
+                'nim' => '21120121140033',
+                'name' => 'Fikri Abdurrohim Ibnu Prabowo',
+                'angkatan' => '2021',
+                'gender' => 'PRIA',
+                'status_terakhir' => '[2024-1] Aktif',
+                'prodi' => 'Teknik Komputer S1',
+                'jalur_masuk' => 'UM S1',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
         ]);
     }
 }

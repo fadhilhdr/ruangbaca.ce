@@ -7,28 +7,6 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Access Level Banner -->
-            @if(!auth()->check())
-                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-yellow-700">
-                                Anda sedang melihat versi terbatas. 
-                                <a href="{{ route('login') }}" class="font-medium underline text-yellow-700 hover:text-yellow-600">
-                                    Login
-                                </a> 
-                                untuk mengakses dokumen lengkap (C200-C500).
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!-- Informasi Capstone -->
@@ -55,7 +33,7 @@
                         <h3 class="text-lg font-semibold mb-4">Anggota Tim</h3>
                         <div class="space-y-3">
                             <div>
-                                <p class="text-gray-600">Ketua (Anggota 1):</p>
+                                <p class="text-gray-600">Anggota 1:</p>
                                 <p class="font-semibold">{{ $capstone->anggota1->name ?? 'Tidak ada' }} ({{ $capstone->anggota1_nim }})</p>
                             </div>
                             @if($capstone->anggota2_nim)
@@ -95,7 +73,7 @@
                                 </div>
                                 <div class="border rounded-lg">
                                     <iframe src="{{ Storage::url($capstone->c100_path) }}"
-                                            class="w-full h-[500px]"
+                                            class="w-full h-[1000px]"
                                             title="Dokumen C100"></iframe>
                                 </div>
                             @else

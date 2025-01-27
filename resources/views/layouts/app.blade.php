@@ -70,7 +70,7 @@
 <body class="bg-gray-50">
     <div class="min-h-screen flex flex-col">
         <x-navbar />
-        
+
         <main class="flex-grow mt-16">
             {{ $slot }}
         </main>

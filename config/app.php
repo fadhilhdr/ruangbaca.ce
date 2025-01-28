@@ -16,7 +16,7 @@ return [
     |
      */
 
-    'name'            => env('APP_NAME', 'ruangbaca.ce'),
+    'name'            => env('APP_NAME', 'Ruang Baca Teknik Komputer'),
 
     /*
     |--------------------------------------------------------------------------

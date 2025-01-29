@@ -6,21 +6,12 @@
                 <h4 class="text-lg font-semibold mb-4 pb-2 border-b border-gray-700">Tautan</h4>
                 <ul class="space-y-3">
                     <li><a href="https://tekkom.ft.undip.ac.id/ppid.undip.ac.id" class="text-gray-300 hover:text-white transition-colors duration-200 flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"/>
-                        </svg>
                         Informasi Publik Undip
                     </a></li>
                     <li><a href="https://tekkom.ft.undip.ac.id/lppm.undip.ac.id" class="text-gray-300 hover:text-white transition-colors duration-200 flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"/>
-                        </svg>
                         LPPM Undip
                     </a></li>
                     <li><a href="https://tekkom.ft.undip.ac.id/kemdikbud.go.id" class="text-gray-300 hover:text-white transition-colors duration-200 flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"/>
-                        </svg>
                         Kemendikbudristek
                     </a></li>
                 </ul>
@@ -31,21 +22,12 @@
                 <h4 class="text-lg font-semibold mb-4 pb-2 border-b border-gray-700">Blog</h4>
                 <ul class="space-y-3">
                     <li><a href="https://blog.undip.ac.id/" class="text-gray-300 hover:text-white transition-colors duration-200 flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"/>
-                        </svg>
                         Dosen / Staff
                     </a></li>
                     <li><a href="#" class="text-gray-300 hover:text-white transition-colors duration-200 flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"/>
-                        </svg>
                         Mahasiswa
                     </a></li>
                     <li><a href="https://undip.ac.id/project/panduan-pembuatan-blog" class="text-gray-300 hover:text-white transition-colors duration-200 flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"/>
-                        </svg>
                         Panduan Blog Undip
                     </a></li>
                 </ul>

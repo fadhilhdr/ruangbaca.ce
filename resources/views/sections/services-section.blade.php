@@ -21,7 +21,7 @@
                                 <div class="absolute inset-0 bg-gray-100 group-hover:bg-blue-600">
                                     <div class="absolute inset-0 opacity-10">
                                         <div class="h-full w-full flex items-center justify-center text-4xl font-bold text-gray-300 group-hover:text-white">
-                                            BUKU
+                                            Buku
                                         </div>
                                     </div>
                                 </div>
@@ -54,7 +54,7 @@
                                 <div class="absolute inset-0 bg-gray-100 group-hover:bg-blue-600">
                                     <div class="absolute inset-0 opacity-10">
                                         <div class="h-full w-full flex items-center justify-center text-4xl font-bold text-gray-300 group-hover:text-white">
-                                            TA
+                                            Tugas Akhir
                                         </div>
                                     </div>
                                 </div>
@@ -87,7 +87,7 @@
                                 <div class="absolute inset-0 bg-gray-100 group-hover:bg-blue-600">
                                     <div class="absolute inset-0 opacity-10">
                                         <div class="h-full w-full flex items-center justify-center text-4xl font-bold text-gray-300 group-hover:text-white">
-                                            CP
+                                            Capstone
                                         </div>
                                     </div>
                                 </div>

@@ -1,13 +1,14 @@
-<!-- resources/views/public/tugasakhirs/index.blade.php -->
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold leading-tight text-gray-800">
-            {{ __('Repository Tugas Akhir') }}
-        </h2>
-    </x-slot>
+<x-app-layout>        
+
 
     <div class="py-12">
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">    
+            
+            <!-- Header Section -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">Tugas Akhir</h1>
+            </div>
+            
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!-- Search Bar -->

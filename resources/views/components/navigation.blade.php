@@ -39,11 +39,11 @@
                 
                 <a href="#" 
                    class="py-4 px-4 hover:bg-blue-700 hover:text-white transition-colors duration-200 border-b-2 border-transparent hover:border-white">
-                    Informasi
+                    Panduan
                 </a>
                 <a href="#" 
                    class="py-4 px-4 hover:bg-blue-700 hover:text-white transition-colors duration-200 border-b-2 border-transparent hover:border-white">
-                    Bantuan
+                    Informasi
                 </a>
             </div>
             
@@ -134,11 +134,11 @@
             </a>
             <a href="#" 
                class="block py-3 px-4 text-white hover:bg-blue-700 transition-colors duration-200">
-                Informasi
+                Panduan
             </a>
             <a href="#" 
                class="block py-3 px-4 text-white hover:bg-blue-700 transition-colors duration-200">
-                Bantuan
+                Informasi
             </a>
             
             @guest

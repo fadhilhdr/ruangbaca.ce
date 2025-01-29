@@ -1,5 +1,8 @@
 <x-app-layout>
     <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        @include('components.page-header', [
+            'title' => 'Peminjaman Buku',
+        ])
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
             <div class="p-6 border-b border-gray-200">
                 <a href="{{ route('member.loans.returnForm', $loan->id) }}" class="text-blue-600 hover:text-blue-800 inline-flex items-center">

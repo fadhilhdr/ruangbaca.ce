@@ -35,21 +35,29 @@ Route::get('/visitor', [VisitorController::class, 'index'])->name('visitor.index
 Route::post('/visitor/confirmCheckout', [VisitorController::class, 'confirmCheckout'])->name('visitor.confirmCheckout');
 
 // Rute public
-Route::prefix('public/books')->name('public.books.')->group(function () {
-    Route::get('/', [BookController::class, 'index'])->name('index');
-    Route::get('/{isbn}', [BookController::class, 'show'])->name('show');
-});
+Route::prefix('public')->name('public.')->group(function () {
+    // Redirect dari /public ke /public/books
+    Route::get('/', function () {
+        return redirect()->route('public.books.index');
+    })->name('index');
 
-// Rute Public untuk Tugas Akhir
-Route::prefix('public/tugasakhirs')->name('public.tugasakhirs.')->group(function () {
-    Route::get('/', [TugasakhirController::class, 'index'])->name('index');
-    Route::get('/{id}', [TugasakhirController::class, 'show'])->name('show');
-});
+    // Books routes
+    Route::prefix('books')->name('books.')->group(function () {
+        Route::get('/', [BookController::class, 'index'])->name('index');
+        Route::get('/{isbn}', [BookController::class, 'show'])->name('show');
+    });
 
-// Rute Public untuk Tugas Akhir
-Route::prefix('public/capstones')->name('public.capstones.')->group(function () {
-    Route::get('/', [CapstoneController::class, 'index'])->name('index');
-    Route::get('/{id}', [CapstoneController::class, 'show'])->name('show');
+    // Tugas Akhir routes
+    Route::prefix('tugasakhirs')->name('tugasakhirs.')->group(function () {
+        Route::get('/', [TugasakhirController::class, 'index'])->name('index');
+        Route::get('/{id}', [TugasakhirController::class, 'show'])->name('show');
+    });
+
+    // Capstone routes
+    Route::prefix('capstones')->name('capstones.')->group(function () {
+        Route::get('/', [CapstoneController::class, 'index'])->name('index');
+        Route::get('/{id}', [CapstoneController::class, 'show'])->name('show');
+    });
 });
 
 // Rute public (registrasi menjadi user)
@@ -80,8 +88,12 @@ Route::get('/dashboard', function () {
     }
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Rute member
 Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->group(function () {
+    // Redirect dari /member ke /member/dashboard
+    Route::get('/', function () {
+        return redirect()->route('member.dashboard');
+    })->name('index');
+
     // Dashboard Member
     Route::get('/dashboard', [BookLoanController::class, 'dashboard'])->name('dashboard');
 

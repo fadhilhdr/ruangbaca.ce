@@ -1,6 +1,8 @@
-<!-- resources/views/member/loans/renewForm.blade.php -->
 <x-app-layout>
     <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        @include('components.page-header', [
+            'title' => 'Peminjaman Buku',
+        ])
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
             @if (session('success'))
                 <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4">

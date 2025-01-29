@@ -1,14 +1,9 @@
 <x-app-layout>        
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        @include('components.page-header', [
+            'title' => 'Katalog Tugas Akhir',
+        ])
 
-
-    <div class="py-12">
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">    
-            
-            <!-- Header Section -->
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Tugas Akhir</h1>
-            </div>
-            
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!-- Search Bar -->

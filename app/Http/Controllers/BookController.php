@@ -13,8 +13,9 @@ class BookController extends Controller
         $query = Book::query()
             ->select('isbn', 'judul', 'penulis', 'penerbit', 'peminatan', 'sub_peminatan', 'thumbnail', 'synopsis')
             ->selectRaw('COUNT(CASE WHEN is_available = true THEN 1 END) as available_stock')
+            ->selectRaw('COUNT(*) as total_stock') // Tambahkan total stok
             ->groupBy('isbn', 'judul', 'penulis', 'penerbit', 'peminatan', 'sub_peminatan', 'thumbnail', 'synopsis');
-
+    
         // Search logic
         if ($request->has('keyword')) {
             $keyword = $request->input('keyword');
@@ -26,7 +27,7 @@ class BookController extends Controller
                     ->orWhere('sub_peminatan', 'like', '%' . $keyword . '%');
             });
         }
-
+    
         // Filter logic remains the same
         if ($request->has('filter') && $request->filter != 'all') {
             $filter = $request->filter;
@@ -37,13 +38,14 @@ class BookController extends Controller
                 }
             }
         }
-
+    
         $books = $query->paginate(10)->appends($request->query());
         $peminatans = Book::distinct()->pluck('peminatan');
         $subPeminatans = Book::distinct()->pluck('sub_peminatan');
-
+    
         return view('public.books.index', compact('books', 'peminatans', 'subPeminatans'));
     }
+    
 
     public function show($isbn)
     {

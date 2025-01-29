@@ -1,15 +1,8 @@
 <x-app-layout>
-    <div class="container mx-auto px-4 py-8">
-        <div class="max-w-4xl mx-auto">
-            <!-- Navigation -->
-            <div class="mb-6">
-                <a href="{{ route('member.dashboard') }}" class="text-blue-600 hover:text-blue-800 inline-flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                    </svg>
-                    Kembali ke Dashboard
-                </a>
-            </div>
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        @include('components.page-header', [
+            'title' => 'Peminjaman Buku',
+        ])
 
             <!-- Main Content -->
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">

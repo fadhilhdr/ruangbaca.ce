@@ -1,12 +1,8 @@
 <x-app-layout>
     <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         @include('components.page-header', [
-            'title' => 'Peminjaman Buku',
-        ])
-
-            <!-- Filters -->
-            <h1 class="text-2xl font-bold text-gray-800">Riwayat Peminjaman</h1>
-            
+            'title' => 'Riwayat Peminjaman Buku',
+        ])  
             <div class="bg-white rounded-lg shadow-md p-6 mb-6">
                 <form method="GET" action="{{ route('member.loans.history') }}" class="space-y-4 md:space-y-0 md:flex md:gap-4">
                     <div class="flex-1">
@@ -52,19 +48,19 @@
 
             <!-- Loan History Cards -->
             @if($loans->count() > 0)
-                <div class="space-y-4">
+                <div class="space-y-6">
                     @foreach($loans as $loan)
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200">
                             <div class="p-6">
                                 <div class="flex flex-col md:flex-row gap-6">
                                     <!-- Book Image -->
-                                    <div class="w-full md:w-32 h-40 flex-shrink-0">
+                                    <div class="w-full md:w-36 h-48 flex-shrink-0">
                                         @if($loan->book->thumbnail)
                                             <img src="{{ Storage::url($loan->book->thumbnail) }}" 
-                                                 alt="{{ $loan->book->judul }}"
-                                                 class="w-full h-full object-cover rounded-lg">
+                                                alt="{{ Str::title($loan->book->judul) }}"
+                                                class="w-full h-full object-cover rounded-lg shadow-sm">
                                         @else
-                                            <div class="w-full h-full bg-gray-100 rounded-lg flex items-center justify-center">
+                                            <div class="w-full h-full bg-gray-50 rounded-lg border border-gray-100 flex items-center justify-center">
                                                 <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                                                 </svg>
@@ -74,33 +70,74 @@
 
                                     <!-- Loan Details -->
                                     <div class="flex-1">
-                                        <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ $loan->book->judul }}</h3>
-                                        <p class="text-gray-600 mb-4">{{ $loan->book->penulis }}</p>
-                                        
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                                             <div>
-                                                <p class="text-sm text-gray-600">Tanggal Peminjaman</p>
-                                                <p class="font-medium">{{ Carbon\Carbon::parse($loan->loan_date)->format('d M Y') }}</p>
+                                                <h3 class="text-xl font-semibold text-gray-900">{{ Str::title($loan->book->judul) }}</h3>
+                                                <p class="text-gray-600 mt-1">{{ Str::title($loan->book->penulis) }}</p>
                                             </div>
-                                            <div>
-                                                <p class="text-sm text-gray-600">Tanggal Pengembalian</p>
-                                                <p class="font-medium">{{ $loan->return_date ? Carbon\Carbon::parse($loan->return_date)->format('d M Y') : '-' }}</p>
+                                        </div>
+                                        
+                                        <!-- Loan Dates -->
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                                            <div class="bg-gray-50 rounded-lg p-4">
+                                                <div class="flex items-center space-x-3">
+                                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                                    </svg>
+                                                    <div>
+                                                        <p class="text-sm text-gray-600">Tanggal Peminjaman</p>
+                                                        <p class="font-medium text-gray-900">{{ Carbon\Carbon::parse($loan->loan_date)->format('d M Y') }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="bg-gray-50 rounded-lg p-4">
+                                                <div class="flex items-center space-x-3">
+                                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                                    </svg>
+                                                    <div>
+                                                        <p class="text-sm text-gray-600">Tanggal Pengembalian</p>
+                                                        <p class="font-medium text-gray-900">
+                                                            {{ $loan->return_date ? Carbon\Carbon::parse($loan->return_date)->format('d M Y') : '-' }}
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <!-- Transaction Timeline -->
-                                        <div class="border-t pt-4">
-                                            <h4 class="text-sm font-medium text-gray-700 mb-2">Riwayat Transaksi</h4>
-                                            <div class="space-y-2">
+                                        <div class="mt-6 border-t border-gray-100 pt-6">
+                                            <h4 class="text-sm font-medium text-gray-900 mb-4">Riwayat Transaksi</h4>
+                                            <div class="space-y-3">
                                                 @foreach($loan->transactions as $transaction)
-                                                    <div class="flex items-center justify-between text-sm">
-                                                        <span class="text-gray-600">
-                                                            {{ ucfirst($transaction->type->type_name) }}
+                                                    <div class="flex items-center justify-between text-sm bg-gray-50 rounded-lg p-3">
+                                                        <span class="flex items-center text-gray-700">
+                                                            @if($transaction->type->type_name === 'borrow')
+                                                                <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                                                </svg>
+                                                            @elseif($transaction->type->type_name === 'return')
+                                                                <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                                                </svg>
+                                                            @elseif($transaction->type->type_name === 'fine')
+                                                                <svg class="w-4 h-4 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                                </svg>
+                                                            @endif
+                                                            {{ Str::title($transaction->type->type_name) }}
                                                             @if($transaction->type->type_name === 'fine')
-                                                                (Rp {{ number_format($transaction->fines->first()->amount, 0, ',', '.') }})
+                                                                <span class="text-red-600 ml-1">
+                                                                    (Rp {{ number_format($transaction->fines->first()->amount, 0, ',', '.') }})
+                                                                </span>
                                                             @endif
                                                         </span>
-                                                        <span class="text-gray-500">{{ $transaction->created_at->format('d M Y H:i') }}</span>
+                                                        <span class="text-gray-500 flex items-center">
+                                                            <svg class="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                            </svg>
+                                                            {{ $transaction->created_at->format('d M Y H:i') }}
+                                                        </span>
                                                     </div>
                                                 @endforeach
                                             </div>
@@ -113,18 +150,16 @@
                 </div>
 
                 <!-- Pagination -->
-                <div class="mt-6">
+                <div class="mt-8">
                     {{ $loans->links() }}
                 </div>
             @else
-                <div class="bg-white rounded-lg shadow-md p-6 text-center">
-                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                <div class="text-center py-12 bg-gray-50 rounded-xl">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                     </svg>
-                    <p class="text-gray-600">Tidak ada riwayat peminjaman.</p>
-                    <a href="{{ route('public.books.index') }}" class="mt-4 inline-block text-blue-600 hover:text-blue-800">
-                        Pinjam buku sekarang
-                    </a>
+                    <h3 class="mt-4 text-sm font-medium text-gray-900">Tidak Ada Riwayat Peminjaman</h3>
+                    <p class="mt-2 text-sm text-gray-500">Anda belum memiliki riwayat peminjaman buku.</p>
                 </div>
             @endif
         </div>

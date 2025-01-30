@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         @include('components.page-header', [
-            'title' => 'Peminjaman Buku',
+            'title' => 'Penggantian Buku',
         ])
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
             <div class="p-6 border-b border-gray-200">
@@ -23,10 +23,6 @@
                         <div>
                             <dt class="text-sm text-gray-500">Judul</dt>
                             <dd class="text-gray-900">{{ $loan->book->judul }}</dd>
-                        </div>
-                        <div>
-                            <dt class="text-sm text-gray-500">Kode Unik</dt>
-                            <dd class="text-gray-900">{{ $loan->kode_unik_buku }}</dd>
                         </div>
                         <div>
                             <dt class="text-sm text-gray-500">ISBN</dt>

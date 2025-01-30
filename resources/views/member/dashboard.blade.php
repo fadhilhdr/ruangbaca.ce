@@ -68,34 +68,8 @@
                         <div class="p-6">
                             <h2 class="text-lg font-semibold text-gray-900 mb-6">Menu Cepat</h2>
                             <div class="space-y-4">
-                                <a href="{{ route('member.loans.index') }}" 
-                                   class="flex items-center p-4 rounded-xl border border-gray-100 hover:bg-blue-50 transition-all duration-200 group">
-                                    <div class="p-3 rounded-lg bg-blue-50 group-hover:bg-blue-100">
-                                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                                        </svg>
-                                    </div>
-                                    <div class="ml-4">
-                                        <h3 class="font-medium text-gray-900">Daftar Peminjaman</h3>
-                                        <p class="text-sm text-gray-500 mt-1">Lihat semua peminjaman aktif</p>
-                                    </div>
-                                </a>
-
-                                <a href="{{ route('member.loans.history') }}"
-                                   class="flex items-center p-4 rounded-xl border border-gray-100 hover:bg-blue-50 transition-all duration-200 group">
-                                    <div class="p-3 rounded-lg bg-blue-50 group-hover:bg-blue-100">
-                                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                        </svg>
-                                    </div>
-                                    <div class="ml-4">
-                                        <h3 class="font-medium text-gray-900">Riwayat Peminjaman</h3>
-                                        <p class="text-sm text-gray-500 mt-1">Lihat histori peminjaman</p>
-                                    </div>
-                                </a>
-
                                 <a href="{{ route('public.books.index') }}"
-                                   class="flex items-center p-4 rounded-xl border border-gray-100 hover:bg-blue-50 transition-all duration-200 group">
+                                    class="flex items-center p-4 rounded-xl border border-gray-100 hover:bg-blue-50 transition-all duration-200 group">
                                     <div class="p-3 rounded-lg bg-blue-50 group-hover:bg-blue-100">
                                         <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -106,36 +80,103 @@
                                         <p class="text-sm text-gray-500 mt-1">Telusuri koleksi perpustakaan</p>
                                     </div>
                                 </a>
+                                
+                                <a href="{{ route('member.tugasakhirs.index') }}"
+                                    class="flex items-center p-4 rounded-xl border border-gray-100 hover:bg-blue-50 transition-all duration-200 group">
+                                    <div class="p-3 rounded-lg bg-blue-50 group-hover:bg-blue-100">
+                                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 11h6"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 15h4"/>
+                                        </svg>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h3 class="font-medium text-gray-900">Tugas Akhir</h3>
+                                        <p class="text-sm text-gray-500 mt-1">Unggah dokumen TA</p>
+                                    </div>
+                                </a>  
+                                
+                                <a href="{{ route('member.capstones.index') }}"
+                                    class="flex items-center p-4 rounded-xl border border-gray-100 hover:bg-blue-50 transition-all duration-200 group">
+                                    <div class="p-3 rounded-lg bg-blue-50 group-hover:bg-blue-100">
+                                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 11h6"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 15h4"/>
+                                        </svg>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h3 class="font-medium text-gray-900">Capstone</h3>
+                                        <p class="text-sm text-gray-500 mt-1">Unggah dokumen Capstone</p>
+                                    </div>
+                                </a>                                                                                           
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Peminjaman Aktif -->
+                <!-- Peminjaman Terbaru -->
                 <div class="lg:col-span-2">
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100">
                         <div class="p-6">
                             <div class="flex items-center justify-between mb-6">
-                                <h2 class="text-lg font-semibold text-gray-900">Peminjaman Aktif Terbaru</h2>
-                                <a href="{{ route('member.loans.index') }}" 
-                                   class="text-sm text-blue-600 hover:text-blue-700 hover:underline">
-                                    Lihat Semua
-                                </a>
+                                <h2 class="text-lg font-semibold text-gray-900">Peminjaman Terbaru</h2>
+                                <div class="flex space-x-4">
+                                    <a href="{{ route('member.loans.index') }}" 
+                                    class="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline">
+                                        Pinjaman Aktif
+                                    </a>
+                                    <span class="text-gray-300">|</span>
+                                    <a href="{{ route('member.loans.history') }}" 
+                                    class="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline">
+                                        Riwayat Peminjaman
+                                    </a>
+                                </div>
                             </div>
 
-                            @if($allLoans->isNotEmpty())
-                                <div class="grid gap-6">
-                                    @foreach($allLoans as $loan)
-                                        <div class="flex bg-white rounded-xl border border-gray-100 hover:border-blue-200 hover:shadow-md transition-all duration-200 p-4">
+                            @php
+                                $now = now();
+                                // Get active loans (not returned) and sort by newest first
+                                $activeLoans = $allLoans
+                                    ->filter(function($loan) {
+                                        return !$loan->return_date;
+                                    })
+                                    ->sortByDesc('loan_date');
+
+                                // Get returned loans and sort by return date
+                                $returnedLoans = $allLoans
+                                    ->filter(function($loan) {
+                                        return $loan->return_date;
+                                    })
+                                    ->sortByDesc('return_date');
+
+                                // Combine active loans first, then returned loans, and take 3
+                                $displayLoans = $activeLoans->merge($returnedLoans)->take(3);
+                                
+                                // Check if there are more loans than what we're displaying
+                                $hasMoreLoans = $allLoans->count() > 3;
+                            @endphp
+
+                            @if($displayLoans->isNotEmpty())
+                                <div class="grid gap-4">
+                                    @foreach($displayLoans as $loan)
+                                        @php
+                                            $dueDate = Carbon\Carbon::parse($loan->due_date);
+                                            $isOverdue = $dueDate->isPast() && !$loan->return_date;
+                                            $daysRemaining = $now->diffInDays($dueDate, false);
+                                        @endphp
+                                        <div class="group flex bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-200 p-5">
                                             <!-- Book Thumbnail -->
-                                            <div class="w-24 h-32 flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden">
+                                            <div class="w-28 h-36 flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden shadow-sm">
                                                 @if ($loan->book->thumbnail)
                                                     <img src="{{ Storage::url($loan->book->thumbnail) }}"
-                                                         alt="{{ $loan->book->judul }}"
-                                                         class="w-full h-full object-cover">
+                                                        alt="{{ Str::title($loan->book->judul) }}"
+                                                        class="w-full h-full object-cover">
                                                 @else
                                                     <div class="w-full h-full flex items-center justify-center bg-gray-100">
-                                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                                                         </svg>
                                                     </div>
@@ -146,35 +187,58 @@
                                             <div class="ml-6 flex-grow">
                                                 <div class="flex justify-between items-start">
                                                     <div>
-                                                        <h4 class="font-medium text-gray-900">{{ $loan->book->judul }}</h4>
-                                                        <p class="text-sm text-gray-500 mt-1">{{ $loan->book->penulis }}</p>
+                                                        <h4 class="font-medium text-gray-900">{{ Str::title($loan->book->judul) }}</h4>
+                                                        <p class="text-sm text-gray-500 mt-1">{{ Str::title($loan->book->penulis) }}</p>
                                                     </div>
                                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ $loan->status['class'] }}">
-                                                        {{ $loan->status['label'] }}
+                                                        {{ Str::title($loan->status['label']) }}
                                                     </span>
                                                 </div>
 
-                                                <div class="mt-4 flex items-center justify-between">
-                                                    <div class="flex items-center space-x-4">
-                                                        <div class="flex items-center text-sm text-gray-500">
-                                                            <svg class="w-4 h-4 text-gray-400 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                                            </svg>
-                                                            Tenggat: {{ Carbon\Carbon::parse($loan->due_date)->format('d M Y') }}
+                                                <div class="text-sm mt-1">
+                                                    @if($loan->return_date)
+                                                        <div class="text-green-600">
+                                                            Sudah dikembalikan pada {{ Carbon\Carbon::parse($loan->return_date)->format('d M Y') }}
                                                         </div>
-                                                    </div>
-
-                                                    <a href="{{ route('member.loans.show', $loan->id) }}"
-                                                       class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors">
-                                                        Lihat Detail
-                                                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                                        </svg>
-                                                    </a>
+                                                    @else
+                                                        @php
+                                                            $now = now();
+                                                            $dueDate = Carbon\Carbon::parse($loan->due_date);
+                                                            $isOverdue = $dueDate < $now;
+                                                            $isDueSoon = !$isOverdue && $dueDate <= $now->addDays(3);
+                                                            $daysRemaining = $now->diffInDays($dueDate, false);
+                                                        @endphp
+                                                        
+                                                        @if($isOverdue)
+                                                            <div class="text-red-600">
+                                                                Terlambat {{ abs($daysRemaining) }} hari
+                                                            </div>
+                                                        @elseif($isDueSoon)
+                                                            <div class="text-yellow-600">
+                                                                {{ $daysRemaining }} hari tersisa (Segera Jatuh Tempo)
+                                                            </div>
+                                                        @else
+                                                            <div class="text-blue-600">
+                                                                {{ $daysRemaining }} hari tersisa
+                                                            </div>
+                                                        @endif
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
                                     @endforeach
+
+                                    @if($allLoans->count() > 3)
+                                        <div class="text-center pt-4">
+                                            <a href="{{ route('member.loans.history') }}" 
+                                            class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors">
+                                                Lihat Semua Riwayat Peminjaman
+                                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    @endif
                                 </div>
                             @else
                                 <div class="text-center py-12 bg-gray-50 rounded-xl">
@@ -184,7 +248,7 @@
                                     <h3 class="mt-4 text-sm font-medium text-gray-900">Tidak Ada Peminjaman Aktif</h3>
                                     <p class="mt-2 text-sm text-gray-500">Anda belum memiliki peminjaman buku yang aktif saat ini.</p>
                                     <a href="{{ route('public.books.index') }}" 
-                                       class="mt-6 inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors">
+                                    class="mt-6 inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors">
                                         Cari Buku
                                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>

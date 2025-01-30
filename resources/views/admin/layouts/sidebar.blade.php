@@ -44,31 +44,6 @@
                     </ul>
                 </li>
 
-                {{-- <li class="nav-item {{ request()->is('admin/lecturers*') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ request()->is('admin/lecturers*') ? 'active' : '' }}">
-                        <i class="bi bi-person-badge"></i>
-                        <p>
-                            Lecturers
-                            <i class="nav-arrow bi bi-chevron-right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('admin.lecturers.index') }}"
-                                class="nav-link {{ request()->routeIs('admin.lecturers.index') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Index</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.lecturers.create') }}"
-                                class="nav-link {{ request()->routeIs('admin.lecturers.create') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Insert Data</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li> --}}
                 {{-- book data --}}
                 <li class="nav-item {{ request()->is('admin/books*') ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ request()->is('admin/books*') ? 'active' : '' }}">
@@ -99,7 +74,7 @@
                     <a href="#" class="nav-link {{ request()->is('admin/document*') ? 'active' : '' }}">
                         <i class="bi bi-file-earmark-text-fill"></i>
                         <p>
-                            Dokumen
+                            Dokumen TA
                             <i class="nav-arrow bi bi-chevron-right"></i>
                         </p>
                     </a>
@@ -116,6 +91,32 @@
                                 class="nav-link {{ request()->routeIs('admin.document.create') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Tambah Dokumen</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item {{ request()->is('admin/capstones*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->is('admin/capstones*') ? 'active' : '' }}">
+                        <i class="bi bi-archive"></i>
+                        <p>
+                            Dokumen Capstone
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.capstones.index') }}"
+                                class="nav-link {{ request()->routeIs('admin.capstones.index') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Indeks Capstone</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.capstones.create') }}"
+                                class="nav-link {{ request()->routeIs('admin.capstones.create') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Tambah Capstone</p>
                             </a>
                         </li>
                     </ul>

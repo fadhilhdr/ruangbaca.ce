@@ -88,7 +88,7 @@
                 </div>
                 <div>
                     <h3 class="h2 fw-bold mb-1">{{ $totalDocument ?? 0 }}</h3>
-                    <p class="text-muted small mb-0">Total Dokumen</p>
+                    <p class="text-muted small mb-0">Total Dokumen TA</p>
                 </div>
             </div>
             <a href="{{ route('admin.document.index') }}"

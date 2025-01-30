@@ -31,11 +31,7 @@ Route::get('/credit', function () {
     return view('credit');
 })->name('credit');
 
-Route::get('/recomendation', function () {
-    return view('recomendation');
-});
-
-Route::post('/recommend-books', [BookRecommendationController::class, 'getRecommendations']);
+Route::post('/recommendations', [BookRecommendationController::class, 'getRecommendations']);
 
 // Rute visitor
 Route::post('/visitor', [VisitorController::class, 'store'])->name('visitor.store');

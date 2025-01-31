@@ -146,7 +146,7 @@
                                     <a href="" class="btn btn-secondary">
                                         <i class="bi bi-arrow-left me-1"></i> Kembali
                                     </a>
-                                    <a href="#" class="btn btn-warning">
+                                    <a href="{{ route('admin.download.template') }}" class="btn btn-warning">
                                         <i class="bi bi-download me-1"></i> Unduh Template
                                     </a>
 

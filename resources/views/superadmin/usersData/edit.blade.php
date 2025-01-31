@@ -8,7 +8,7 @@
             <h3 class="card-title">Edit User</h3>
         </div>
         <div class="card-body">
-            <form action="{{ route('superadmin.users.update', $user->id) }}" method="POST">
+            <form action="{{ route('superadmin.users.update', $user->userid) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -27,7 +27,6 @@
                         </option>
                     </select>
                 </div>
-
 
                 <button type="submit" class="btn btn-primary">Update</button>
             </form>

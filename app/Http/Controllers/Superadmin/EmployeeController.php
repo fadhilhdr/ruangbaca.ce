@@ -20,8 +20,7 @@ class EmployeeController extends Controller
             });
         }
 
-        $pegawais = $query->paginate(10);
-        Alert::success('Berhasil!', 'Data mahasiswa berhasil dihapus!.');
+        $pegawais = $query->paginate(5);
         return view('superadmin.lecturersData.index', compact('pegawais'));
     }
 
@@ -57,8 +56,9 @@ class EmployeeController extends Controller
         try {
             $pegawai = Pegawai::create($validatedData);
 
-            return redirect()->route('superadmin.employees.index');
             Alert::success('Berhasil!', 'Data Pegawai berhasil ditambahkan.!.');
+
+            return redirect()->route('superadmin.employees.index');
 
         } catch (\Exception $e) {
             return back()->withErrors(['msg' => 'Gagal menyimpan data: ' . $e->getMessage()])
@@ -71,9 +71,9 @@ class EmployeeController extends Controller
 
     }
 
-    public function edit($nip_nppu_nupk)
+    public function edit($id)
     {
-        $pegawai = Pegawai::findOrFail($nip_nppu_nupk);
+        $pegawai = Pegawai::findOrFail($id);
         return view('superadmin.lecturersData.edit', compact('pegawai'));
     }
 
@@ -83,7 +83,7 @@ class EmployeeController extends Controller
 
         $validatedData = $request->validate([
             'nama_lengkap'        => 'required|string|max:255',
-            'nip_nppu_nupk'       => 'required|string|unique:pegawais,nip_nppu_nupk,' . $nip_nppu_nupk,
+            'nip_nppu_nupk'       => 'required|string|unique:pegawais,nip_nppu_nupk,' . $pegawai->nip_nppu_nupk . ',nip_nppu_nupk',
             'nidn_nidk_nup_nitk'  => 'nullable|string',
             'nuptk'               => 'nullable|string',
             'pangkat_golongan'    => 'nullable|string',
@@ -106,8 +106,9 @@ class EmployeeController extends Controller
         try {
             $pegawai->update($validatedData);
 
-            return redirect()->route('superadmin.employees.index');
             Alert::success('Berhasil!', 'Data Pegawai berhasil diperbaharui.!.');
+
+            return redirect()->route('superadmin.employees.index');
 
         } catch (\Exception $e) {
             return back()->withErrors(['msg' => 'Gagal memperbarui data: ' . $e->getMessage()])
@@ -121,8 +122,9 @@ class EmployeeController extends Controller
             $pegawai = Pegawai::findOrFail($id);
             $pegawai->delete();
 
-            return redirect()->route('superadmin.employees.index');
             Alert::success('Berhasil!', 'Data Pegawai berhasil dihapus!.');
+
+            return redirect()->route('superadmin.employees.index');
 
         } catch (\Exception $e) {
             return back()->withErrors(['msg' => 'Gagal menghapus data: ' . $e->getMessage()]);

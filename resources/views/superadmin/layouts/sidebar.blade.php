@@ -70,7 +70,7 @@
 
                 {{-- User data --}}
                 <li class="nav-item {{ request()->is('superadmin/users*') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ request()->is('superadmin/employees*') ? 'active' : '' }}">
+                    <a href="#" class="nav-link {{ request()->is('superadmin/users*') ? 'active' : '' }}">
                         <i class="bi bi-person-badge"></i>
                         <p>
                             Pengguna

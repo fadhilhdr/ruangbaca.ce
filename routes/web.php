@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\BookLoanController as AdminBookLoanController;
+use App\Http\Controllers\Admin\CapstoneController as AdminCapstoneController;
 use App\Http\Controllers\Admin\DokumentController;
 use App\Http\Controllers\Admin\FinesBookController;
 use App\Http\Controllers\Admin\HistoryOfController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookLoanController;
+use App\Http\Controllers\BookRecommendationController;
 use App\Http\Controllers\CapstoneController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
@@ -28,6 +30,8 @@ Route::get('/', function () {
 Route::get('/credit', function () {
     return view('credit');
 })->name('credit');
+
+Route::post('/recommendations', [BookRecommendationController::class, 'getRecommendations']);
 
 // Rute visitor
 Route::post('/visitor', [VisitorController::class, 'store'])->name('visitor.store');
@@ -164,6 +168,8 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('books', AdminBookController::class); // Manage books
     Route::post('/books/create', [AdminBookController::class, 'import'])->name('books.import');
     Route::get('/download-template', [AdminBookController::class, 'downloadTemplate'])->name('downloadBook.template');
+
+    Route::resource('/capstones', AdminCapstoneController::class);
 
     Route::resource('transaction', AdminBookLoanController::class); // Manage transaction
     Route::resource('fines', FinesBookController::class);           // Manage fines

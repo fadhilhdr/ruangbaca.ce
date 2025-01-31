@@ -60,6 +60,19 @@ class CapstoneController extends Controller
 
     public function create()
     {
+        // Check if user already has a capstone
+        $userNim = auth()->user()->userid;
+        $hasCapstone = Capstone::where(function($query) use ($userNim) {
+            $query->where('anggota1_nim', $userNim)
+                  ->orWhere('anggota2_nim', $userNim)
+                  ->orWhere('anggota3_nim', $userNim);
+        })->exists();
+    
+        if ($hasCapstone) {
+            return redirect()->route('member.capstones.index')
+                ->with('error', 'Anda sudah memiliki project capstone aktif.');
+        }
+        
         return view('member.capstones.create');
     }
 
@@ -94,6 +107,19 @@ class CapstoneController extends Controller
 
     public function store(Request $request)
     {
+        // Check if authenticated user already has a capstone
+        $userNim = auth()->user()->userid;
+        $hasCapstone = Capstone::where(function($query) use ($userNim) {
+            $query->where('anggota1_nim', $userNim)
+                  ->orWhere('anggota2_nim', $userNim)
+                  ->orWhere('anggota3_nim', $userNim);
+        })->exists();
+    
+        if ($hasCapstone) {
+            return redirect()->route('member.capstones.index')
+                ->with('error', 'Anda sudah memiliki project capstone aktif.');
+        }
+        
         $validated = $request->validate([
             'kode_kelompok' => [
                 'required',

@@ -9,8 +9,8 @@ class Pegawai extends Model
     use HasFactory;
 
     protected $table      = 'pegawais';
-    protected $primaryKey = 'id';
-    public $incrementing  = true;
+    protected $primaryKey = 'nip_nppu_nupk';
+    public $incrementing  = false;
     protected $keyType    = 'int';
 
     protected $fillable = [

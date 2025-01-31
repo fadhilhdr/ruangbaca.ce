@@ -40,6 +40,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th class="text-center" style="width: 40px">NO</th>
+                                <th>id</th>
                                 <th>User ID</th>
                                 <th>Nama</th>
                                 <th>Role ID</th>
@@ -50,6 +51,7 @@
                             @forelse($users as $index => $user)
                                 <tr class="align-middle">
                                     <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $user->id }}</td>
                                     <td>{{ $user->userid }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>

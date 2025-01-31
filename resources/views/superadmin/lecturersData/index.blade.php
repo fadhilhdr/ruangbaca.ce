@@ -5,6 +5,7 @@
 @section('content')
     <div class="container-fluid">
         <!-- Search and Filter Card -->
+
         <div class="card shadow-sm border-0 rounded-3 mb-4">
             <div class="card-body">
                 <div class="row d-flex justify-content-between">
@@ -46,7 +47,6 @@
                         <thead class="table-light">
                             <tr>
                                 <th>No</th>
-                                <th>id</th>
                                 <th>Nama Lengkap</th>
                                 <th>NIP/NPPU/NUPK</th>
                                 <th>NIDN/NIDK/NUP/NITK</th>
@@ -73,7 +73,6 @@
                             @foreach ($pegawais as $index => $pegawai)
                                 <tr>
                                     <td>{{ $loop->iteration + ($pegawais->currentPage() - 1) * $pegawais->perPage() }}</td>
-                                    <td>{{ $pegawai->id }}</td>
                                     <td>{{ $pegawai->nama_lengkap }}</td>
                                     <td>{{ $pegawai->nip_nppu_nupk }}</td>
                                     <td>{{ $pegawai->nidn_nidk_nup_nitk }}</td>
@@ -101,7 +100,7 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
                                                 <li>
-                                                    <a href="{{ route('superadmin.employees.edit', $pegawai->id) }}"
+                                                    <a href="{{ route('superadmin.employees.edit', $pegawai->nip_nppu_nupk) }}"
                                                         class="dropdown-item py-2 px-4">
                                                         <i class="bi bi-pencil-square me-2 text-warning"></i>
                                                         Edit Data
@@ -112,7 +111,7 @@
                                                 </li>
                                                 <li>
                                                     <form
-                                                        action="{{ route('superadmin.employees.destroy', $pegawai->id) }}"
+                                                        action="{{ route('superadmin.employees.destroy', $pegawai->nip_nppu_nupk) }}"
                                                         method="POST"
                                                         onsubmit="event.preventDefault();
                                                                    Swal.fire({

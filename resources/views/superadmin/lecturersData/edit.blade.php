@@ -14,7 +14,7 @@
                         </h3>
                     </div>
 
-                    <form method="POST" action="{{ route('superadmin.employees.update', $pegawai->id) }}"
+                    <form method="POST" action="{{ route('superadmin.employees.update', $pegawai->nip_nppu_nupk) }}"
                         class="form-horizontal">
                         @csrf
                         @method('PUT')

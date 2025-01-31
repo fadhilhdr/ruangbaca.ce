@@ -1,4 +1,4 @@
-@extends('admin.layouts.base')
+@extends('superadmin.layouts.base')
 
 @section('title', 'Tambah Data Pegawai Lengkap')
 

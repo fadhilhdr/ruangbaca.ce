@@ -115,7 +115,7 @@
         <div class="card">
             <h2>Putrandi Agung Prabowo</h2>
             <div class="social-icons">
-                <a href="https://linkedin.com/in/putrandiagung" target="_blank"><i class="bi bi-linkedin"></i></a>
+                <a href="https://www.linkedin.com/in/putrandi-agung/" target="_blank"><i class="bi bi-linkedin"></i></a>
                 <a href="https://instagram.com/putrandiagung" target="_blank"><i class="bi bi-instagram"></i></a>
             </div>
         </div>

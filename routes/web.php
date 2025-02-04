@@ -31,6 +31,11 @@ Route::get('/credit', function () {
     return view('credit');
 })->name('credit');
 
+// Rute halaman panduan
+Route::get('/panduan', function () {
+    return view('panduan');
+})->name('panduan');
+
 Route::post('/recommendations', [BookRecommendationController::class, 'getRecommendations']);
 
 // Rute visitor

@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 
-                <a href="#" 
+                <a href="{{route('panduan')}}" 
                    class="py-4 px-4 hover:bg-blue-700 hover:text-white transition-colors duration-200 border-b-2 border-transparent hover:border-white">
                     Panduan
                 </a>

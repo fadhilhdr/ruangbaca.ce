@@ -3,7 +3,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-    <h2 class="text-xl font-semibold mb-6 text-center">Alur Peminjaman Buku</h2>
+    @include('components.page-header', [
+        'title' => 'Alur Peminjaman Buku',
+    ])
     <div class="space-y-6">
         <div class="flex items-center space-x-4">
             <div class="w-16 h-16 bg-gray-200 flex justify-center items-center rounded-md">

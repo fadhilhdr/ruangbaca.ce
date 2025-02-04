@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         @include('components.page-header', [
-            'title' => 'Penggantian Buku',
+            'title' => 'Pelaporan Buku Hilang',
         ])
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
             <div class="p-6 border-b border-gray-200">

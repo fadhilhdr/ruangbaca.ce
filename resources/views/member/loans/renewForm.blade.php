@@ -54,10 +54,6 @@
                                     <dt class="text-sm font-medium text-gray-500">ISBN</dt>
                                     <dd class="mt-1 text-sm text-gray-900">{{ $loan->book->isbn }}</dd>
                                 </div>
-                                <div>
-                                    <dt class="text-sm font-medium text-gray-500">{{ Str::title('Kode Unik') }}</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">{{ $loan->kode_unik_buku }}</dd>
-                                </div>
                             </dl>
                         </div>
                     </div>
@@ -68,16 +64,16 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">{{ Str::title('Tanggal Peminjaman') }}</dt>
-                                <dd class="mt-1 text-sm text-gray-900">{{ \Carbon\Carbon::parse($loan->loan_date)->format('d M Y H:i') }}</dd>
+                                <dd class="mt-1 text-sm text-gray-900">{{ \Carbon\Carbon::parse($loan->loan_date)->translatedFormat('l, d M Y H:i') }}</dd>
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">{{ Str::title('Tenggat Saat Ini') }}</dt>
-                                <dd class="mt-1 text-sm text-gray-900">{{ \Carbon\Carbon::parse($loan->due_date)->format('d M Y H:i') }}</dd>
+                                <dd class="mt-1 text-sm text-gray-900">{{ \Carbon\Carbon::parse($loan->due_date)->translatedFormat('l, d M Y H:i') }}</dd>
                             </div>
                             <div class="col-span-2">
                                 <dt class="text-sm font-medium text-gray-500">{{ Str::title('Tenggat Setelah Perpanjangan') }}</dt>
                                 <dd class="mt-1 text-sm text-gray-900 font-semibold">
-                                    {{ \Carbon\Carbon::parse($loan->due_date)->addDays(7)->format('d M Y H:i') }}
+                                    {{ \Carbon\Carbon::parse($loan->due_date)->addDays(7)->translatedFormat('l, d M Y H:i') }}
                                 </dd>
                             </div>
                         </div>

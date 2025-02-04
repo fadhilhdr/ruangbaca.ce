@@ -62,7 +62,7 @@
                                 @php
                                     $fields = [
                                         'full_document' => ['Dokumen Lengkap', 'document-text'],
-                                        'cover_abstract' => ['Cover & Abstrak', 'document'],
+                                        'cover_abstract' => ['Cover hingga Abstrak', 'document'],
                                         'bab1_pendahuluan' => ['BAB 1', 'academic-cap'],
                                         'bab2_kajianpustaka' => ['BAB 2', 'book-open'],
                                         'bab3_perancangan' => ['BAB 3', 'template'],

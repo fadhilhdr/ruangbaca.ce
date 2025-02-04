@@ -91,4 +91,48 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        // Flash message untuk success
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                toast: true,
+                position: 'top-end',
+                background: '#D1FAE5',  // Light green background
+                iconColor: '#059669',   // Green icon
+                customClass: {
+                    title: 'text-green-800',
+                    popup: 'rounded-lg shadow-md border border-green-100'
+                }
+            });
+        @endif
+    
+        // Flash message untuk error
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: "{{ session('error') }}",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                toast: true,
+                position: 'top-end',
+                background: '#FEE2E2',  // Light red background
+                iconColor: '#DC2626',   // Red icon
+                customClass: {
+                    title: 'text-red-800',
+                    popup: 'rounded-lg shadow-md border border-red-100'
+                }
+            });
+        @endif
+    </script>
+    @endpush
 </x-app-layout>

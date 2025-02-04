@@ -5,67 +5,86 @@
         ])
 
         {{-- Content --}}
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-7 gap-8">
             <!-- Form Section (1/4 width) -->
-            <div class="lg:col-span-1">
-                <div class="bg-white rounded-lg shadow-md p-6 sticky top-4">
-                    <h2 class="text-lg font-semibold mb-4 text-gray-700 border-b pb-2">Form Check-In</h2>
-                    
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-lg p-8 sticky top-4 border-2 border-blue-500">
+                    <!-- Header Section -->
+                    <div class="mb-6 border-b border-gray-200 pb-4">
+                        <h2 class="text-xl font-bold text-gray-800 mb-2">Form Pengunjung</h2>
+                        <h3 class="text-lg font-semibold text-blue-600">Check-In & Check-Out</h3>
+                    </div>
+            
+                    <!-- Alert Messages -->
                     @if(session('error'))
-                        <div class="mb-4 p-3 rounded-md bg-red-50 border-l-4 border-red-400">
+                        <div class="mb-6 p-4 rounded-md bg-red-50 border-l-4 border-red-500 flex items-center">
+                            <svg class="h-5 w-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"/>
+                            </svg>
                             <p class="text-red-700 text-sm">{{ session('error') }}</p>
                         </div>
                     @endif
-
+            
                     @if(session('success'))
-                        <div class="mb-4 p-3 rounded-md bg-green-50 border-l-4 border-green-400">
+                        <div class="mb-6 p-4 rounded-md bg-green-50 border-l-4 border-green-500 flex items-center">
+                            <svg class="h-5 w-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
+                            </svg>
                             <p class="text-green-700 text-sm">{{ session('success') }}</p>
                         </div>
                     @endif
-
-                    <form action="{{ route('visitor.store') }}" method="POST">
+            
+                    <!-- Form Section -->
+                    <form action="{{ route('visitor.store') }}" method="POST" class="space-y-6">
                         @csrf
-                        <div class="space-y-4">
+                        <div class="space-y-6">
+                            <!-- Identifier Field -->
                             <div>
-                                <label for="identifier" class="block text-sm font-medium text-gray-700 mb-1">
+                                <label for="identifier" class="block text-sm font-semibold text-gray-700 mb-2">
                                     NIM/NIP/Nama <span class="text-red-500">*</span>
                                 </label>
-                                <input type="text" 
-                                    id="identifier" 
-                                    name="identifier" 
-                                    value="{{ old('identifier') }}" 
-                                    required
-                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                    placeholder="Masukkan identitas Anda">
+                                <div class="relative">
+                                    <input type="text"
+                                        id="identifier"
+                                        name="identifier"
+                                        value="{{ old('identifier') }}"
+                                        required
+                                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors duration-200"
+                                        placeholder="Masukkan identitas Anda">
+                                </div>
                             </div>
-
+            
+                            <!-- Instansi Field -->
                             <div>
-                                <label for="instansi" class="block text-sm font-medium text-gray-700 mb-1">
+                                <label for="instansi" class="block text-sm font-semibold text-gray-700 mb-2">
                                     Instansi
                                 </label>
-                                <input type="text" 
-                                    id="instansi" 
-                                    name="instansi" 
-                                    value="{{ old('instansi') }}"
-                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                    placeholder="Nama instansi">
-                                <p class="mt-1 text-xs text-gray-500">*Wajib diisi jika NIM/NIP tidak terdaftar</p>
+                                <div class="relative">
+                                    <input type="text"
+                                        id="instansi"
+                                        name="instansi"
+                                        value="{{ old('instansi') }}"
+                                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors duration-200"
+                                        placeholder="Nama instansi">
+                                </div>
+                                <p class="mt-2 text-sm text-gray-500 italic">*Wajib diisi jika NIM/NIP tidak terdaftar</p>
                             </div>
-
-                            <button type="submit" 
-                                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-md transition duration-150 ease-in-out flex items-center justify-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                    <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />
-                                </svg>
-                                Check In
-                            </button>
                         </div>
+            
+                        <!-- Submit Button -->
+                        <button type="submit"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-0.5 hover:shadow-lg flex items-center justify-center gap-3 mt-8">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />
+                            </svg>
+                            <span>Enter</span>
+                        </button>
                     </form>
                 </div>
             </div>
 
             <!-- Table Section (3/4 width) -->
-            <div class="lg:col-span-3">
+            <div class="lg:col-span-5">
                 <div class="bg-white rounded-lg shadow-md">
                     <div class="p-6 border-b">
                         <h2 class="text-lg font-semibold text-gray-700">Daftar Pengunjung Hari Ini</h2>

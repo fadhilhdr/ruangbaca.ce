@@ -4,6 +4,22 @@
             'title' => 'Unggah Tugas Akhir',
         ])
         
+        {{-- Error Notification --}}
+        @if(session('error'))
+            <div class="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold">Peringatan!</strong>
+                <span class="block sm:inline">{{ session('error') }}</span>
+            </div>
+        @endif
+
+        {{-- Success Notification --}}
+        @if(session('success'))
+            <div class="bg-green-50 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold">Berhasil!</strong>
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        @endif
+
         <div class="bg-white shadow-sm sm:rounded-lg">
             <div class="p-6">
                 <!-- Progress Indicator -->
@@ -26,13 +42,21 @@
                     <div class="bg-white rounded-lg">
                         <div class="px-4 py-5 sm:p-6">
                             <div class="mb-6">
-                                <label for="title" class="block text-sm font-medium text-gray-700">Judul Tugas Akhir</label>
-                                <input type="text" name="title" id="title" required
-                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                                       value="{{ old('title') }}"
-                                       placeholder="Masukkan judul tugas akhir Anda">
+                                <label for="title" class="block text-sm font-medium text-gray-700">
+                                    Judul Tugas Akhir 
+                                    <span id="title-length-indicator" class="text-xs text-gray-500 ml-2">0/255</span>
+                                </label>
+                                <textarea 
+                                name="title" 
+                                id="title" 
+                                required
+                                class="mt-1 block w-full rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm h-20 resize-y @error('title') border-red-500 @enderror"
+                                placeholder="Masukkan judul tugas akhir Anda (maks. 255 karakter)">{{ old('title') }}</textarea>
+                                @error('title')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
-                        </div>
+                        </div>                        
                     </div>
 
                     <!-- Documents Section -->
@@ -43,46 +67,57 @@
                                 @php
                                     $fields = [
                                         'full_document' => [
-                                            'label' => 'Dokumen Lengkap',
-                                            'desc' => 'Upload dokumen tugas akhir lengkap dalam format PDF'
+                                            'label' => 'Dokumen Lengkap Laporan Tugas Akhir',
+                                            'desc' => 'Upload dokumen tugas akhir lengkap dalam format PDF',
+                                            'maxSize' => '15 MB'
                                         ],
                                         'cover_abstract' => [
-                                            'label' => 'Cover dan Abstrak',
-                                            'desc' => 'Halaman cover dan abstrak tugas akhir'
+                                            'label' => 'Cover hingga Abstrak',
+                                            'desc' => 'Upload dokumen cover hingga abstrak tugas akhir dalam format PDF',
+                                            'maxSize' => '5 MB'
                                         ],
                                         'bab1_pendahuluan' => [
-                                            'label' => 'BAB 1 - Pendahuluan',
-                                            'desc' => 'Latar belakang, rumusan masalah, dan tujuan'
+                                            'label' => 'BAB I - Pendahuluan',
+                                            'desc' => 'Upload dokumen tugas akhir bab 1  dalam format PDF',
+                                            'maxSize' => '5 MB'
                                         ],
                                         'bab2_kajianpustaka' => [
-                                            'label' => 'BAB 2 - Kajian Pustaka',
-                                            'desc' => 'Tinjauan pustaka dan landasan teori'
+                                            'label' => 'BAB II - Kajian Pustaka',
+                                            'desc' => 'Upload dokumen tugas akhir bab 2  dalam format PDF',
+                                            'maxSize' => '5 MB'
                                         ],
                                         'bab3_perancangan' => [
-                                            'label' => 'BAB 3 - Perancangan',
-                                            'desc' => 'Metodologi dan perancangan sistem'
+                                            'label' => 'BAB III - Perancangan',
+                                            'desc' => 'Upload dokumen tugas akhir bab 3  dalam format PDF',
+                                            'maxSize' => '5 MB'
                                         ],
                                         'bab4_hasilpembahasan' => [
-                                            'label' => 'BAB 4 - Hasil dan Pembahasan',
-                                            'desc' => 'Hasil penelitian dan pembahasan'
+                                            'label' => 'BAB IV - Hasil dan Pembahasan',
+                                            'desc' => 'Upload dokumen tugas akhir bab 4  dalam format PDF',
+                                            'maxSize' => '10 MB'
                                         ],
                                         'bab5_penutup' => [
-                                            'label' => 'BAB 5 - Penutup',
-                                            'desc' => 'Kesimpulan dan saran'
+                                            'label' => 'BAB V - Penutup',
+                                            'desc' => 'Upload dokumen tugas akhir bab 5  dalam format PDF',
+                                            'maxSize' => '5 MB'
                                         ],
                                         'lampiran' => [
                                             'label' => 'Lampiran',
-                                            'desc' => 'Dokumen pendukung lainnya'
-                                        ]
+                                            'desc' => 'Upload dokumen lampiran tugas akhir dalam format PDF',
+                                            'maxSize' => '5 MB'
+                                        ],
                                     ];
                                 @endphp
 
                                 @foreach($fields as $field => $info)
                                     <div class="relative">
-                                        <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-blue-400 transition-colors duration-200">
+                                        <div class="p-4 bg-gray-50 rounded-lg border hover:border-blue-400 transition-colors duration-200 @error($field) border-red-500 @enderror">
                                             <label class="block">
                                                 <span class="text-sm font-medium text-gray-900">{{ $info['label'] }}</span>
-                                                <span class="block text-xs text-gray-500 mb-2">{{ $info['desc'] }}</span>
+                                                <span class="block text-xs text-gray-500 mb-2">
+                                                    {{ $info['desc'] }} 
+                                                    <span class="text-blue-600">(Maks. {{ $info['maxSize'] }})</span>
+                                                </span>
                                                 <input type="file" 
                                                        name="{{ $field }}" 
                                                        required
@@ -90,6 +125,9 @@
                                                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                                                        onchange="updateProgress()">
                                             </label>
+                                            @error($field)
+                                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                            @enderror
                                         </div>
                                     </div>
                                 @endforeach
@@ -112,22 +150,157 @@
         </div>
     </div>
 
+    @push('scripts')
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.all.min.js"></script>
     <script>
         function updateProgress() {
             const form = document.getElementById('upload-form');
             const inputs = form.querySelectorAll('input[type="file"]');
             const totalInputs = inputs.length;
             let filledInputs = 0;
-
+    
+            const fieldLabels = {
+                'full_document': 'Dokumen Lengkap Laporan Tugas Akhir',
+                'cover_abstract': 'Dokumen Cover hingga Abstrak',
+                'bab1_pendahuluan': 'Dokumen BAB 1 - Pendahuluan',
+                'bab2_kajianpustaka': 'Dokumen BAB 2 - Kajian Pustaka',
+                'bab3_perancangan': 'Dokumen BAB 3 - Perancangan',
+                'bab4_hasilpembahasan': 'Dokumen BAB 4 - Hasil dan Pembahasan',
+                'bab5_penutup': 'Dokumen BAB 5 - Penutup',
+                'lampiran': 'Dokumen Lampiran'
+            };
+    
+            const maxSizeMB = {
+                'full_document': 15,
+                'cover_abstract': 5,
+                'bab1_pendahuluan': 5,
+                'bab2_kajianpustaka': 5,
+                'bab3_perancangan': 5,
+                'bab4_hasilpembahasan': 10,
+                'bab5_penutup': 5,
+                'lampiran': 10
+            };
+    
             inputs.forEach(input => {
                 if (input.files.length > 0) {
-                    filledInputs++;
+                    const fileSizeMB = input.files[0].size / 1024 / 1024;
+                    const label = fieldLabels[input.name] || input.name;
+                    
+                    if (fileSizeMB <= maxSizeMB[input.name]) {
+                        filledInputs++;
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Ukuran File Terlalu Besar',
+                            html: `
+                                <b>${label}</b> yang Anda unggah melebihi batas maksimum.<br>
+                                Batas maksimum: <span class="text-red-600">${maxSizeMB[input.name]} MB</span><br>
+                                Ukuran file Anda: <span class="text-red-600">${fileSizeMB.toFixed(2)} MB</span>
+                            `,
+                            confirmButtonText: 'Pilih File Lain',
+                            confirmButtonColor: '#3085d6',
+                        });
+                        input.value = ''; // Clear the file input
+                    }
                 }
             });
-
+    
             const progressBar = document.getElementById('progress-bar');
             const progress = (filledInputs / totalInputs) * 100;
             progressBar.style.width = progress + '%';
         }
+    
+        // Validasi saat form di-submit
+        document.getElementById('upload-form')?.addEventListener('submit', function(event) {
+            const inputs = this.querySelectorAll('input[type="file"]');
+            const maxSizeMB = {
+                'full_document': 15,
+                'cover_abstract': 5,
+                'bab1_pendahuluan': 5,
+                'bab2_kajianpustaka': 5,
+                'bab3_perancangan': 5,
+                'bab4_hasilpembahasan': 10,
+                'bab5_penutup': 5,
+                'lampiran': 10
+            };
+    
+            for (let input of inputs) {
+                if (input.files.length > 0) {
+                    const fileSizeMB = input.files[0].size / 1024 / 1024;
+                    
+                    if (fileSizeMB > maxSizeMB[input.name]) {
+                        event.preventDefault(); // Mencegah submit
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Periksa Ukuran File',
+                            text: `Pastikan semua dokumen sesuai dengan batas maksimum yang ditentukan.`,
+                            confirmButtonText: 'Mengerti'
+                        });
+                        return;
+                    }
+                }
+            }
+        });    
+        
+        document.addEventListener('DOMContentLoaded', function() {
+        const titleTextarea = document.getElementById('title');
+        const maxLength = 255;
+        let isAlertShown = false; // Flag untuk mencegah multiple alert
+        
+        titleTextarea.addEventListener('input', function() {
+            const currentLength = this.value.length;
+            const lengthIndicator = document.getElementById('title-length-indicator');
+            
+            // Update length indicator
+            if (lengthIndicator) {
+                lengthIndicator.textContent = `${currentLength}/${maxLength}`;
+                
+                // Ubah warna indikator jika mendekati batas
+                if (currentLength >= maxLength - 50) {
+                    lengthIndicator.classList.add('text-yellow-600');
+                } else {
+                    lengthIndicator.classList.remove('text-yellow-600');
+                }
+            }
+            
+            // Check if exceeds max length
+            if (currentLength > maxLength && !isAlertShown) {
+                isAlertShown = true;
+                
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Judul Terlalu Panjang',
+                    html: `
+                        Judul tugas akhir maksimal <b>${maxLength} karakter</b>.<br>
+                        Saat ini: <span class="text-red-600">${currentLength} karakter</span><br>
+                        Mohon kurangi <span class="text-red-600">${currentLength - maxLength} karakter</span> lagi.
+                    `,
+                    confirmButtonText: 'Mengerti',
+                    confirmButtonColor: '#3085d6'
+                }).then(() => {
+                    isAlertShown = false;
+                });
+            }
+        });
+        
+        // Tambahkan validasi saat form disubmit
+        titleTextarea.closest('form').addEventListener('submit', function(e) {
+            if (titleTextarea.value.length > maxLength) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Form Tidak Dapat Dikirim',
+                    html: `
+                        Judul masih melebihi batas maksimal ${maxLength} karakter.<br>
+                        Mohon kurangi panjang judul sebelum mengirim form.
+                    `,
+                    confirmButtonText: 'Mengerti',
+                    confirmButtonColor: '#3085d6'
+                });
+            }
+        });
+    });   
     </script>
+    @endpush
 </x-app-layout>

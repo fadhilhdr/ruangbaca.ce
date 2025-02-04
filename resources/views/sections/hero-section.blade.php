@@ -65,7 +65,7 @@
                     @csrf
                     <div class="backdrop-blur-md bg-white/10 p-1 flex">
                         <input type="text" id="description" name="description"
-                            placeholder="Cari referensi yang dibutuhkan disini"
+                            placeholder="Cari rekomendasi buku disini.."
                             class="w-full bg-transparent text-white placeholder-white/60 px-4 py-3 focus:outline-none"
                             required>
                         <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6">

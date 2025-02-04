@@ -64,11 +64,11 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">{{ Str::title('Tanggal Peminjaman') }}</dt>
-                                <dd class="mt-1 text-sm text-gray-900">{{ Carbon\Carbon::parse($loan->loan_date)->format('d M Y') }}</dd>
+                                <dd class="mt-1 text-sm text-gray-900">{{ Carbon\Carbon::parse($loan->loan_date)->translatedFormat('l, d M Y H:i') }}</dd>
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">{{ Str::title('Tenggat Pengembalian') }}</dt>
-                                <dd class="mt-1 text-sm text-gray-900">{{ Carbon\Carbon::parse($loan->due_date)->format('d M Y') }}</dd>
+                                <dd class="mt-1 text-sm text-gray-900">{{ Carbon\Carbon::parse($loan->due_date)->translatedFormat('l, d M Y H:i') }}</dd>
                                 @if($isLate)
                                     <dd class="mt-1 text-sm text-red-600">Terlambat {{ $daysLate }} hari</dd>
                                 @endif

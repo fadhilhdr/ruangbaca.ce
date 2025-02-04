@@ -89,14 +89,14 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">{{ Str::title('Tanggal Peminjaman') }}</dt>
-                                <dd class="mt-1 text-sm text-gray-900">{{ now()->format('d M Y H:i') }}</dd>
+                                <dd class="mt-1 text-sm text-gray-900">{{ \Carbon\Carbon::now()->translatedFormat('l, d M Y H:i') }}</dd>
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">{{ Str::title('Tenggat Pengembalian') }}</dt>
-                                <dd class="mt-1 text-sm text-gray-900">{{ now()->addDays(14)->format('d M Y H:i') }}</dd>
+                                <dd class="mt-1 text-sm text-gray-900">{{ \Carbon\Carbon::now()->addDays(14)->translatedFormat('l, d M Y H:i') }}</dd>
                             </div>
                         </div>
-                    </div>
+                    </div>                    
                 </div>
 
                 <!-- Borrowing Form Section -->

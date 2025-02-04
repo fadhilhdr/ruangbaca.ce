@@ -59,10 +59,6 @@
                                                 <p class="text-sm text-gray-600 mb-1">ISBN</p>
                                                 <p class="font-medium">{{ $loan->book->isbn }}</p>
                                             </div>
-                                            <div class="bg-gray-50 p-4 rounded-lg">
-                                                <p class="text-sm text-gray-600 mb-1">Kode Unik</p>
-                                                <p class="font-medium">{{ $loan->kode_unik_buku }}</p>
-                                            </div>
                                         </div>
                                         <div class="space-y-4">
                                             <div class="bg-gray-50 p-4 rounded-lg">
@@ -92,7 +88,7 @@
                                         </div>
                                         <div class="ml-4">
                                             <p class="text-sm text-gray-600">Tanggal Peminjaman</p>
-                                            <p class="font-medium">{{ \Carbon\Carbon::parse($loan->loan_date)->format('d M Y') }}</p>
+                                            <p class="font-medium">{{ \Carbon\Carbon::parse($loan->loan_date)->translatedFormat('l, d M Y H:i') }}</p>
                                         </div>
                                     </div>
 
@@ -104,7 +100,7 @@
                                         </div>
                                         <div class="ml-4">
                                             <p class="text-sm text-gray-600">Tenggat Waktu</p>
-                                            <p class="font-medium">{{ \Carbon\Carbon::parse($loan->due_date)->format('d M Y') }}</p>
+                                            <p class="font-medium">{{ \Carbon\Carbon::parse($loan->due_date)->translatedFormat('l, d M Y H:i') }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -118,7 +114,7 @@
                                                 <span class="font-medium">
                                                     {{ $transaction->type?->type_name ?? 'Unknown Transaction' }}
                                                 </span>
-                                                <span class="text-sm text-gray-500">{{ $transaction->created_at->format('d M Y H:i') }}</span>
+                                                <span class="text-sm text-gray-500">{{ $transaction->created_at->translatedFormat('l, d M Y H:i') }}</span>
                                             </div>
                                         @empty
                                             <p class="text-sm text-gray-500 text-center py-4">Belum ada riwayat transaksi</p>

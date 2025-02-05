@@ -44,15 +44,27 @@
                 </div>
 
                 <!-- Sisa Kuota -->
-                <div class="bg-white rounded-2xl shadow-sm p-6 border-l-4 border-purple-500">
+                <div class="bg-white rounded-2xl shadow-sm p-6 border-l-4 {{ $hasActiveLostBook ? 'border-red-500' : 'border-purple-500' }}">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-sm font-medium text-gray-600">Sisa Kuota Peminjaman</p>
-                            <h3 class="text-3xl font-bold text-gray-900 mt-2">{{ $remainingQuota }}</h3>
-                            <p class="text-sm text-gray-500 mt-1">Buku yang masih bisa dipinjam</p>
+                            @php
+                                $hasActiveLostBook = \App\Models\LostBook::whereHas('bookLoan', function($q) {
+                                    $q->where('user_id', auth()->id());
+                                })->whereIn('replacement_status', ['awaiting_verif', 'decline'])->exists();
+                            @endphp
+                
+                            @if($hasActiveLostBook)
+                                <p class="text-sm font-medium text-red-600">Akun Suspended</p>
+                                <h3 class="text-3xl font-bold text-red-700 mt-2">0</h3>
+                                <p class="text-sm text-red-500 mt-1">Karena ada proses penggantian buku hilang</p>
+                            @else
+                                <p class="text-sm font-medium text-gray-600">Sisa Kuota Peminjaman</p>
+                                <h3 class="text-3xl font-bold text-gray-900 mt-2">{{ $remainingQuota }}</h3>
+                                <p class="text-sm text-gray-500 mt-1">Buku yang masih bisa dipinjam</p>
+                            @endif
                         </div>
-                        <div class="p-3 bg-purple-50 rounded-xl">
-                            <svg class="w-8 h-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="p-3 {{ $hasActiveLostBook ? 'bg-red-50' : 'bg-purple-50' }} rounded-xl">
+                            <svg class="w-8 h-8 {{ $hasActiveLostBook ? 'text-red-500' : 'text-purple-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                             </svg>
                         </div>
@@ -224,6 +236,87 @@
                                                         @endif
                                                     @endif
                                                 </div>
+                                                @php
+                                                    $lostBook = \App\Models\LostBook::where('book_loan_id', $loan->id)->first();
+                                                @endphp
+                                                
+                                                @if($lostBook)
+                                                <div class="mt-3 rounded-lg p-3 border
+                                                    @switch($lostBook->replacement_status)
+                                                        @case('awaiting_verif')
+                                                            bg-yellow-50 border-yellow-200
+                                                            @break
+                                                        @case('verified')
+                                                            bg-green-50 border-green-200
+                                                            @break
+                                                        @case('decline')
+                                                            bg-red-50 border-red-200
+                                                            @break
+                                                    @endswitch
+                                                ">
+                                                    <div class="flex items-center">
+                                                        <svg class="w-5 h-5 mr-2
+                                                            @switch($lostBook->replacement_status)
+                                                                @case('awaiting_verif')
+                                                                    text-yellow-400
+                                                                    @break
+                                                                @case('verified')
+                                                                    text-green-400
+                                                                    @break
+                                                                @case('decline')
+                                                                    text-red-400
+                                                                    @break
+                                                            @endswitch
+                                                            " fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            @if($lostBook->replacement_status === 'verified')
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                            @else
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                                            @endif
+                                                        </svg>
+                                                        <span class="text-sm font-medium
+                                                            @switch($lostBook->replacement_status)
+                                                                @case('awaiting_verif')
+                                                                    text-yellow-700
+                                                                    @break
+                                                                @case('verified')
+                                                                    text-green-700
+                                                                    @break
+                                                                @case('decline')
+                                                                    text-red-700
+                                                                    @break
+                                                            @endswitch
+                                                        ">
+                                                            @switch($lostBook->replacement_status)
+                                                                @case('awaiting_verif')
+                                                                    Menunggu Verifikasi Penggantian Buku
+                                                                    @break
+                                                                @case('verified')
+                                                                    Penggantian Buku Telah Diverifikasi
+                                                                    @break
+                                                                @case('decline')
+                                                                    Pengajuan Penggantian Ditolak
+                                                                    @break
+                                                            @endswitch
+                                                        </span>
+                                                    </div>
+                                                    <p class="text-sm mt-1
+                                                        @switch($lostBook->replacement_status)
+                                                            @case('awaiting_verif')
+                                                                text-yellow-600
+                                                                @break
+                                                            @case('verified')
+                                                                text-green-600
+                                                                @break
+                                                            @case('decline')
+                                                                text-red-600
+                                                                @break
+                                                        @endswitch
+                                                    ">
+                                                        Dilaporkan pada: {{ Carbon\Carbon::parse($lostBook->date_reported)->format('d M Y') }}
+                                                    </p>
+                                                </div>
+                                            @endif
                                             </div>
                                         </div>
                                     @endforeach

@@ -16,39 +16,40 @@ class BookLoanController extends Controller
 {
     public function dashboard()
     {
-        // Get all loans (both active and returned) ordered by loan date
-        $allLoans = BookLoan::where('user_id', auth()->id())
-                          ->with('book') // eager load book relationship
-                          ->whereNotNull('loan_date') // memastikan ada tanggal peminjaman
-                          ->orderByDesc('loan_date') // urutkan dari yang terbaru
-                          ->take(5) // ambil 5 peminjaman terakhir
-                          ->get()
-                          ->map(function($loan) {
-                              // Add status for each loan
-                              $loan->status = $this->getLoanStatus($loan);
-                              return $loan;
-                          });
-
-        // Get count of active loans (untuk perhitungan quota)
-        $activeLoanCount = BookLoan::where('user_id', auth()->id())
-                                  ->whereNull('return_date')
-                                  ->count();
-
-        // Get count of late loans
-        $lateLoanCount = BookLoan::where('user_id', auth()->id())
-                                ->whereNull('return_date')
-                                ->where('due_date', '<', now())
-                                ->count();
-
-        // Calculate remaining loan quota
-        $remainingQuota = 2 - $activeLoanCount; // Maximum 2 books allowed
-
-        return view('member.dashboard', compact(
-            'allLoans',
-            'activeLoanCount',
-            'lateLoanCount',
-            'remainingQuota'
-        ));
+       // Get active lost book cases
+       $hasActiveLostBook = LostBook::whereHas('bookLoan', function($q) {
+           $q->where('user_id', auth()->id());
+       })->whereIn('replacement_status', ['awaiting_verif', 'declined'])->exists();
+    
+       $allLoans = BookLoan::where('user_id', auth()->id())
+           ->with(['book', 'lostBook']) 
+           ->whereNotNull('loan_date')
+           ->orderByDesc('loan_date')
+           ->take(5)
+           ->get()
+           ->map(function($loan) {
+               $loan->status = $this->getLoanStatus($loan);
+               return $loan;
+           });
+    
+       $activeLoanCount = BookLoan::where('user_id', auth()->id())
+           ->whereNull('return_date')
+           ->count();
+    
+       $lateLoanCount = BookLoan::where('user_id', auth()->id())
+           ->whereNull('return_date')
+           ->where('due_date', '<', now())
+           ->count();
+    
+       $remainingQuota = 2 - $activeLoanCount;
+    
+       return view('member.dashboard', compact(
+           'allLoans',
+           'activeLoanCount', 
+           'lateLoanCount',
+           'remainingQuota',
+           'hasActiveLostBook'
+       ));
     }
 
     private function getLoanStatus($loan)
@@ -115,7 +116,11 @@ class BookLoanController extends Controller
     public function showBorrowForm($isbn)
     {
         $bookReference = Book::where('isbn', $isbn)->firstOrFail();
-        return view('member.loans.borrowForm', compact('bookReference'));
+        $hasActiveLostBook = LostBook::whereHas('bookLoan', function($query) {
+            $query->where('user_id', auth()->id());
+        })->whereIn('replacement_status', ['awaiting_verif', 'declined'])
+          ->exists();
+          return view('member.loans.borrowForm', compact('bookReference', 'hasActiveLostBook'));
     }
 
     public function showRenewForm($id)
@@ -256,36 +261,46 @@ class BookLoanController extends Controller
         }
     }
 
-    public function borrowBook(Request $request, $isbn)
-    {
-        $request->validate([
-            'kode_unik_buku' => 'required|exists:books,kode_unik',
-            'terms' => 'required|accepted'
-        ]);
+public function borrowBook(Request $request, $isbn)
+{
+    // Single check for lost book at the beginning
+    $hasActiveLostBook = LostBook::whereHas('bookLoan', function($query) {
+        $query->where('user_id', auth()->id());
+    })->whereIn('replacement_status', ['awaiting_verif', 'declined'])
+      ->exists();
 
-        try {
-            DB::beginTransaction();
+    if ($hasActiveLostBook) {
+        return back()->with('error', 'Anda memiliki kasus kehilangan buku yang belum terselesaikan. Silahkan selesaikan proses penggantian buku terlebih dahulu.');
+    }
 
+    $request->validate([
+        'kode_unik_buku' => 'required|exists:books,kode_unik',
+        'terms' => 'required|accepted'
+    ]);
+
+    try {
+        DB::beginTransaction();
+        
             // Check if the book exists and is available
             $book = Book::where('kode_unik', $request->kode_unik_buku)
                         ->where('isbn', $isbn)
                         ->where('is_available', true)
                         ->lockForUpdate()
                         ->first();
-
+    
             if (!$book) {
                 return back()->with('error', 'Buku tidak tersedia atau kode unik tidak sesuai.');
             }
-
+    
             // Check if user has reached maximum loan limit (2 books)
             $activeLoans = BookLoan::where('user_id', auth()->id())
                                   ->whereNull('return_date')
                                   ->count();
-
+    
             if ($activeLoans >= 2) {
                 return back()->with('error', 'Anda telah mencapai batas maksimum peminjaman (2 buku).');
             }
-
+    
             // Create new loan
             $loan = BookLoan::create([
                 'kode_unik_buku' => $request->kode_unik_buku,
@@ -294,26 +309,26 @@ class BookLoanController extends Controller
                 'due_date' => now()->addDays(14),
                 'renewal_count' => 0
             ]);
-
+    
             $transactionType = TransactionType::where('type_name', 'borrow')->first();
             if (!$transactionType) {
                 throw new \Exception('Tipe transaksi borrow tidak ditemukan');
             }
-
+    
             Transaction::create([
                 'book_loan_id' => $loan->id,
                 'transaction_type_id' => $transactionType->id,
             ]);
-
+    
             // Update book availability
             $book->update(['is_available' => false]);
-
+    
             DB::commit();
-
+    
             return redirect()->route('member.loans.index')
                            ->with('success', 'Buku berhasil dipinjam. Harap kembalikan sebelum ' .
                                            now()->addDays(14)->format('d M Y H:i'));
-
+    
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan dalam proses peminjaman.');

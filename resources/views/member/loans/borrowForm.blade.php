@@ -42,6 +42,22 @@
                     <h2 class="text-xl font-semibold text-gray-900 mb-6">{{ Str::title('Informasi Buku') }}</h2>
                     
                     <div class="flex items-start space-x-6">
+                        <!-- Lost Book Alert -->
+                        @if($hasActiveLostBook)
+                            <div class="bg-red-50 border-l-4 border-red-500 p-4">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-semibold text-red-700">Akun Anda Ditangguhkan</p>
+                                        <p class="text-sm text-red-700">Anda memiliki kasus kehilangan buku yang belum terselesaikan. Silahkan selesaikan proses penggantian buku terlebih dahulu.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                         <!-- Book Image -->
                         <div class="flex-shrink-0">
                             <div class="relative aspect-[3/4] w-40 rounded-lg overflow-hidden bg-white shadow">
@@ -190,12 +206,40 @@
             const kodeUnikInput = document.getElementById('kode_unik_buku');
             const termsCheckbox = document.getElementById('terms');
             const submitButton = document.getElementById('submitButton');
-            const kodeUnikStatus = document.getElementById('kodeUnikStatus');
+            const kodeUnikStatus = document.getElementById('kodeUnikStatus');  
             
             let isKodeUnikValid = false;
             let scanBuffer = '';
-            let scanTimeout;
-    
+            let scanTimeout;        
+            
+            @if($hasActiveLostBook)
+                submitButton.disabled = true;
+                kodeUnikInput.disabled = true;
+                termsCheckbox.disabled = true;
+                kodeUnikInput.placeholder = "Peminjaman tidak tersedia - Akun ditangguhkan";
+                
+                // Tambahkan pesan status
+                kodeUnikStatus.textContent = "Akun ditangguhkan karena ada kasus kehilangan buku yang belum diselesaikan";
+                kodeUnikStatus.className = "mt-2 text-sm text-red-600";
+            @endif
+
+            // Check for error message from session
+            @if(Session::has('error'))
+                const errorMessage = @json(Session::get('error'));
+                const warningDiv = document.createElement('div');
+                warningDiv.className = 'mt-4 p-3 bg-red-50 border border-red-200 rounded-lg';
+                warningDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        <span class="text-sm font-medium text-red-700">
+                            ${errorMessage}
+                        </span>
+                    </div>
+                `;
+                form.insertBefore(warningDiv, form.firstChild);
+            @endif
             // Function to check if form can be submitted
             function updateSubmitButton() {
                 submitButton.disabled = !(isKodeUnikValid && termsCheckbox.checked);

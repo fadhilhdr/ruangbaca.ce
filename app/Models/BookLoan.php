@@ -43,9 +43,16 @@ class BookLoan extends Model
         return $this->hasMany(Transaction::class, 'book_loan_id');
     }
 
-    public function lostBooks()
+    public function lostBook()
     {
-        return $this->hasMany(LostBook::class, 'book_loan_id');
+        return $this->hasOne(LostBook::class, 'book_loan_id');
+    }
+
+    public function hasActiveLostBook()
+    {
+        return $this->lostBook()
+            ->whereIn('replacement_status', ['awaiting_verif', 'decline'])
+            ->exists();
     }
 
     //UNTUK VALIDASI TERKAIT LOANS

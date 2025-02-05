@@ -33,7 +33,6 @@ class TugasakhirController extends Controller
         return view('public.tugasakhirs.show', compact('tugasakhir'));
     }
     
-
     public function memberShow($id)
     {
         $tugasakhir = Tugasakhir::findOrFail($id);

@@ -19,7 +19,7 @@ class BookLoanController extends Controller
        // Get active lost book cases
        $hasActiveLostBook = LostBook::whereHas('bookLoan', function($q) {
            $q->where('user_id', auth()->id());
-       })->whereIn('replacement_status', ['awaiting_verif', 'declined'])->exists();
+       })->whereIn('replacement_status', ['awaiting_verif', 'decline'])->exists();
     
        $allLoans = BookLoan::where('user_id', auth()->id())
            ->with(['book', 'lostBook']) 
@@ -118,7 +118,7 @@ class BookLoanController extends Controller
         $bookReference = Book::where('isbn', $isbn)->firstOrFail();
         $hasActiveLostBook = LostBook::whereHas('bookLoan', function($query) {
             $query->where('user_id', auth()->id());
-        })->whereIn('replacement_status', ['awaiting_verif', 'declined'])
+        })->whereIn('replacement_status', ['awaiting_verif', 'decline'])
           ->exists();
           return view('member.loans.borrowForm', compact('bookReference', 'hasActiveLostBook'));
     }
@@ -171,17 +171,26 @@ class BookLoanController extends Controller
     {
         $loan = BookLoan::findOrFail($id);
 
-        // Check if there's an existing replacement request
-        $existingRequest = LostBook::where('book_loan_id', $loan->id)->first();
+        $hasActiveLostBook = LostBook::where('book_loan_id', $loan->id)
+        ->whereIn('replacement_status', ['awaiting_verif', 'decline'])
+        ->exists();
 
-        if ($existingRequest) {
+        $hasVerifiedLostBook = LostBook::where('book_loan_id', $loan->id)
+            ->where('replacement_status', 'verified')
+            ->exists();
+
+        if ($hasActiveLostBook) {
             return redirect()->route('member.loans.returnForm', $loan->id)
-                ->with('error', 'Sudah ada laporan kehilangan buku yang sedang diproses');
+                ->with('error', 'Sudah ada laporan kehilangan buku yang sedang diproses atau ditolak.');
+        }
+
+        if ($hasVerifiedLostBook) {
+            return redirect()->route('member.loans.returnForm', $loan->id)
+                ->with('success', 'Laporan kehilangan buku sudah diverifikasi.');
         }
 
         return view('member.loans.replacementForm', compact('loan'));
     }
-
 
     public function validateKodeUnik($kode, $isbn)
     {
@@ -266,7 +275,7 @@ public function borrowBook(Request $request, $isbn)
     // Single check for lost book at the beginning
     $hasActiveLostBook = LostBook::whereHas('bookLoan', function($query) {
         $query->where('user_id', auth()->id());
-    })->whereIn('replacement_status', ['awaiting_verif', 'declined'])
+    })->whereIn('replacement_status', ['awaiting_verif', 'decline'])
       ->exists();
 
     if ($hasActiveLostBook) {

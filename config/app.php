@@ -4,20 +4,11 @@ use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Application Name
-    |--------------------------------------------------------------------------
-    |
-    | This value is the name of your application. This value is used when the
-    | framework needs to place the application's name in a notification or
-    | any other location as required by the application or its packages.
-    |
-     */
-
-    'name'            => env('APP_NAME', 'Ruang Baca Teknik Komputer'),
-
+    'name'               => env('APP_NAME', 'Ruang Baca Teknik Komputer'),
+    'recommendation_api' => [
+        'url_api' => env('RECOMMENDATION_API_URL'), // Ambil dari .env
+        'key'     => env('RECOMMENDATION_API_KEY'), // Tambahkan baris ini
+    ],
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -29,7 +20,7 @@ return [
     |
      */
 
-    'env'             => env('APP_ENV', 'production'),
+    'env'                => env('APP_ENV', 'production'),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +33,7 @@ return [
     |
      */
 
-    'debug'           => (bool) env('APP_DEBUG', false),
+    'debug'              => (bool) env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,9 +46,9 @@ return [
     |
      */
 
-    'url'             => env('APP_URL', 'http://localhost'),
+    'url'                => env('APP_URL', 'http://localhost'),
 
-    'asset_url'       => env('ASSET_URL'),
+    'asset_url'          => env('ASSET_URL'),
 
     /*
     |--------------------------------------------------------------------------
@@ -70,7 +61,7 @@ return [
     |
      */
 
-    'timezone'        => 'Asia/Jakarta',
+    'timezone'           => 'Asia/Jakarta',
 
     /*
     |--------------------------------------------------------------------------
@@ -83,7 +74,7 @@ return [
     |
      */
 
-    'locale'          => 'en',
+    'locale'             => 'en',
 
     /*
     |--------------------------------------------------------------------------
@@ -96,7 +87,7 @@ return [
     |
      */
 
-    'fallback_locale' => 'en',
+    'fallback_locale'    => 'en',
 
     /*
     |--------------------------------------------------------------------------
@@ -109,7 +100,7 @@ return [
     |
      */
 
-    'faker_locale'    => 'en_US',
+    'faker_locale'       => 'en_US',
 
     /*
     |--------------------------------------------------------------------------
@@ -122,9 +113,9 @@ return [
     |
      */
 
-    'key'             => env('APP_KEY'),
+    'key'                => env('APP_KEY'),
 
-    'cipher'          => 'AES-256-CBC',
+    'cipher'             => 'AES-256-CBC',
 
     /*
     |--------------------------------------------------------------------------
@@ -139,7 +130,7 @@ return [
     |
      */
 
-    'maintenance'     => [
+    'maintenance'        => [
         'driver' => 'file',
         // 'store' => 'redis',
     ],
@@ -155,7 +146,7 @@ return [
     |
      */
 
-    'providers'       => ServiceProvider::defaultProviders()->merge([
+    'providers'          => ServiceProvider::defaultProviders()->merge([
         /*
          * Package Service Providers...
          */
@@ -183,7 +174,7 @@ return [
     |
      */
 
-    'aliases'         => Facade::defaultAliases()->merge([
+    'aliases'            => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
 

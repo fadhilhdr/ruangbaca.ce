@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tugasakhir;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class DokumentController extends Controller
 {
@@ -60,7 +61,8 @@ class DokumentController extends Controller
         }
 
         TugasAkhir::create($data);
-        return redirect()->route('admin.dokumen.index')->with('success', 'Dokumen berhasil ditambahkan.');
+        Alert::success('success', 'Dokumen berhasil ditambahkan!');
+        return redirect()->route('admin.dokumen.index');
     }
 
     public function edit($id)
@@ -92,7 +94,8 @@ class DokumentController extends Controller
         }
 
         $dokumen->update($data);
-        return redirect()->route('admin.dokumen.index')->with('success', 'Dokumen berhasil diperbarui.');
+        Alert::success('success', 'Dokumen berhasil diperbarui!');
+        return redirect()->route('admin.dokumen.index');
     }
 
     public function destroy($id)
@@ -103,7 +106,8 @@ class DokumentController extends Controller
         }
 
         $dokumen->delete();
-        return redirect()->route('admin.dokumen.index')->with('success', 'Dokumen berhasil dihapus.');
+        Alert::success('success', 'Dokumen berhasil dihapus!');
+        return redirect()->route('admin.dokumen.index');
     }
 
     /**

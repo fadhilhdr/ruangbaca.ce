@@ -107,7 +107,6 @@ class EmployeeController extends Controller
             $pegawai->update($validatedData);
 
             Alert::success('Berhasil!', 'Data Pegawai berhasil diperbaharui.!.');
-
             return redirect()->route('superadmin.employees.index');
 
         } catch (\Exception $e) {

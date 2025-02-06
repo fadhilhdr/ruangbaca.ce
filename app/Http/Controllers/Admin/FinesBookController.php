@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Fine;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class FinesBookController extends Controller
 {
@@ -45,8 +46,9 @@ class FinesBookController extends Controller
         }
 
         $fine->save();
+        Alert::success('success', 'Status denda berhasil diperbarui!!');
 
-        return redirect()->route('admin.fines.index')->with('status', 'Status denda berhasil diperbarui!');
+        return redirect()->route('admin.fines.index');
     }
 
     /**

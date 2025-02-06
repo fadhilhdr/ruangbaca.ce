@@ -11,6 +11,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookLoanController;
 use App\Http\Controllers\BookRecommendationController;
 use App\Http\Controllers\CapstoneController;
+use App\Http\Controllers\LostBookController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Superadmin\DashboardController;
@@ -182,6 +183,9 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
 
     Route::get('visitor', [VisitorController::class, 'adminVisitorController'])->name('visitor.index');
     Route::patch('/admin/denda/{id}/update-status', [FinesBookController::class, 'updateStatus'])->name('denda.updateStatus');
+
+    Route::resource('lost-books', LostBookController::class);                                                                         // Manage lost-book
+    Route::put('/lost-books/{lostBook}/update-status', [LostBookController::class, 'updateStatus'])->name('lost-books.updateStatus'); // Gunakan PUT untuk update
 
     //Book History
 

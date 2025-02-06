@@ -20,7 +20,7 @@ class BookRecommendationController extends Controller
             $response = Http::timeout(30)->post('http://localhost:5000/recommend', [
                 'description' => $description,
             ]);
-
+            
             if ($response->successful()) {
                 $recommendations = $response->json();
                 return response()->json($recommendations);

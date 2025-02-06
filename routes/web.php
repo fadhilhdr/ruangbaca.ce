@@ -178,6 +178,8 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
 
     Route::resource('transaction', AdminBookLoanController::class); // Manage transaction
     Route::resource('fines', FinesBookController::class);           // Manage fines
+    Route::put('/admin/fines/{id}/update-status', [FinesBookController::class, 'updateStatus'])->name('fines.updateStatus');
+
     Route::get('visitor', [VisitorController::class, 'adminVisitorController'])->name('visitor.index');
     Route::patch('/admin/denda/{id}/update-status', [FinesBookController::class, 'updateStatus'])->name('denda.updateStatus');
 

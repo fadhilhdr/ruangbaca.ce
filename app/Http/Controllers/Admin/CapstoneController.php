@@ -57,11 +57,11 @@ class CapstoneController extends Controller
             'anggota3_nim'   => 'nullable|exists:students,nim',
             'kategori'       => 'required',
             'judul_capstone' => 'required',
-            'c100'           => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-            'c200'           => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-            'c300'           => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-            'c400'           => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-            'c500'           => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'c100'           => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'c200'           => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'c300'           => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'c400'           => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'c500'           => 'nullable|file|mimes:pdf,doc,docx|max:5120',
         ]);
 
         $data = $request->except(['c100', 'c200', 'c300', 'c400', 'c500']);
@@ -100,11 +100,11 @@ class CapstoneController extends Controller
             'anggota3_nim'   => 'nullable|exists:students,nim',
             'kategori'       => 'required',
             'judul_capstone' => 'required',
-            'c100'           => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-            'c200'           => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-            'c300'           => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-            'c400'           => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-            'c500'           => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'c100'           => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'c200'           => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'c300'           => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'c400'           => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'c500'           => 'nullable|file|mimes:pdf,doc,docx|max:5120',
         ]);
 
         $data = $request->except(['c100', 'c200', 'c300', 'c400', 'c500']);

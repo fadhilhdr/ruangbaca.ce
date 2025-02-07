@@ -124,7 +124,7 @@ class CapstoneController extends Controller
         $capstone->update($data);
         Alert::success('success', 'Dokumen capstone berhasil diperbaharui!');
 
-        return redirect()->route('admin.capstoneData.index');
+        return redirect()->route('admin.capstones.index');
     }
 
     /**

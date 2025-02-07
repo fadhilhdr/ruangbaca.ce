@@ -89,7 +89,8 @@
                                     @endforeach
 
                                     <div class="form-group mb-4">
-                                        <label for="lampiran" class="form-label">Lampiran (Opsional)</label>
+                                        <label for="lampiran" class="form-label">Lampiran</label><span
+                                            class="text-danger">*</span>
                                         <input type="file" class="form-control @error('lampiran') is-invalid @enderror"
                                             id="lampiran" name="lampiran">
                                         @error('lampiran')

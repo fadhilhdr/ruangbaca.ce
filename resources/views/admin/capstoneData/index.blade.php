@@ -131,7 +131,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="10" class="text-center py-4">
+                                    <td colspan="13" class="text-center py-4">
                                         <div class="d-flex flex-column align-items-center">
                                             <i class="bi bi-inbox text-muted" style="font-size: 2rem;"></i>
                                             <p class="text-muted mt-2">Tidak ada data capstone tersedia</p>

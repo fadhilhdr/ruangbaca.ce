@@ -28,7 +28,7 @@ class BookController extends Controller
             });
         }
     
-        // Filter logic remains the same
+        // Filter logic 
         if ($request->has('filter') && $request->filter != 'all') {
             $filter = $request->filter;
             if (in_array($filter, ['judul', 'penulis', 'isbn', 'peminatan', 'sub_peminatan'])) {
@@ -39,11 +39,13 @@ class BookController extends Controller
             }
         }
     
-        $books = $query->paginate(10)->appends($request->query());
-        $peminatans = Book::distinct()->pluck('peminatan');
-        $subPeminatans = Book::distinct()->pluck('sub_peminatan');
+        $sortField = $request->get('sort', 'judul'); // default sort by title
+        $sortDirection = $request->get('direction', 'asc');
+        
+        $query->orderBy($sortField, $sortDirection);
     
-        return view('public.books.index', compact('books', 'peminatans', 'subPeminatans'));
+        $books = $query->paginate(10)->appends($request->query());
+        return view('public.books.index', compact('books', 'sortField', 'sortDirection'));
     }
     
 

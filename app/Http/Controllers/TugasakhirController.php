@@ -11,15 +11,68 @@ class TugasakhirController extends Controller
 {
     public function index(Request $request)
     {
-        $keyword = $request->get('search');
-        $tugasakhirs = Tugasakhir::when($keyword, function($query) use ($keyword) {
-            return $query->search($keyword);
-        });
-
-        $tugasakhirs = $tugasakhirs->paginate(10);
-        return view('public.tugasakhirs.index', compact('tugasakhirs'));
+        // Base query with user relationship for getting names
+        $query = Tugasakhir::with(['user:userid,name']);
+        
+        // Search logic
+        if ($request->has('keyword')) {
+            $keyword = $request->input('keyword');
+            $query->where(function ($q) use ($keyword) {
+                $q->where('title', 'like', '%' . $keyword . '%')
+                    ->orWhere('nim', 'like', '%' . $keyword . '%')
+                    ->orWhereHas('user', function($q) use ($keyword) {
+                        $q->where('name', 'like', '%' . $keyword . '%');
+                    });
+            });
+        }
+        
+        // Filter logic
+        if ($request->has('filter') && $request->filter != '') {
+            $filter = $request->filter;
+            $filterValue = $request->input('filter_value');
+            
+            if ($filterValue) {
+                switch ($filter) {
+                    case 'title':
+                        $query->where('title', 'like', '%' . $filterValue . '%');
+                        break;
+                    case 'nim':
+                        $query->where('nim', 'like', '%' . $filterValue . '%');
+                        break;
+                    case 'name':
+                        $query->whereHas('user', function($q) use ($filterValue) {
+                            $q->where('name', 'like', '%' . $filterValue . '%');
+                        });
+                        break;
+                }
+            }
+        }
+        
+        // Sort logic
+        $sortField = $request->input('sort', 'created_at'); // default sort by created_at
+        $sortDirection = $request->input('direction', 'desc'); // default direction is descending
+        
+        // Validate sort field to prevent SQL injection
+        $allowedSortFields = ['title', 'created_at', 'user'];
+        if (!in_array($sortField, $allowedSortFields)) {
+            $sortField = 'created_at';
+        }
+        
+        // Handle user (penulis) sorting separately since it's a relationship
+        if ($sortField === 'user') {
+            $query->leftJoin('users', 'tugasakhirs.nim', '=', 'users.userid')
+                  ->select('tugasakhirs.*', 'users.name as user_name')
+                  ->orderBy('users.name', $sortDirection);
+        } else {
+            $query->orderBy($sortField, $sortDirection);
+        }
+        
+        $tugasakhirs = $query->paginate(10)
+                             ->appends($request->query());
+        
+        // Pass sort parameters to the view for maintaining state
+        return view('public.tugasakhirs.index', compact('tugasakhirs', 'sortField', 'sortDirection'));
     }
-
 
     public function memberIndex()
     {

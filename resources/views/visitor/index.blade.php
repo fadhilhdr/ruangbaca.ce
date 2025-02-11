@@ -41,7 +41,7 @@
                             <!-- Identifier Field -->
                             <div>
                                 <label for="identifier" class="block text-sm font-semibold text-gray-700 mb-2">
-                                    NIM/NIP/Nama <span class="text-red-500">*</span>
+                                    Nama <span class="text-red-500">*</span>
                                 </label>
                                 <div class="relative">
                                     <input type="text"
@@ -52,6 +52,7 @@
                                         class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors duration-200"
                                         placeholder="Masukkan identitas Anda">
                                 </div>
+                                <p class="mt-2 text-sm text-gray-500 italic">*Dari Teknik Komputer? Masukan NIM/NIP</p>
                             </div>
             
                             <!-- Instansi Field -->

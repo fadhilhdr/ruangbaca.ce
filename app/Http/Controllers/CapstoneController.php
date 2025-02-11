@@ -13,35 +13,102 @@ class CapstoneController extends Controller
 {
     public function index(Request $request)
     {
-        $keyword = $request->get('search');
-        
-        // Base query with relationships
+        // Base query with relationships for team members
         $query = Capstone::with([
             'anggota1:nim,name',
             'anggota2:nim,name',
             'anggota3:nim,name'
         ]);
-
-        // Apply search if keyword exists
-        if ($keyword) {
-            $query->where(function($q) use ($keyword) {
+        
+        // Search logic
+        if ($request->has('keyword')) {
+            $keyword = $request->input('keyword');
+            $query->where(function ($q) use ($keyword) {
                 $q->where('judul_capstone', 'like', '%' . $keyword . '%')
-                  ->orWhere('kode_kelompok', 'like', '%' . $keyword . '%')
-                  ->orWhere('kategori', 'like', '%' . $keyword . '%');
+                    ->orWhere('kode_kelompok', 'like', '%' . $keyword . '%')
+                    ->orWhere('kategori', 'like', '%' . $keyword . '%')
+                    ->orWhereHas('anggota1', function($q) use ($keyword) {
+                        $q->where('name', 'like', '%' . $keyword . '%')
+                            ->orWhere('nim', 'like', '%' . $keyword . '%');
+                    })
+                    ->orWhereHas('anggota2', function($q) use ($keyword) {
+                        $q->where('name', 'like', '%' . $keyword . '%')
+                            ->orWhere('nim', 'like', '%' . $keyword . '%');
+                    })
+                    ->orWhereHas('anggota3', function($q) use ($keyword) {
+                        $q->where('name', 'like', '%' . $keyword . '%')
+                            ->orWhere('nim', 'like', '%' . $keyword . '%');
+                    });
             });
         }
-
-        // Get paginated results
-        $capstones = $query->orderBy('created_at', 'desc')->paginate(10);
-
-        // Keep search parameter in pagination
-        if ($keyword) {
-            $capstones->appends(['search' => $keyword]);
+        
+        // Filter logic
+        if ($request->has('filter') && $request->filter != '') {
+            $filter = $request->filter;
+            $filterValue = $request->input('filter_value');
+            
+            if ($filterValue) {
+                switch ($filter) {
+                    case 'judul_capstone':
+                        $query->where('judul_capstone', 'like', '%' . $filterValue . '%');
+                        break;
+                    case 'kode_kelompok':
+                        $query->where('kode_kelompok', 'like', '%' . $filterValue . '%');
+                        break;
+                    case 'kategori':
+                        $query->where('kategori', 'like', '%' . $filterValue . '%');
+                        break;
+                    case 'anggota':
+                        $query->where(function($q) use ($filterValue) {
+                            $q->whereHas('anggota1', function($q) use ($filterValue) {
+                                $q->where('name', 'like', '%' . $filterValue . '%')
+                                    ->orWhere('nim', 'like', '%' . $filterValue . '%');
+                            })
+                            ->orWhereHas('anggota2', function($q) use ($filterValue) {
+                                $q->where('name', 'like', '%' . $filterValue . '%')
+                                    ->orWhere('nim', 'like', '%' . $filterValue . '%');
+                            })
+                            ->orWhereHas('anggota3', function($q) use ($filterValue) {
+                                $q->where('name', 'like', '%' . $filterValue . '%')
+                                    ->orWhere('nim', 'like', '%' . $filterValue . '%');
+                            });
+                        });
+                        break;
+                }
+            }
         }
-
-        return view('public.capstones.index', [
-            'capstones' => $capstones
-        ]);
+        
+        // Sort logic
+        $sortField = $request->input('sort', 'created_at'); // default sort by created_at
+        $sortDirection = $request->input('direction', 'desc'); // default direction is descending
+        
+        // Validate sort field to prevent SQL injection
+        $allowedSortFields = ['kode_kelompok', 'judul_capstone', 'kategori', 'created_at'];
+        if (!in_array($sortField, $allowedSortFields)) {
+            $sortField = 'created_at';
+        }
+        
+        // Validate sort direction
+        if (!in_array($sortDirection, ['asc', 'desc'])) {
+            $sortDirection = 'desc';
+        }
+        
+        $query->orderBy($sortField, $sortDirection);
+        
+        // Get paginated results
+        $capstones = $query->paginate(10)
+                           ->appends($request->query());
+        
+        // Get unique categories for filter dropdown
+        $categories = Capstone::distinct()->pluck('kategori');
+        
+        // Pass all necessary data to the view
+        return view('public.capstones.index', compact(
+            'capstones',
+            'categories',
+            'sortField',
+            'sortDirection'
+        ));
     }
 
     public function memberIndex()

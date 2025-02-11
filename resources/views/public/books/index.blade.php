@@ -172,90 +172,131 @@
         </div>
 
         <!-- Book List Container -->
-        <div class="grid grid-cols-2 gap-6">
-            @forelse ($books as $book)
-                <div class="bg-white p-4 border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 rounded-lg">
-                    <div class="flex gap-4">
-                        <!-- Book Thumbnail -->
-                        <div class="w-24 h-32 relative overflow-hidden bg-gray-100 border border-gray-200 flex-shrink-0">
-                            @if ($book->thumbnail)
-                                <img src="{{ asset('storage/' . $book->thumbnail) }}" 
-                                    alt="{{ ucfirst(strtolower($book->judul)) }}"
-                                    class="absolute inset-0 w-full h-full object-cover" />
-                            @else
-                                <div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-200">
-                                    <div class="">
-                                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                                        </svg>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-gray-600 tracking-wide w-48">
+                                Cover Buku
+                            </th>
+                            @php
+                                $columns = [
+                                    'judul' => 'Judul',
+                                    'penulis' => 'Penulis',
+                                    'penerbit' => 'Penerbit',
+                                    'peminatan' => 'Peminatan',
+                                    'sub_peminatan' => 'Sub Peminatan'
+                                ];
+                            @endphp
+
+                            @foreach($columns as $field => $label)
+                                <th scope="col" class="px-6 py-4 text-left">
+                                    <a href="{{ route('public.books.index', array_merge(
+                                        request()->except(['sort', 'direction']),
+                                        [
+                                            'sort' => $field,
+                                            'direction' => ($sortField === $field && $sortDirection === 'asc') ? 'desc' : 'asc'
+                                        ]
+                                    )) }}" 
+                                        class="group inline-flex items-center space-x-2 text-sm font-semibold {{ $sortField === $field ? 'text-blue-600' : 'text-gray-600' }}"
+                                    >
+                                        <span class="border-b-2 {{ $sortField === $field ? 'border-blue-600' : 'border-transparent group-hover:border-gray-300' }} py-1">
+                                            {{ $label }}
+                                        </span>
+                                        <span class="relative flex items-center">
+                                            @if($sortField === $field)
+                                                @if($sortDirection === 'asc')
+                                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+                                                    </svg>
+                                                @else
+                                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                                    </svg>
+                                                @endif
+                                            @else
+                                                <svg class="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                                                </svg>
+                                            @endif
+                                        </span>
+                                    </a>
+                                </th>
+                            @endforeach
+                            <th scope="col" class="px-6 py-4 text-center text-sm font-semibold text-gray-600 tracking-wide">
+                                Aksi
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @forelse ($books as $book)
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="relative">
+                                        <div class="w-32 h-40 relative overflow-hidden bg-gray-100 rounded-t-lg border border-gray-200 shadow-sm">
+                                            @if ($book->thumbnail)
+                                                <img src="{{ asset('storage/' . $book->thumbnail) }}" 
+                                                    alt="{{ ucfirst(strtolower($book->judul)) }}"
+                                                    class="absolute inset-0 w-full h-full object-cover" />
+                                            @else
+                                                <div class="absolute inset-0 flex items-center justify-center bg-gray-200">
+                                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                                                    </svg>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <!-- Enhanced availability status -->
+                                        <div class="">
+                                            <div class="relative">
+                                                <div class="absolute inset-0 bg-white rounded-full shadow-sm"></div>
+                                                <div class="w-32 relative px-3 py-1 rounded-b-lg border {{ $book->available_stock > 0 ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50' }} text-center">
+                                                    <span class="text-sm font-medium {{ $book->available_stock > 0 ? 'text-green-700' : 'text-red-700' }}">
+                                                        {{ $book->available_stock }} dari {{ $book->total_stock }} tersedia
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            @endif
-                        </div>
-
-                        <!-- Book Details -->
-                        <div class="flex-1 min-w-0 flex flex-col justify-between h-full">
-                            <div>
-                                <h2 class="text-lg font-semibold text-gray-900">{{ Str::Limit(Str::title($book->judul), 40, '...')}}</h2>
-
-                                <!-- Secondary Info - Smaller and more compact -->
-                                <div class="mt-1 space-y-1">
-                                    <p class="text-xs text-gray-600">
-                                        <span class="font-medium inline-block">Peminatan </span> : {{ Str::title($book->peminatan) }}
-                                    </p>
-                                    <p class="text-xs text-gray-600">
-                                        <span class="font-medium inline-block">Sub Peminatan </span> : {{ Str::title($book->sub_peminatan) }}
-                                    </p>
-                                    <p class="text-xs text-gray-600">
-                                        <span class="font-medium inline-block">Penulis </span> : {{ Str::title($book->penulis) }}
-                                    </p>
-                                    <p class="text-xs text-gray-600">
-                                        <span class="font-medium inline-block">Penerbit </span> : {{ Str::title($book->penerbit) }}
-                                    </p>
-                                </div>
-
-                                <!-- Synopsis - Fixed height container -->
-                                <div class="mt-2 h-10"> <!-- Fixed height untuk synopsis -->
-                                    @if($book->synopsis)
-                                        <p class="text-xs text-gray-500 line-clamp-2">{{ $book->synopsis }}</p>
-                                    @endif
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <!-- Bottom container for badge and button -->
-                    <div class="space-y-3">
-                        <!-- Availability Badge -->
-                        <div class="text-center">
-                            <div class="inline-flex items-center px-3 py-1.5 rounded-lg {{ $book->available_stock > 0 ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200' }}">
-                                <span class="text-sm font-medium">
-                                    {{ $book->available_stock }} dari {{ $book->total_stock }} tersedia
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- Action Button -->
-                        <div class="text-center">
-                            <a href="{{ route('public.books.show', $book->isbn) }}"
-                                class="inline-flex rounded-lg items-center px-3 py-1.5 text-xs font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 border border-blue-200 hover:border-blue-300 transition-colors">
-                                <span>Lihat Detail</span>
-                                <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <!-- Empty State - Spans full width -->
-                <div class="col-span-2 text-center py-8 bg-white border border-gray-200 rounded-lg">
-
-                    <h3 class="mt-3 text-base font-medium text-gray-900">Tidak ada buku yang ditemukan</h3>
-                    <p class="mt-1 text-sm text-gray-500">Coba ubah kata kunci atau filter pencarian Anda</p>
-                </div>
-            @endforelse
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm font-medium text-gray-900">{{ Str::title($book->judul) }}</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-900">{{ Str::title($book->penulis) }}</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-900">{{ Str::title($book->penerbit) }}</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-900">{{ Str::title($book->peminatan) }}</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-900">{{ Str::title($book->sub_peminatan) }}</div>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <a href="{{ route('public.books.show', $book->isbn) }}"
+                                        class="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 gap-2 min-w-[160px]">
+                                        <span>Detail Buku</span>
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="px-6 py-10 text-center">
+                                    <h3 class="text-base font-medium text-gray-900">Tidak ada buku yang ditemukan</h3>
+                                    <p class="mt-1 text-sm text-gray-500">Coba ubah kata kunci atau filter pencarian Anda</p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Pagination -->

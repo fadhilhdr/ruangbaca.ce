@@ -37,6 +37,11 @@ Route::get('/panduan', function () {
     return view('panduan');
 })->name('panduan');
 
+// Rute halaman informasi
+Route::get('/informasi', function () {
+    return view('information');
+})->name('informasi');
+
 Route::post('/recommendations', [BookRecommendationController::class, 'getRecommendations']);
 
 // Rute visitor

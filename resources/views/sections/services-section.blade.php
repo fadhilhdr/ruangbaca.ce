@@ -22,7 +22,7 @@
                                 <div class="absolute inset-0 bg-gray-100 group-hover:bg-blue-600">
                                     <div class="absolute inset-0 opacity-10">
                                         <div
-                                            class="h-full w-full flex items-center justify-center text-4xl font-bold text-gray-300 group-hover:text-white">
+                                            class="h-full w-full flex items-center justify-center text-4xl font-bold text-gray-900 group-hover:text-white">
                                             Buku
                                         </div>
                                     </div>
@@ -63,7 +63,7 @@
                                 <div class="absolute inset-0 bg-gray-100 group-hover:bg-blue-600">
                                     <div class="absolute inset-0 opacity-10">
                                         <div
-                                            class="h-full w-full flex items-center justify-center text-4xl font-bold text-gray-300 group-hover:text-white">
+                                            class="h-full w-full flex items-center justify-center text-4xl font-bold text-gray-900 group-hover:text-white">
                                             Tugas Akhir
                                         </div>
                                     </div>
@@ -103,7 +103,7 @@
                                 <div class="absolute inset-0 bg-gray-100 group-hover:bg-blue-600">
                                     <div class="absolute inset-0 opacity-10">
                                         <div
-                                            class="h-full w-full flex items-center justify-center text-4xl font-bold text-gray-300 group-hover:text-white">
+                                            class="h-full w-full flex items-center justify-center text-4xl font-bold text-gray-900 group-hover:text-white">
                                             Capstone
                                         </div>
                                     </div>

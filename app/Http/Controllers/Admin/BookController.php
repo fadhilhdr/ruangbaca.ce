@@ -175,7 +175,6 @@ class BookController extends Controller
     public function downloadTemplate()
     {
         $filePath = 'public/templates/book_template.xlsx';
-
         return Storage::download($filePath);
     }
 }

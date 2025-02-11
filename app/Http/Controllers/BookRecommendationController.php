@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Http;
 
 class BookRecommendationController extends Controller
 {
-
     public function getRecommendations(Request $request)
     {
         try {
@@ -17,18 +16,23 @@ class BookRecommendationController extends Controller
 
             $description = $request->input('description');
 
-            $response = Http::timeout(30)->post('http://localhost:5000/recommend', [
+            $apiUrl = config('app.recommendation_api.url_api');
+            $apiKey = config('app.recommendation_api.key');
+
+            $response = Http::timeout(30)->withHeaders([
+                'X-API-KEY' => $apiKey,
+            ])->post($apiUrl, [
                 'description' => $description,
             ]);
 
             if ($response->successful()) {
                 $recommendations = $response->json();
                 return response()->json($recommendations);
+            } else {
+                return response()->json([
+                    'error' => 'Failed to fetch recommendations from API. Status Code: ' . $response->status(),
+                ], $response->status());
             }
-
-            return response()->json([
-                'error' => 'Failed to fetch recommendations from API',
-            ], 500);
         } catch (Exception $e) {
             return response()->json([
                 'error' => 'An error occurred: ' . $e->getMessage(),

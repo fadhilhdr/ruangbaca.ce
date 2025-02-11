@@ -1,10 +1,9 @@
 <?php
-
 namespace App\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 
 class Tugasakhir extends Model
@@ -43,6 +42,6 @@ class Tugasakhir extends Model
 
     public function isFileAvailable()
     {
-        return !empty($this->full_document);
+        return ! empty($this->full_document);
     }
 }

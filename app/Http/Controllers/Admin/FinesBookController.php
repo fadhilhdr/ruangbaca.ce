@@ -1,41 +1,54 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Fine;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class FinesBookController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $denda = Fine::orderBy('created_at', 'desc')->get();
+        $query = Fine::with(['transaction.bookLoan.user', 'transaction.type'])->orderBy('created_at', 'desc');
+
+        if ($request->has('search') && ! empty($request->search)) {
+            $search = $request->search;
+
+            $query->whereHas('transaction.bookLoan.user', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            });
+        }
+
+        $denda = $query->get();
+
         return view('admin.denda.index', compact('denda'));
     }
 
-    public function updateStatus($id)
+    public function updateStatus(Request $request, $id)
     {
-        // Ambil data Fine berdasarkan ID
         $fine = Fine::findOrFail($id);
 
-        // Periksa apakah status sudah diverifikasi atau belum
-        if ($fine->status === 'awaiting_verif') {
-            $fine->status = 'verified';
-            $fine->verified_at = now(); // Set waktu verifikasi
+        // Validasi status yang diperbolehkan
+        $request->validate([
+            'status' => 'required|in:awaiting_verif,verified,decline',
+        ]);
+
+        $fine->status = $request->status;
+
+        if ($request->status === 'verified') {
+            $fine->verified_at = now();
         } else {
-            $fine->status = 'awaiting_verif';
-            $fine->verified_at = null; // Reset waktu verifikasi
+            $fine->verified_at = null;
         }
 
-        // Simpan perubahan
         $fine->save();
+        Alert::success('success', 'Status denda berhasil diperbarui!!');
 
-        // Redirect kembali ke halaman yang menampilkan daftar denda
-        return redirect()->route('admin.fines.index')->with('status', 'Status denda berhasil diperbarui!');
+        return redirect()->route('admin.fines.index');
     }
 
     /**

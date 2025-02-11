@@ -47,6 +47,7 @@
                                 <th>Anggota 2</th>
                                 <th>Anggota 3</th>
                                 <th>Judul Capstone</th>
+                                <th>Kategori</th>
                                 <th>C100</th>
                                 <th>C200</th>
                                 <th>C300</th>
@@ -64,6 +65,7 @@
                                     <td>{{ $capstone->anggota2->name }}</td>
                                     <td> {{ $capstone->anggota3->name }}</td>
                                     <td>{{ $capstone->judul_capstone }}</td>
+                                    <td>{{ $capstone->kategori }}</td>
                                     <td>
                                         <a href="{{ Storage::url($capstone->c100_path) }}" target="_blank">C100</a>
                                     </td>

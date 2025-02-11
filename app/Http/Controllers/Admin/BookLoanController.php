@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -15,9 +14,21 @@ class BookLoanController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $transactions = Transaction::with(['bookLoan.book', 'bookLoan.user', 'type'])->orderBy("created_at", "desc")->get();
+        $query = Transaction::with(['bookLoan.book', 'bookLoan.user', 'type'])->orderBy("created_at", "desc");
+
+        if ($request->has('search') && ! empty($request->search)) {
+            $search = $request->search;
+
+            $query->whereHas('bookLoan.user', function ($q) use ($search) {
+                $q->where('userid', $search)              // Mencari berdasarkan user_id
+                    ->orWhere('name', 'like', "%{$search}%"); // Mencari berdasarkan nama
+            });
+        }
+
+        $transactions = $query->get();
+
         return view('admin.transaksi.index', compact('transactions'));
     }
 

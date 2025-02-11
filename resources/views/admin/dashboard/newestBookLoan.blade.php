@@ -2,7 +2,7 @@
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
             <h3 class="card-title mb-0"> <i class="bi bi-clock-history me-2"></i>
-                Peminjaman Buku Terbaru</h3>
+                Transaksi terbaru</h3>
         </div>
         <div class="card-body p-0" style="max-height: 200px; overflow-y: auto;">
             <!-- Set max-height dan scroll -->
@@ -18,13 +18,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($transactions as $transaction)
+                    @foreach ($transactions as $index => $transaction)
                         <tr>
-                            <td class="text-center">{{ $transaction->id }}</td>
+                            <td class="text-center">{{ $loop->iteration }}</td>
                             <td class="text-nowrap">{{ $transaction->bookLoan->user->name ?? 'N/A' }}</td>
                             <td class="text-center">
                                 @php
                                     $status = $transaction->type->type_name ?? 'N/A';
+                                    $statusMapping = [
+                                        'Borrow' => 'Peminjaman',
+                                        'Renewal' => 'Perpanjangan',
+                                        'Return' => 'Pengembalian',
+                                        'Fine Payment' => 'Pembayaran Denda',
+                                        'Lost Book Replacement' => 'Penggantian Buku Hilang',
+                                    ];
+                                    $statusIndo = $statusMapping[$status] ?? 'Tidak Diketahui';
                                     $statusClass = match ($status) {
                                         'Borrow' => 'bg-primary',
                                         'Renewal' => 'bg-info',
@@ -35,9 +43,10 @@
                                     };
                                 @endphp
                                 <span class="badge {{ $statusClass }} text-white px-3 py-1">
-                                    {{ $status }}
+                                    {{ $statusIndo }}
                                 </span>
                             </td>
+
                             <td class="text-nowrap">{{ $transaction->bookLoan->book->judul ?? 'N/A' }}</td>
                             <td class="text-nowrap">{{ $transaction->bookLoan->loan_date ?? 'N/A' }}</td>
                             <td class="text-center">

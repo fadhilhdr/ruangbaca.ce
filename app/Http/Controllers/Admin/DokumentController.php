@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Tugasakhir;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class DokumentController extends Controller
 {
@@ -36,74 +38,221 @@ class DokumentController extends Controller
     {
         return view('admin.dokumen.create');
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nim'                 => 'required|string|max:20',
-            'judul'               => 'required|string|max:255',
-            'cover_abstrak'       => 'required|file|mimes:pdf|max:2048',
-            'bab1_pendahuluan'    => 'required|file|mimes:pdf|max:2048',
-            'bab2_kajian_pustaka' => 'required|file|mimes:pdf|max:2048',
-            'bab3_metodologi'     => 'required|file|mimes:pdf|max:2048',
-            'bab4_implementasi'   => 'required|file|mimes:pdf|max:2048',
-            'bab5_kesimpulan'     => 'required|file|mimes:pdf|max:2048',
-            'lampiran'            => 'nullable|file|mimes:pdf|max:2048',
-        ]);
-
-        $data = $request->except('_token');
-        foreach ($request->allFiles() as $key => $file) {
-            $data[$key] = $file->store('dokumen_ta');
-        }
-
-        TugasAkhir::create($data);
-        return redirect()->route('admin.dokumen.index')->with('success', 'Dokumen berhasil ditambahkan.');
-    }
-
     public function edit($id)
     {
         $dokumen = TugasAkhir::findOrFail($id);
         return view('admin.dokumen.edit', compact('dokumen'));
     }
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        // Define file size limits and error messages
+        $fileSizeLimits = [
+            'full_document'        => 15, // 15 MB
+            'cover_abstract'       => 5,  // 5 MB
+            'bab1_pendahuluan'     => 5,
+            'bab2_kajianpustaka'   => 5,
+            'bab3_perancangan'     => 5,
+            'bab4_hasilpembahasan' => 10,
+            'bab5_penutup'         => 5,
+            'lampiran'             => 10,
+        ];
 
+        // Custom validation messages
+        $messages = [
+            'title.max'  => 'Judul tugas akhir tidak boleh lebih dari 255 karakter.',
+            '*.required' => 'Mohon unggah dokumen :attribute.',
+            '*.mimes'    => 'Dokumen :attribute harus dalam format PDF.',
+        ];
+
+        // Dynamic file size validation
+        $sizeRules = [];
+        foreach ($fileSizeLimits as $field => $limit) {
+            $sizeRules[$field] = [
+                'required',
+                'mimes:pdf',
+                'max:' . ($limit * 1024), // Convert MB to KB
+                function ($attribute, $value, $fail) use ($limit) {
+                    $fileSize = $value->getSize() / 1024 / 1024; // Convert to MB
+                    if ($fileSize > $limit) {
+                        $fail("Ukuran dokumen $attribute tidak boleh melebihi $limit MB.");
+                    }
+                },
+            ];
+        }
+
+        // Merge validation rules
+        $validationRules = array_merge([
+            'title' => 'required|string|max:255',
+        ], $sizeRules);
+
+        // Validate request
+        try {
+            $validatedData = $request->validate($validationRules, $messages);
+
+            $data        = $request->all();
+            $nim         = auth()->user()->userid;
+            $data['nim'] = $nim;
+
+            // Create a folder for the specific NIM under tugasakhirs
+            $folderPath = 'tugasakhirs/' . $nim;
+
+            // Store files with custom naming
+            $fileFields = [
+                'full_document'        => 'full_document',
+                'cover_abstract'       => 'cover_abstract',
+                'bab1_pendahuluan'     => 'bab1_pendahuluan',
+                'bab2_kajianpustaka'   => 'bab2_kajianpustaka',
+                'bab3_perancangan'     => 'bab3_perancangan',
+                'bab4_hasilpembahasan' => 'bab4_hasilpembahasan',
+                'bab5_penutup'         => 'bab5_penutup',
+                'lampiran'             => 'lampiran',
+            ];
+
+            foreach ($fileFields as $field => $prefix) {
+                if ($request->hasFile($field)) {
+                    $file         = $request->file($field);
+                    $filename     = $nim . '_' . $prefix . '.' . $file->getClientOriginalExtension();
+                    $path         = $file->storeAs('public/' . $folderPath, $filename);
+                    $data[$field] = $folderPath . '/' . $filename;
+                }
+            }
+
+            Tugasakhir::create($data);
+            Alert::success('success', 'Tugas Akhir berhasil diunggah.');
+            return redirect()->route('admin.document.index');
+
+        } catch (ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan dalam pengisian form.');
+        }
+    }
+    // Update function
     public function update(Request $request, $id)
     {
-        $dokumen = TugasAkhir::findOrFail($id);
-
-        $request->validate([
-            'nim'                 => 'required|string|max:20',
-            'judul'               => 'required|string|max:255',
-            'cover_abstrak'       => 'nullable|file|mimes:pdf|max:2048',
-            'bab1_pendahuluan'    => 'nullable|file|mimes:pdf|max:2048',
-            'bab2_kajian_pustaka' => 'nullable|file|mimes:pdf|max:2048',
-            'bab3_metodologi'     => 'nullable|file|mimes:pdf|max:2048',
-            'bab4_implementasi'   => 'nullable|file|mimes:pdf|max:2048',
-            'bab5_kesimpulan'     => 'nullable|file|mimes:pdf|max:2048',
-            'lampiran'            => 'nullable|file|mimes:pdf|max:2048',
-        ]);
-
-        $data = $request->except('_token', '_method');
-        foreach ($request->allFiles() as $key => $file) {
-            Storage::delete($dokumen->$key);
-            $data[$key] = $file->store('dokumen_ta');
+        $tugasakhir = Tugasakhir::findOrFail($id);
+        if ($tugasakhir->nim !== auth()->user()->userid) {
+            abort(403);
         }
 
-        $dokumen->update($data);
-        return redirect()->route('admin.dokumen.index')->with('success', 'Dokumen berhasil diperbarui.');
+        // Define file size limits (MB)
+        $fileSizeLimits = [
+            'full_document'        => 15,
+            'cover_abstract'       => 5,
+            'bab1_pendahuluan'     => 5,
+            'bab2_kajianpustaka'   => 5,
+            'bab3_perancangan'     => 5,
+            'bab4_hasilpembahasan' => 10,
+            'bab5_penutup'         => 5,
+            'lampiran'             => 10,
+        ];
+
+        // Custom validation messages
+        $messages = [
+            'title.max' => 'Judul tugas akhir tidak boleh lebih dari 255 karakter.',
+            '*.mimes'   => 'Dokumen :attribute harus dalam format PDF.',
+        ];
+
+        // Dynamic file size validation
+        $sizeRules = [];
+        foreach ($fileSizeLimits as $field => $limit) {
+            $sizeRules[$field] = [
+                'nullable',
+                'mimes:pdf',
+                'max:' . ($limit * 1024), // Convert MB to KB
+                function ($attribute, $value, $fail) use ($limit) {
+                    if ($value && $value->getSize() / 1024 / 1024 > $limit) {
+                        $fail("Ukuran dokumen $attribute tidak boleh melebihi $limit MB.");
+                    }
+                },
+            ];
+        }
+
+        // Merge validation rules
+        $validationRules = array_merge([
+            'title' => 'required|string|max:255',
+        ], $sizeRules);
+
+        // Validate request
+        try {
+            $validatedData = $request->validate($validationRules, $messages);
+
+            $data       = $request->only(['title']);
+            $nim        = $tugasakhir->nim;
+            $folderPath = 'tugasakhirs/' . $nim;
+
+            $fileFields = [
+                'full_document'        => 'full_document',
+                'cover_abstract'       => 'cover_abstract',
+                'bab1_pendahuluan'     => 'bab1_pendahuluan',
+                'bab2_kajianpustaka'   => 'bab2_kajianpustaka',
+                'bab3_perancangan'     => 'bab3_perancangan',
+                'bab4_hasilpembahasan' => 'bab4_hasilpembahasan',
+                'bab5_penutup'         => 'bab5_penutup',
+                'lampiran'             => 'lampiran',
+            ];
+
+            foreach ($fileFields as $field => $prefix) {
+                if ($request->hasFile($field)) {
+                    // Delete old file if exists
+                    if ($tugasakhir->$field) {
+                        Storage::disk('public')->delete($tugasakhir->$field);
+                    }
+
+                    // Store new file
+                    $file         = $request->file($field);
+                    $filename     = $nim . '_' . $prefix . '.' . $file->getClientOriginalExtension();
+                    $path         = $file->storeAs('public/' . $folderPath, $filename);
+                    $data[$field] = $folderPath . '/' . $filename;
+                }
+            }
+
+            $tugasakhir->update($data);
+            Alert::success('success', 'Tugas Akhir berhasil diperbarui.');
+            return redirect()->route('admin.document.index');
+        } catch (ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan dalam pengisian form.');
+        }
     }
 
+    // Delete function
     public function destroy($id)
     {
-        $dokumen = TugasAkhir::findOrFail($id);
-        foreach (['cover_abstrak', 'bab1_pendahuluan', 'bab2_kajian_pustaka', 'bab3_metodologi', 'bab4_implementasi', 'bab5_kesimpulan', 'lampiran'] as $fileColumn) {
-            Storage::delete($dokumen->$fileColumn);
+        try {
+            $tugasakhir = Tugasakhir::findOrFail($id);
+
+            $fileFields = [
+                'full_document',
+                'cover_abstract',
+                'bab1_pendahuluan',
+                'bab2_kajianpustaka',
+                'bab3_perancangan',
+                'bab4_hasilpembahasan',
+                'bab5_penutup',
+                'lampiran',
+            ];
+
+            foreach ($fileFields as $field) {
+                if (! empty($tugasakhir->$field)) {
+                    Storage::disk('public')->delete($tugasakhir->$field);
+                }
+            }
+
+            $tugasakhir->delete();
+            Alert::success('Success', 'Data tugas akhir berhasil dihapus!');
+
+        } catch (\Exception $e) {
+            Alert::error('Error', 'Gagal menghapus data tugas akhir.');
         }
 
-        $dokumen->delete();
-        return redirect()->route('admin.dokumen.index')->with('success', 'Dokumen berhasil dihapus.');
+        return redirect()->route('admin.document.index');
     }
 
     /**

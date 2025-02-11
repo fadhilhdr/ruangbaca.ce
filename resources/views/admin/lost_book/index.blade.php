@@ -1,6 +1,6 @@
 @extends('admin.layouts.base')
 
-@section('title', 'Daftar Denda')
+@section('title', 'Daftar Buku Hilang')
 
 @section('content')
     <div class="container-fluid">
@@ -9,7 +9,7 @@
                 <div class="card-body">
                     <div class="row d-flex justify-content-between">
                         <div class="col-sm-4">
-                            <form action="{{ route('admin.fines.index') }}" method="GET" class="d-flex">
+                            <form action="{{ route('admin.lost-books.index') }}" method="GET" class="d-flex">
                                 <div class="input-group">
                                     <input type="search" name="search" id="search" class="form-control"
                                         placeholder="Cari berdasarkan nama pengguna..." value="{{ request('search') }}">
@@ -26,7 +26,7 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <h3 class="card-title">
-                        <i class="bi bi-book me-2"></i> Daftar Denda
+                        <i class="bi bi-book-x me-2"></i> Daftar Buku Hilang
                     </h3>
                 </div>
 
@@ -35,62 +35,59 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>ID Peminjam</th>
-                                <th>Jumlah Denda</th>
-                                <th>Status</th>
-                                <th>Bukti Transfer</th>
-                                <th>Dibayar Pada</th>
-                                <th>Verifikasi Pada</th>
+                                <th>Nama Peminjam</th>
+                                <th>Judul Buku</th>
+                                <th>ISBN</th>
+                                <th>Tanggal Dilaporkan</th>
+                                <th>Status Penggantian</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($denda as $index => $item)
+                            @forelse ($lostBooks as $index => $book)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ $item->bookLoan->user->name ?? 'N/A' }}</td>
-                                    <td>{{ $item->amount }}</td>
+                                    <td>{{ $book->bookLoan->user->name ?? 'N/A' }}</td>
+                                    <td>{{ $book->bookLoan->book->judul ?? 'N/A' }}</td>
+                                    <td>{{ $book->isbn }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($book->date_reported)->format('d-m-Y') }}</td>
                                     <td>
                                         @php
-                                            $statusClass = match ($item->status) {
+                                            $statusClass = match ($book->replacement_status) {
                                                 'awaiting_verif' => 'bg-warning',
                                                 'verified' => 'bg-success',
                                                 'decline' => 'bg-danger',
                                                 default => 'bg-secondary',
                                             };
+
+                                            $statusText = match ($book->replacement_status) {
+                                                'awaiting_verif' => 'Menunggu Verifikasi',
+                                                'verified' => 'Terverifikasi',
+                                                'decline' => 'Ditolak',
+                                                default => 'Status Tidak Diketahui', // Untuk status lainnya
+                                            };
                                         @endphp
-                                        <div class="text-white text-center font-semibold rounded {{ $statusClass }}">
-                                            {{ $item->status }}
+                                        <div
+                                            class="text-white text-center font-semibold rounded px-2 py-1 {{ $statusClass }}">
+                                            {{ $statusText }}
                                         </div>
                                     </td>
                                     <td>
-                                        @if ($item->bukti_tf)
-                                            <a href="{{ Storage::url($item->bukti_tf) }}" target="_blank">Lihat
-                                                Bukti</a>
-                                        @else
-                                            Tidak Ada
-                                        @endif
-                                    </td>
-                                    <td>
-                                        {{ $item->paid_at ? \Carbon\Carbon::parse($item->paid_at)->format('d-m-Y H:i:s') : 'Belum Dibayar' }}
-                                    </td>
-                                    <td>
-                                        {{ $item->verified_at ? \Carbon\Carbon::parse($item->verified_at)->format('d-m-Y H:i:s') : 'Belum Diverifikasi' }}
-                                    </td>
-                                    <td>
-                                        <form action="{{ route('admin.fines.updateStatus', $item->id) }}" method="POST">
+                                        <form action="{{ route('admin.lost-books.updateStatus', $book->id) }}"
+                                            method="POST">
                                             @csrf
                                             @method('PUT')
-                                            <select name="status" class="form-select" onchange="this.form.submit()">
+                                            <select name="replacement_status" class="form-select"
+                                                onchange="this.form.submit()">
                                                 <option value="awaiting_verif"
-                                                    {{ $item->status == 'awaiting_verif' ? 'selected' : '' }}>Menunggu
-                                                    verifikasi
-                                                </option>
+                                                    {{ $book->replacement_status == 'awaiting_verif' ? 'selected' : '' }}>
+                                                    Menunggu Verifikasi</option>
                                                 <option value="verified"
-                                                    {{ $item->status == 'verified' ? 'selected' : '' }}>
-                                                    Terverifikasi</option>
-                                                <option value="decline" {{ $item->status == 'decline' ? 'selected' : '' }}>
-                                                    Ditolak
+                                                    {{ $book->replacement_status == 'verified' ? 'selected' : '' }}>
+                                                    Terverifikasi
+                                                </option>
+                                                <option value="decline"
+                                                    {{ $book->replacement_status == 'decline' ? 'selected' : '' }}>Ditolak
                                                 </option>
                                             </select>
                                         </form>
@@ -98,10 +95,10 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="8" class="text-center py-4">
+                                    <td colspan="7" class="text-center py-4">
                                         <div class="d-flex flex-column align-items-center">
                                             <i class="bi bi-inbox text-muted" style="font-size: 2rem;"></i>
-                                            <p class="text-muted mt-2">Tidak ada data denda tersedia</p>
+                                            <p class="text-muted mt-2">Tidak ada data buku hilang</p>
                                         </div>
                                     </td>
                                 </tr>

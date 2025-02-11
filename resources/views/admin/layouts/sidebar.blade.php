@@ -141,7 +141,12 @@
                         <p>Denda</p>
                     </a>
                 </li>
-
+                <li class="nav-item">
+                    <a href="{{ route('admin.lost-books.index') }}" class="nav-link">
+                        <i class="bi bi-journal-minus"></i>
+                        <p>Pengajuan Buku Hilang</p>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>

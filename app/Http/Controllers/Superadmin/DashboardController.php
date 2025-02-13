@@ -2,11 +2,9 @@
 namespace App\Http\Controllers\Superadmin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Book;
+use App\Models\Pegawai;
 use App\Models\Student;
-use App\Models\Transaction;
-use App\Models\Tugasakhir;
-use App\Models\Visitor;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -16,22 +14,12 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // Menghitung jumlah buku yang tersedia (is_available = 1)
-        $availableBooks = Book::where('is_available', 1)->count();
-
-        // Menghitung jumlah buku yang dipinjam (is_available = 0)
-        $borrowedBooks = Book::where('is_available', 0)->count();
 
         $totalStudents = Student::count();
-        $totalVisitor  = Visitor::count();
-        $totalDocument = Tugasakhir::count();
+        $totalPegawai  = Pegawai::count();
+        $totalPengguna = User::count();
 
-        // Menampilkan tabel transaksi
-        $transactions = Transaction::with(['bookLoan.user', 'bookLoan', 'type'])->orderBy("created_at", "desc")
-            ->take(3) // atau bisa juga menggunakan ->limit(3)
-            ->get();
-
-        return view('superadmin.dashboard.index', compact('availableBooks', 'borrowedBooks', 'totalVisitor', 'totalStudents', 'transactions', 'totalDocument'));
+        return view('superadmin.dashboard.index', compact('totalStudents', 'totalPegawai', 'totalPengguna'));
     }
 
     /**

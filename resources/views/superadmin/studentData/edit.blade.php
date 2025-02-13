@@ -14,7 +14,8 @@
                         </h3>
                     </div>
 
-                    <form method="POST" action="{{ route('admin.students.update', $student->nim) }}" class="form-horizontal">
+                    <form method="POST" action="{{ route('superadmin.students.update', $student->nim) }}"
+                        class="form-horizontal">
                         @csrf
                         @method('PUT')
                         <div class="card-body">

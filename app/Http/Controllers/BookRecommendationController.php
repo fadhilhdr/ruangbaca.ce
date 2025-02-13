@@ -15,11 +15,13 @@ class BookRecommendationController extends Controller
             ]);
 
             $description = $request->input('description');
+            $verifySSL   = false; // Default ke true jika tidak ada di config
+            $apiUrl      = config('app.recommendation_api.url_api');
+            $apiKey      = config('app.recommendation_api.key');
 
-            $apiUrl = config('app.recommendation_api.url_api');
-            $apiKey = config('app.recommendation_api.key');
-
-            $response = Http::timeout(30)->withHeaders([
+            $response = Http::timeout(30)->withOptions([
+                'verify' => $verifySSL, // Nonaktifkan verifikasi SSL
+            ])->withHeaders([
                 'X-API-KEY' => $apiKey,
             ])->post($apiUrl, [
                 'description' => $description,

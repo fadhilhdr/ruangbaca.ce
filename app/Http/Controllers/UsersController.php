@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class UsersController extends Controller
 {
@@ -30,7 +31,8 @@ class UsersController extends Controller
             'name'    => $request->name,
             'role_id' => $request->role_id,
         ]);
+        Alert::success('Berhasil!', 'Role pengguna berhasil diperbaharui!');
 
-        return redirect()->route('superadmin.users.index')->with('success', 'User updated successfully.');
+        return redirect()->route('superadmin.users.index');
     }
 }

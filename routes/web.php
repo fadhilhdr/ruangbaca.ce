@@ -51,9 +51,8 @@ Route::post('/visitor/confirmCheckout', [VisitorController::class, 'confirmCheck
 
 // Rute public
 Route::prefix('public')->name('public.')->group(function () {
-    // Redirect dari /public ke /public/books
     Route::get('/', function () {
-        return redirect()->route('public.books.index');
+        return response()->noContent(); 
     })->name('index');
 
     // Books routes
@@ -119,7 +118,7 @@ Route::middleware(['auth', 'role:Member'])->prefix('member')->name('member.')->g
         Route::get('/{id}', [BookLoanController::class, 'show'])->name('show');
 
         // Borrow Routes
-
+        
         Route::get('/borrow/{isbn}', [BookLoanController::class, 'showBorrowForm'])->name('borrowForm');
         Route::post('/borrow/{isbn}', [BookLoanController::class, 'borrowBook'])->name('borrow');
 

@@ -134,7 +134,7 @@
                                 Kode Unik Buku
                             </label>
                             <div class="mt-1 flex space-x-2">
-                                <input type="text" 
+                                <input type="password" 
                                        name="kode_unik_buku" 
                                        id="kode_unik_buku"
                                        class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"

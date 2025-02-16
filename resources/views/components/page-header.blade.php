@@ -29,7 +29,7 @@
             <nav aria-label="Lokasi halaman">
                 <ol class="flex items-center text-sm">
                     <li class="text-gray-600">
-                        <span class="hover:text-gray-900">Beranda</span>
+                        <span>Beranda</span>
                     </li>
                     
                     @foreach (\App\Helpers\BreadcrumbHelper::generateBreadcrumb() as $breadcrumb)

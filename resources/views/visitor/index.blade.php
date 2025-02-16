@@ -15,25 +15,6 @@
                         <h3 class="text-lg font-semibold text-blue-600">Check-In & Check-Out</h3>
                     </div>
             
-                    <!-- Alert Messages -->
-                    @if(session('error'))
-                        <div class="mb-6 p-4 rounded-md bg-red-50 border-l-4 border-red-500 flex items-center">
-                            <svg class="h-5 w-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"/>
-                            </svg>
-                            <p class="text-red-700 text-sm">{{ session('error') }}</p>
-                        </div>
-                    @endif
-            
-                    @if(session('success'))
-                        <div class="mb-6 p-4 rounded-md bg-green-50 border-l-4 border-green-500 flex items-center">
-                            <svg class="h-5 w-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
-                            </svg>
-                            <p class="text-green-700 text-sm">{{ session('success') }}</p>
-                        </div>
-                    @endif
-            
                     <!-- Form Section -->
                     <form action="{{ route('visitor.store') }}" method="POST" class="space-y-6">
                         @csrf
@@ -49,6 +30,7 @@
                                         name="identifier"
                                         value="{{ old('identifier') }}"
                                         required
+                                        autofocus
                                         class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors duration-200"
                                         placeholder="Masukkan identitas Anda">
                                 </div>
@@ -167,5 +149,77 @@
                 </div>
             </div>
         </div>
+        <script>
+            const SwalConfig = Swal.mixin({
+                customClass: {
+                    popup: 'animated zoomIn'
+                },
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            });
+            
+            // Function to handle identifier field focus
+            const focusIdentifierField = () => {
+                const identifierField = document.getElementById('identifier');
+                if (identifierField && document.activeElement !== identifierField) {
+                    identifierField.focus();
+                    identifierField.select();
+                }
+            };
+            
+            // Handle success messages
+            @if(session('success'))
+                SwalConfig.fire({
+                    icon: 'success',
+                    title: "{{ session('success') }}",
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(() => {
+                    focusIdentifierField();
+                });
+            @endif
+            
+            // Handle error messages
+            @if(session('error'))
+                SwalConfig.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "{{ session('error') }}",
+                    showConfirmButton: true,
+                    confirmButtonColor: '#3085d6'
+                }).then(() => {
+                    focusIdentifierField();
+                });
+            @endif
+            
+            // Initial focus when page loads
+            document.addEventListener('DOMContentLoaded', focusIdentifierField);
+            
+            // Focus after any SweetAlert closes
+            Swal.bindClickHandler();
+            
+            // Add event listener for clicks outside the input
+            document.addEventListener('click', (e) => {
+                if (e.target.id !== 'identifier') {
+                    focusIdentifierField();
+                }
+            });
+            
+            // Add event listener for keypress
+            document.addEventListener('keypress', () => {
+                focusIdentifierField();
+            });
+            
+            // Fallback focus check (reduced interval and only if needed)
+            setInterval(() => {
+                if (document.activeElement.id !== 'identifier') {
+                    focusIdentifierField();
+                }
+            }, 500);
+        </script>  
     </div>
 </x-app-layout>

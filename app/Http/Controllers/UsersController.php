@@ -7,9 +7,15 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class UsersController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::paginate(10);
+        $search = $request->input('search');
+
+        $users = User::when($search, function ($query, $search) {
+            return $query->where('name', 'like', "%{$search}%")
+                ->orWhere('userid', 'like', "%{$search}%");
+        })->paginate(10);
+
         return view('superadmin.usersData.index', compact('users'));
     }
 
@@ -35,4 +41,16 @@ class UsersController extends Controller
 
         return redirect()->route('superadmin.users.index');
     }
+    public function destroy($userid)
+    {
+        $user = User::findOrFail($userid);
+
+        // Hapus pengguna
+        $user->delete();
+
+        // Tampilkan alert sukses
+        Alert::success('Berhasil!', 'Pengguna berhasil dihapus.');
+        return redirect()->route('superadmin.users.index');
+    }
+
 }

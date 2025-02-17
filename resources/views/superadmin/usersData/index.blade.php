@@ -11,7 +11,7 @@
                     <div class="col-sm-4">
                         <form action="{{ route('superadmin.users.index') }}" method="GET" class="d-flex">
                             <input type="text" class="form-control me-2" id="search" name="search"
-                                value="{{ request('search') }}" placeholder="Cari nama...">
+                                value="{{ request('search') }}" placeholder="Cari nama/userid...">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-search me-1"></i>
                             </button>

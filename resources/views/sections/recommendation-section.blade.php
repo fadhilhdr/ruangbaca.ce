@@ -1,4 +1,4 @@
-<div class="container mx-auto px-4 py-12">
+<div id="answer" class="container mx-auto px-4 py-12">
     {{-- Recommendations Section --}}
     <div id="recommendations" class="hidden">
         <h2 class="text-3xl font-bold text-white mb-8 text-center">Rekomendasi Buku</h2>
@@ -93,7 +93,7 @@
                         document.getElementById('recommendations').classList.remove('hidden');
 
                         // Scroll ke bagian rekomendasi setelah hasil ditampilkan
-                        document.getElementById('recommendations').scrollIntoView({
+                        document.getElementById('answer').scrollIntoView({
                             behavior: 'smooth',
                             block: 'start'
                         });
@@ -108,7 +108,7 @@
                         document.getElementById('recommendations').classList.remove('hidden');
 
                         // Scroll ke bagian rekomendasi jika tidak ada hasil
-                        document.getElementById('recommendations').scrollIntoView({
+                        document.getElementById('answer').scrollIntoView({
                             behavior: 'smooth',
                             block: 'start'
                         });
@@ -125,7 +125,7 @@
                     document.getElementById('recommendations').classList.remove('hidden');
 
                     // Scroll ke bagian rekomendasi jika terjadi error
-                    document.getElementById('recommendations').scrollIntoView({
+                    document.getElementById('answer').scrollIntoView({
                         behavior: 'smooth',
                         block: 'start'
                     });

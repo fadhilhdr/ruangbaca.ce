@@ -9,15 +9,15 @@
                 <!-- Header Section -->
                 <div class="mb-8 border-b pb-4">
                     <h3 class="text-2xl font-semibold text-gray-900">{{ Str::title($tugasakhir->title) }}</h3>
-                    <div class="mt-3 flex items-center space-x-4">
+                    <div class="mt-3 flex flex-wrap gap-4 sm:flex-nowrap sm:items-center">
                         <div class="flex items-center text-gray-600">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
-                            <span>{{ $tugasakhir->user->name ?? 'Tidak diketahui' }}</span>
+                            <span class="truncate">{{ $tugasakhir->user->name ?? 'Tidak diketahui' }}</span>
                         </div>
                         <div class="flex items-center text-gray-600">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                             <span>{{ $tugasakhir->created_at->format('d F Y') }}</span>
@@ -51,57 +51,64 @@
                     }
                 @endphp
 
-                <!-- Tab Navigation dengan Scrolling -->
+                <!-- Improved Tab Navigation dengan Scrolling -->
                 <div class="relative mb-4">
-                    <!-- Tombol scroll kiri -->
-                    <button onclick="scrollTabs('left')" class="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-white shadow-md rounded-full hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    
-                    <!-- Tombol scroll kanan -->
-                    <button onclick="scrollTabs('right')" class="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-white shadow-md rounded-full hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
-
-                    <div class="overflow-x-auto scrollbar-hide px-8" id="tabs-container">
-                        <nav class="flex min-w-full border-b border-gray-200 pb-px" aria-label="Tabs">
-                            <div class="flex space-x-1">
-                                @foreach($documents as $field => $label)
-                                    @if($tugasakhir->$field)
-                                        <button onclick="showTab('{{ $field }}')"
-                                                id="tab-{{ $field }}"
-                                                class="tab-btn whitespace-nowrap px-4 py-2.5 text-sm font-medium border-b-2 border-transparent transition-colors duration-200 ease-in-out hover:text-gray-700 hover:border-gray-300 focus:outline-none">
-                                            {{ $label }}
-                                        </button>
-                                    @endif
-                                @endforeach
-                            </div>
-                        </nav>
+                    <div class="flex">
+                        <!-- Left scroll button - Now outside the scroll container -->
+                        <button onclick="scrollTabs('left')" 
+                                id="scroll-left"
+                                class="hidden px-2 py-2.5 bg-white shadow-lg rounded-l-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        
+                        <!-- Tabs container -->
+                        <div class="flex-1 overflow-x-auto scrollbar-hide" id="tabs-container">
+                            <nav class="flex border-b border-gray-200" aria-label="Tabs">
+                                <div class="flex space-x-1 min-w-full px-1">
+                                    @foreach($documents as $field => $label)
+                                        @if($tugasakhir->$field)
+                                            <button onclick="showTab('{{ $field }}')"
+                                                    id="tab-{{ $field }}"
+                                                    class="tab-btn whitespace-nowrap px-4 py-2.5 text-sm font-medium border-b-2 border-transparent transition-all duration-200 hover:text-gray-700 hover:border-gray-300 focus:outline-none">
+                                                {{ $label }}
+                                            </button>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </nav>
+                        </div>
+                        
+                        <!-- Right scroll button - Now outside the scroll container -->
+                        <button onclick="scrollTabs('right')"
+                                id="scroll-right" 
+                                class="hidden px-2 py-2.5 bg-white shadow-lg rounded-r-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
-                <!-- Tab Content dengan Toolbar -->
+                <!-- Tab Content with Improved Toolbar -->
                 @foreach($documents as $field => $label)
                     @if($tugasakhir->$field)
                         <div id="content-{{ $field }}" class="hidden tab-content">
-                            <div class="mb-4 p-4 bg-gray-50 rounded-lg flex items-center justify-between">
+                            <div class="mb-4 p-4 bg-gray-50 rounded-lg flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                 <h4 class="text-lg font-medium text-gray-900">{{ $label }}</h4>
-                                <div class="flex items-center space-x-3">
+                                <div class="flex flex-col sm:flex-row gap-3">
                                     <a href="{{ Storage::url($tugasakhir->$field) }}"
-                                    target="_blank"
-                                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                                       target="_blank"
+                                       class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-blue-600 bg-white border border-blue-600 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                         </svg>
                                         Buka di Tab Baru
                                     </a>
                                     <a href="{{ Storage::url($tugasakhir->$field) }}"
-                                    download
-                                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                                       download
+                                       class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                         </svg>
@@ -111,7 +118,7 @@
                             </div>
                             <div class="border rounded-lg bg-gray-50">
                                 <iframe src="{{ Storage::url($tugasakhir->$field) }}"
-                                        class="w-full h-screen rounded-lg"
+                                        class="w-full h-[800px] rounded-lg"
                                         title="{{ $label }}"></iframe>
                             </div>
                         </div>
@@ -122,13 +129,32 @@
     </div>
 
     <style>
-        /* Hide scrollbar but keep functionality */
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
         }
         .scrollbar-hide {
             -ms-overflow-style: none;
             scrollbar-width: none;
+        }
+        
+        /* Smooth transitions for tab indicators */
+        .tab-btn {
+            position: relative;
+        }
+        
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: transparent;
+            transition: background-color 0.2s ease-in-out;
+        }
+        
+        .tab-btn.active::after {
+            background-color: rgb(37, 99, 235);
         }
     </style>
 
@@ -139,39 +165,43 @@
                 firstTab.click();
             }
             
-            // Check if scroll buttons should be visible
+            // Initial check for scroll buttons
             checkScrollButtons();
+            
+            // Add scroll event listener to container
+            const container = document.getElementById('tabs-container');
+            container.addEventListener('scroll', checkScrollButtons);
         });
 
         function showTab(fieldName) {
-            // Sembunyikan semua content
+            // Hide all content
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.add('hidden');
             });
             
-            // Hapus semua active state
+            // Remove all active states
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('text-blue-600', 'border-blue-600');
+                btn.classList.remove('text-blue-600', 'border-blue-600', 'active');
                 btn.classList.add('border-transparent');
             });
             
-            // Tampilkan content yang dipilih
+            // Show selected content
             const selectedContent = document.getElementById(`content-${fieldName}`);
             if (selectedContent) {
                 selectedContent.classList.remove('hidden');
             }
             
-            // Set active state pada tab yang dipilih (hanya border bawah)
+            // Set active state on selected tab
             const selectedTab = document.getElementById(`tab-${fieldName}`);
             if (selectedTab) {
-                selectedTab.classList.add('text-blue-600', 'border-blue-600');
+                selectedTab.classList.add('text-blue-600', 'border-blue-600', 'active');
                 selectedTab.classList.remove('border-transparent');
             }
         }
 
         function scrollTabs(direction) {
             const container = document.getElementById('tabs-container');
-            const scrollAmount = 200; // Sesuaikan dengan kebutuhan
+            const scrollAmount = container.clientWidth * 0.75; // Scroll 75% of container width
             
             if (direction === 'left') {
                 container.scrollBy({
@@ -184,21 +214,36 @@
                     behavior: 'smooth'
                 });
             }
+            
+            // Update scroll buttons after scrolling
+            setTimeout(checkScrollButtons, 100);
         }
 
         function checkScrollButtons() {
             const container = document.getElementById('tabs-container');
-            const maxScroll = container.scrollWidth - container.clientWidth;
+            const leftButton = document.getElementById('scroll-left');
+            const rightButton = document.getElementById('scroll-right');
             
-            // Logika untuk menampilkan/menyembunyikan tombol scroll bisa ditambahkan di sini
-            // if (maxScroll > 0) {
-            //     // Tampilkan tombol
-            // } else {
-            //     // Sembunyikan tombol
-            // }
+            // Show/hide left button
+            if (container.scrollLeft > 0) {
+                leftButton.classList.remove('hidden');
+            } else {
+                leftButton.classList.add('hidden');
+            }
+            
+            // Show/hide right button
+            if (container.scrollLeft + container.clientWidth < container.scrollWidth - 1) {
+                rightButton.classList.remove('hidden');
+            } else {
+                rightButton.classList.add('hidden');
+            }
         }
 
-        // Event listener untuk update status tombol saat resize
-        window.addEventListener('resize', checkScrollButtons);
+        // Add resize observer to handle window resizing
+        const resizeObserver = new ResizeObserver(entries => {
+            checkScrollButtons();
+        });
+        
+        resizeObserver.observe(document.getElementById('tabs-container'));
     </script>
 </x-app-layout>

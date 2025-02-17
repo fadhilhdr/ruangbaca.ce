@@ -1,5 +1,5 @@
 <!-- resources/views/sections/visitor-section.blade.php -->
-<div class="bg-gradient-to-b from-gray-50 to-white py-16">
+<div class="bg-gradient-to-b  from-white py-24 to-blue-200">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-12">

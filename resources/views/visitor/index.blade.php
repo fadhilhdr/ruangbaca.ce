@@ -30,7 +30,8 @@
                                         name="identifier"
                                         value="{{ old('identifier') }}"
                                         required
-                                        autofocus
+                                        autocomplete="off"
+                                        data-scanner-input
                                         class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors duration-200"
                                         placeholder="Masukkan identitas Anda">
                                 </div>
@@ -47,6 +48,7 @@
                                         id="instansi"
                                         name="instansi"
                                         value="{{ old('instansi') }}"
+                                        autocomplete="off"
                                         class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors duration-200"
                                         placeholder="Nama instansi">
                                 </div>
@@ -70,8 +72,24 @@
             <div class="lg:col-span-5">
                 <div class="bg-white rounded-lg shadow-md">
                     <div class="p-6 border-b">
-                        <h2 class="text-lg font-semibold text-gray-700">Daftar Pengunjung Hari Ini</h2>
-                        <p class="text-sm text-gray-500 mt-1">Menampilkan data kunjungan per {{ now()->format('d/m/Y') }}</p>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h2 class="text-lg font-semibold text-gray-700">Daftar Pengunjung Hari Ini</h2>
+                                <p class="text-sm text-gray-500 mt-1">Menampilkan data kunjungan per {{ now()->format('d/m/Y') }}</p>
+                            </div>
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg px-4 py-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                                    <p class="text-sm font-medium text-gray-700">
+                                        Pengunjung Saat Ini 
+                                        <span class="ml-1 text-lg font-bold text-blue-600">
+                                            {{ App\Models\Visitor::whereNull('check_out_at')->count() }}
+                                        </span>
+                                        <span class="text-sm font-normal text-gray-700">orang</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="overflow-x-auto">
@@ -150,76 +168,126 @@
             </div>
         </div>
         <script>
-            const SwalConfig = Swal.mixin({
-                customClass: {
-                    popup: 'animated zoomIn'
-                },
-                showClass: {
-                    popup: 'animate__animated animate__fadeInDown'
-                },
-                hideClass: {
-                    popup: 'animate__animated animate__fadeOutUp'
+        // Global state to track manual input mode
+        let isManualInputMode = false;
+
+        // Function to handle identifier field focus
+        const focusIdentifierField = () => {
+            const identifierField = document.getElementById('identifier');
+            const instansiField = document.getElementById('instansi');
+            
+            // Don't force focus if user is in manual input mode
+            if (isManualInputMode) {
+                return;
+            }
+            
+            // Don't force focus if user is actively typing in instansi field
+            if (document.activeElement === instansiField) {
+                return;
+            }
+            
+            if (identifierField && document.activeElement !== identifierField) {
+                identifierField.focus();
+                identifierField.select();
+            }
+        };
+
+        // Initialize SweetAlert configuration
+        const SwalConfig = Swal.mixin({
+            customClass: {
+                popup: 'animated zoomIn'
+            },
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp'
+            }
+        });
+
+        // Handle error case when NIM/NIP not found
+        const handleNotFoundError = () => {
+            SwalConfig.fire({
+                icon: 'warning',
+                title: 'NIM/NIP tidak ditemukan',
+                text: 'Silakan isi nama dan instansi secara manual',
+                showConfirmButton: true,
+                confirmButtonColor: '#3085d6'
+            }).then(() => {
+                isManualInputMode = true; // Enable manual input mode
+                const instansiField = document.getElementById('instansi');
+                if (instansiField) {
+                    instansiField.focus();
+                }
+            });
+        };
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            const identifierField = document.getElementById('identifier');
+            const instansiField = document.getElementById('instansi');
+            
+            // Initial focus
+            focusIdentifierField();
+            
+            // Handle identifier field events
+            identifierField.addEventListener('blur', (e) => {
+                if (!isManualInputMode) {
+                    setTimeout(focusIdentifierField, 100);
                 }
             });
             
-            // Function to handle identifier field focus
-            const focusIdentifierField = () => {
-                const identifierField = document.getElementById('identifier');
-                if (identifierField && document.activeElement !== identifierField) {
-                    identifierField.focus();
-                    identifierField.select();
-                }
-            };
-            
-            // Handle success messages
-            @if(session('success'))
-                SwalConfig.fire({
-                    icon: 'success',
-                    title: "{{ session('success') }}",
-                    showConfirmButton: false,
-                    timer: 2000
-                }).then(() => {
-                    focusIdentifierField();
-                });
-            @endif
-            
-            // Handle error messages
-            @if(session('error'))
-                SwalConfig.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: "{{ session('error') }}",
-                    showConfirmButton: true,
-                    confirmButtonColor: '#3085d6'
-                }).then(() => {
-                    focusIdentifierField();
-                });
-            @endif
-            
-            // Initial focus when page loads
-            document.addEventListener('DOMContentLoaded', focusIdentifierField);
-            
-            // Focus after any SweetAlert closes
-            Swal.bindClickHandler();
-            
-            // Add event listener for clicks outside the input
-            document.addEventListener('click', (e) => {
-                if (e.target.id !== 'identifier') {
-                    focusIdentifierField();
+            // Reset manual mode when identifier field is cleared
+            identifierField.addEventListener('input', (e) => {
+                if (e.target.value === '') {
+                    isManualInputMode = false;
                 }
             });
             
-            // Add event listener for keypress
-            document.addEventListener('keypress', () => {
+            // Handle instansi field focus
+            instansiField.addEventListener('focus', () => {
+                if (identifierField.value && !isManualInputMode) {
+                    // Check if this focus was triggered by tab or click
+                    // If NIM/NIP wasn't found, we'll keep manual mode
+                    isManualInputMode = true;
+                }
+            });
+        });
+
+        // Handle success messages
+        @if(session('success'))
+            SwalConfig.fire({
+                icon: 'success',
+                title: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 2000
+            }).then(() => {
+                isManualInputMode = false; // Reset to scanner mode after success
                 focusIdentifierField();
             });
-            
-            // Fallback focus check (reduced interval and only if needed)
-            setInterval(() => {
-                if (document.activeElement.id !== 'identifier') {
-                    focusIdentifierField();
-                }
-            }, 500);
+        @endif
+
+        // Handle error messages
+        @if(session('error'))
+            handleNotFoundError();
+        @endif
+
+        // Modified interval check
+        setInterval(() => {
+            if (!isManualInputMode && document.activeElement.id !== 'identifier') {
+                focusIdentifierField();
+            }
+        }, 500);
+
+        // Add manual input mode toggle button (optional)
+        const toggleManualMode = () => {
+            isManualInputMode = !isManualInputMode;
+            if (isManualInputMode) {
+                document.getElementById('instansi').focus();
+            } else {
+                focusIdentifierField();
+            }
+        };
         </script>  
     </div>
 </x-app-layout>

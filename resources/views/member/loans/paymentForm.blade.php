@@ -27,7 +27,7 @@
                 <div class="mb-6">
                     <h4 class="font-medium text-gray-900 mb-2">Pembayaran via QRIS</h4>
                     <div class="bg-white border rounded-lg p-4 mb-4">
-                        <img src="{{ asset('images/dummy-qris.png') }}" 
+                        <img src="{{ asset('#') }}" 
                              alt="QRIS Code" 
                              class="w-48 h-48 mx-auto">
                         <p class="text-center text-sm text-gray-500 mt-2">Scan QRIS untuk melakukan pembayaran</p>

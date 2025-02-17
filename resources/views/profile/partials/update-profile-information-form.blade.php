@@ -31,7 +31,7 @@
             </div>
             <div>
                 <x-input-label for="status" :value="__('Status')" />
-                <x-text-input id="status" name="status" type="text" class="mt-1 block w-full bg-gray-100" :value="$user->student->status" disabled />
+                <x-text-input id="status" name="status" type="text" class="mt-1 block w-full bg-gray-100" :value="$user->student->status_terakhir" disabled />
             </div>
         @elseif ($user->lecturer)
             <div>

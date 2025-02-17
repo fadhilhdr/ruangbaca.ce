@@ -139,10 +139,18 @@ class BookLoanController extends Controller
     public function showReturnForm($id)
     {
         $loan = BookLoan::findOrFail($id);
-        $isLate = Carbon::now()->greaterThan($loan->due_date);
-        $daysLate = $isLate ? Carbon::now()->diffInDays($loan->due_date) : 0;
-        $fineAmount = $daysLate * 1000; // Rp1.000 per day
-
+        
+        $now = Carbon::now();
+        $isLate = $now->greaterThan($loan->due_date);
+        
+        if ($isLate) {
+            $daysLate = $now->diffInDays($loan->due_date) + 1;
+        } else {
+            $daysLate = 0;
+        }
+        
+        $fineAmount = $daysLate * 1000; // Rp1.000 per hari
+        
         return view('member.loans.returnForm', compact('loan', 'isLate', 'daysLate', 'fineAmount'));
     }
 
@@ -150,22 +158,32 @@ class BookLoanController extends Controller
     public function showPaymentForm($id)
     {
         $loan = BookLoan::findOrFail($id);
-
-        // Check if there's an existing unpaid fine
+    
+        // Cek apakah ada denda yang belum diverifikasi
         $existingFine = Fine::where('book_loan_id', $loan->id)
             ->where('status', '!=', 'verified')
             ->first();
-
+    
         if ($existingFine) {
             return redirect()->route('member.loans.returnForm', $loan->id)
                 ->with('error', 'Sudah ada pembayaran denda yang sedang diproses');
         }
-
-        $daysLate = Carbon::now()->diffInDays($loan->due_date);
-        $fineAmount = $daysLate * 1000;
-
-        return view('member.loans.paymentForm', compact('loan', 'daysLate', 'fineAmount'));
+    
+        // Cek apakah pengembalian terlambat
+        $now = Carbon::now();
+        $isLate = $now->greaterThan($loan->due_date);
+        
+        if ($isLate) {
+            $daysLate = $now->diffInDays($loan->due_date) + 1;
+        } else {
+            $daysLate = 0;
+        }
+    
+        $fineAmount = $daysLate * 1000; // Rp1.000 per hari
+    
+        return view('member.loans.paymentForm', compact('loan', 'isLate', 'daysLate', 'fineAmount'));
     }
+    
 
     public function showReplacementForm($id)
     {

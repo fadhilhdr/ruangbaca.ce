@@ -8,23 +8,6 @@
 
         <!-- Navigation row with back button and breadcrumbs -->
         <div class="flex items-center space-x-4">
-            <!-- Back Button -->
-            <button onclick="history.back()" 
-                    class="group flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-200"
-                    title="Kembali ke halaman sebelumnya">
-                <svg class="w-4 h-4 mr-1.5 transform group-hover:-translate-x-1 transition-transform duration-200" 
-                     fill="currentColor" 
-                     viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" 
-                          d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" 
-                          clip-rule="evenodd"/>
-                </svg>
-                <span class="font-medium hover:underline underline-offset-2">Kembali</span>
-            </button>
-
-            <!-- Divider -->
-            <div class="h-4 w-px bg-gray-300"></div>
-
             <!-- Breadcrumbs -->
             <nav aria-label="Lokasi halaman">
                 <ol class="flex items-center text-sm">

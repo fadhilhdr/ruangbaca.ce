@@ -41,9 +41,12 @@ class VisitorController extends Controller
         }
     
         // Cek apakah pengunjung sudah check-in dan belum check-out
-        $existingVisitor = Visitor::where('nim_nip_nppu_nupk', $identifier)
-            ->whereNull('check_out_at')
-            ->first();
+        $existingVisitor = Visitor::where(function($query) use ($identifier) {
+            $query->where('nim_nip_nppu_nupk', $identifier)
+                ->orWhere('name', $identifier);
+        })
+        ->whereNull('check_out_at')
+        ->first();
     
         if ($existingVisitor) {
             return view('visitor.confirm_checkout', [
@@ -67,7 +70,7 @@ class VisitorController extends Controller
         // Jika tidak ditemukan di database, gunakan input manual
         if ($request->filled('instansi')) {
             Visitor::create([
-                'nim_nip_nppu_nupk' => $identifier,
+                'nim_nip_nppu_nupk' => null,
                 'name' => $identifier, // menggunakan identifier sebagai nama
                 'instansi' => $request->input('instansi'),
                 'check_in_at' => now(),

@@ -190,11 +190,21 @@
                                            id="kode_unik_buku"
                                            class="block w-full rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm disabled:bg-gray-50 disabled:text-gray-500"
                                            required
+                                           readonly
                                            placeholder="@if($hasActiveLostBook)Peminjaman tidak tersedia - Akun ditangguhkan @else Scan untuk masukkan kode unik buku @endif"
                                            @if($hasActiveLostBook) disabled @endif>
                                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                                         <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                                            <!-- Outline square with rounded corners -->
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke-width="1.5"/>
+                                            
+                                            <!-- Three position markers (corners) -->
+                                            <rect x="6" y="6" width="3" height="3" stroke-width="1.5"/>
+                                            <rect x="15" y="6" width="3" height="3" stroke-width="1.5"/>
+                                            <rect x="6" y="15" width="3" height="3" stroke-width="1.5"/>
+                                            
+                                            <!-- Center scanning dot/line -->
+                                            <circle cx="12" cy="12" r="1" stroke-width="0" fill="currentColor"/>
                                         </svg>
                                     </div>
                                 </div>
@@ -250,7 +260,12 @@
             
             let isKodeUnikValid = false;
             let scanTimeout;
-
+            let lastInputTime = 0;
+            const maxDelay = 50; // Maksimum delay antar karakter dalam ms untuk barcode scanner
+    
+            // Set input sebagai readonly di awal
+            kodeUnikInput.setAttribute('readonly', 'readonly');
+    
             // Update submit button state
             function updateSubmitButton() {
                 if (isKodeUnikValid && termsCheckbox.checked) {
@@ -261,7 +276,7 @@
                     submitButton.classList.add('opacity-50');
                 }
             }
-
+    
             // Validate kode unik with enhanced feedback
             async function validateKodeUnik(kodeUnik) {
                 try {
@@ -274,7 +289,7 @@
                             Memvalidasi kode...
                         </div>
                     `;
-
+    
                     const response = await fetch(`/api/validate-kode-unik/${kodeUnik}/${@json($bookReference->isbn)}`);
                     const data = await response.json();
                     
@@ -283,7 +298,7 @@
                     const iconPath = data.valid 
                         ? 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
                         : 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z';
-
+    
                     kodeUnikStatus.innerHTML = `
                         <div class="flex items-center ${statusClass}">
                             <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -294,6 +309,15 @@
                     `;
                     
                     updateSubmitButton();
+    
+                    // Jika validasi gagal, reset input dan siapkan untuk scan ulang
+                    if (!data.valid) {
+                        setTimeout(() => {
+                            kodeUnikInput.value = '';
+                            kodeUnikInput.removeAttribute('readonly');
+                            kodeUnikInput.focus();
+                        }, 1500); // Tunggu 1.5 detik agar pesan error bisa dibaca
+                    }
                 } catch (error) {
                     console.error('Error:', error);
                     kodeUnikStatus.innerHTML = `
@@ -306,9 +330,49 @@
                     `;
                     isKodeUnikValid = false;
                     updateSubmitButton();
+                    
+                    // Reset input setelah error
+                    setTimeout(() => {
+                        kodeUnikInput.value = '';
+                        kodeUnikInput.removeAttribute('readonly');
+                        kodeUnikInput.focus();
+                    }, 1500);
                 }
             }
-
+    
+            // Menambahkan event listener untuk focus
+            kodeUnikInput.addEventListener('focus', function() {
+                // Menghapus atribut readonly saat input mendapat focus
+                // (biasanya akan terjadi ketika scanner mulai memindai)
+                this.removeAttribute('readonly');
+            });
+            
+            // Menambahkan event listener untuk blur
+            kodeUnikInput.addEventListener('blur', function() {
+                // Jangan set readonly jika kosong, agar bisa difokuskan kembali
+                if (this.value.trim() !== '') {
+                    this.setAttribute('readonly', 'readonly');
+                }
+            });
+    
+            // Deteksi input dari barcode scanner vs manual typing
+            kodeUnikInput.addEventListener('keypress', function(e) {
+                const currentTime = new Date().getTime();
+                
+                // Jika delay terlalu lama, berarti kemungkinan input manual
+                if (lastInputTime > 0 && currentTime - lastInputTime > maxDelay) {
+                    e.preventDefault();
+                    return false;
+                }
+                
+                lastInputTime = currentTime;
+                
+                // Mencegah submit form ketika menekan Enter
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                }
+            });
+    
             // Handle barcode scanner input with debounce
             kodeUnikInput.addEventListener('input', (e) => {
                 clearTimeout(scanTimeout);
@@ -322,24 +386,28 @@
                     }
                 }, 300);
             });
-
-            // Prevent form submission on Enter
-            kodeUnikInput.addEventListener('keypress', function(e) {
+    
+            // Reset timer saat selesai input dan tambahkan readonly kembali
+            kodeUnikInput.addEventListener('keyup', function(e) {
+                // Jika enter, berarti scan selesai
                 if (e.key === 'Enter') {
-                    e.preventDefault();
+                    lastInputTime = 0;
+                    this.setAttribute('readonly', 'readonly');
                 }
             });
-
-            // Keep focus on input field
+    
+            // Keep focus on input field jika belum valid
             if (!@json($hasActiveLostBook)) {
                 kodeUnikInput.focus();
                 document.addEventListener('click', function() {
-                    kodeUnikInput.focus();
+                    if (!isKodeUnikValid) {
+                        kodeUnikInput.focus();
+                    }
                 });
             }
-
+    
             termsCheckbox.addEventListener('change', updateSubmitButton);
-
+    
             // Loading state for form submission
             form.addEventListener('submit', function() {
                 submitButton.disabled = true;

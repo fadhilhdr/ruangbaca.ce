@@ -217,7 +217,7 @@
                                                             $now = now();
                                                             $dueDate = Carbon\Carbon::parse($loan->due_date);
                                                             $isOverdue = $dueDate < $now;
-                                                            $isDueSoon = !$isOverdue && $dueDate <= $now->addDays(3);
+                                                            $isDueSoon = !$isOverdue && $dueDate <= $now->copy()->addDays(3);
                                                             $daysRemaining = $now->diffInDays($dueDate, false);
                                                         @endphp
                                                         

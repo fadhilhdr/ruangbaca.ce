@@ -43,9 +43,12 @@ class BookController extends Controller
         $sortDirection = $request->get('direction', 'asc');
         
         $query->orderBy($sortField, $sortDirection);
+
+        $peminatans = Book::distinct()->pluck('peminatan')->toArray();
+        $subPeminatans = Book::distinct()->pluck('sub_peminatan')->toArray();
     
         $books = $query->paginate(10)->appends($request->query());
-        return view('public.books.index', compact('books', 'sortField', 'sortDirection'));
+        return view('public.books.index', compact('books', 'sortField', 'sortDirection', 'peminatans', 'subPeminatans'));
     }
     
 
